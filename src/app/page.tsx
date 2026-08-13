@@ -1,4 +1,5 @@
 import { TaskInput } from "@/components/TaskInput";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -19,6 +20,16 @@ export default function Home() {
         </div>
 
         <TaskInput />
+
+        <div className="mt-2 text-center animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300 fill-mode-both">
+          <Link 
+            href="/discover"
+            className="group inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-brand-600 dark:text-gray-400 dark:hover:text-brand-400 transition-colors"
+          >
+            Or browse all AI tools
+            <span className="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+          </Link>
+        </div>
 
       </main>
     </div>

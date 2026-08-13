@@ -1,4 +1,4 @@
-import { Recommendation } from "@/types";
+import { Recommendation } from "@/types/index";
 import Link from "next/link";
 
 interface ToolCardProps {
@@ -40,7 +40,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           Why we recommend it
         </h4>
         <ul className="space-y-2">
-          {tool.reasons.map((reason, idx) => (
+          {tool.reasons.map((reason: string, idx: number) => (
             <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
               <svg className="h-5 w-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

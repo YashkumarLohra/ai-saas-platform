@@ -1,4 +1,4 @@
-import { Recommendation } from "@/types";
+import { Recommendation } from "@/types/index";
 
 export const MOCK_RECOMMENDATIONS: Recommendation[] = [
   {

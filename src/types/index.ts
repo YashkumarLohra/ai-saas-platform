@@ -10,4 +10,5 @@ export interface Recommendation {
   features: string[];
   pros: string[];
   cons: string[];
+  websiteUrl?: string;
 }

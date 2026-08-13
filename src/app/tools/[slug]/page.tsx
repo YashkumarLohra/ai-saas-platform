@@ -56,12 +56,29 @@ export default async function ToolDetailPage({ params }: PageProps) {
           </div>
 
           <div className="w-full md:w-auto flex flex-col gap-3 min-w-[240px]">
-            <button className="w-full rounded-xl bg-brand-600 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-brand-500 flex justify-center items-center gap-2">
-              Open Tool
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </button>
+            {tool.websiteUrl ? (
+              <a 
+                href={tool.websiteUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full rounded-xl bg-brand-600 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-brand-500 flex justify-center items-center gap-2"
+              >
+                Visit Tool
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            ) : (
+              <button 
+                disabled
+                className="w-full rounded-xl bg-gray-200 dark:bg-zinc-800 px-6 py-3.5 text-base font-semibold text-gray-500 dark:text-gray-400 cursor-not-allowed flex justify-center items-center gap-2"
+              >
+                Website Not Available
+                <svg className="h-4 w-4 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+              </button>
+            )}
             <div className="flex gap-2">
               <button className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 text-center">
                 Compare

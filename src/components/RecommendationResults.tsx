@@ -1,13 +1,31 @@
+"use client";
+
+import { useState } from "react";
 import { ToolCard } from "@/components/ToolCard";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import Link from "next/link";
 
 interface RecommendationResultsProps {
   submittedTask: string;
 }
 
 export function RecommendationResults({ submittedTask }: RecommendationResultsProps) {
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
+
+  const handleToggleCompare = (slug: string) => {
+    setSelectedTools(prev => {
+      if (prev.includes(slug)) {
+        return prev.filter(s => s !== slug);
+      }
+      if (prev.length < 3) {
+        return [...prev, slug];
+      }
+      return prev;
+    });
+  };
+
   return (
-    <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4">
+    <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4 relative pb-24">
       <div className="flex flex-col items-center text-center mb-12">
         {/* Task Context Area */}
         <div className="flex flex-col items-center mb-8">
@@ -39,9 +57,36 @@ export function RecommendationResults({ submittedTask }: RecommendationResultsPr
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left">
         {MOCK_RECOMMENDATIONS.map((tool) => (
-          <ToolCard key={tool.id} tool={tool} />
+          <ToolCard 
+            key={tool.id} 
+            tool={tool}
+            isSelected={selectedTools.includes(tool.slug)}
+            onToggleCompare={() => handleToggleCompare(tool.slug)}
+            disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}
+          />
         ))}
       </div>
+
+      {selectedTools.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
+          <div className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl rounded-full p-2 pl-6 flex items-center gap-4 border border-gray-800 dark:border-gray-200">
+            <span className="font-medium text-sm whitespace-nowrap">
+              {selectedTools.length} {selectedTools.length === 1 ? "tool" : "tools"} selected
+            </span>
+            <Link
+              href={`/compare?tools=${selectedTools.join(",")}`}
+              aria-disabled={selectedTools.length < 2}
+              className={`rounded-full px-5 py-2 text-sm font-bold transition-all whitespace-nowrap ${
+                selectedTools.length >= 2 
+                  ? "bg-brand-500 text-white hover:bg-brand-400 shadow-md" 
+                  : "bg-gray-800 text-gray-500 dark:bg-gray-100 dark:text-gray-400 pointer-events-none"
+              }`}
+            >
+              Compare tools
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

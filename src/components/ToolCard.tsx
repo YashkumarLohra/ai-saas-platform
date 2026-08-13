@@ -26,6 +26,15 @@ export function ToolCard({ tool }: ToolCardProps) {
         {tool.description}
       </p>
 
+      <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
+        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+          Best for
+        </h4>
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          {tool.bestFor}
+        </p>
+      </div>
+
       <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4">
         <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
           Why we recommend it

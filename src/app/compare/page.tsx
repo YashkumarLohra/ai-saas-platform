@@ -114,10 +114,11 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
                     href={tool.websiteUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 flex justify-center items-center gap-2"
+                    className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2"
+                    aria-label={`Visit official website for ${tool.name} (opens in a new tab)`}
                   >
-                    Visit Tool
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    Visit Official Website
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                   </a>
@@ -126,7 +127,7 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
                     disabled
                     className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-3 text-sm font-semibold text-gray-500 dark:text-gray-400 cursor-not-allowed flex justify-center items-center gap-2"
                   >
-                    Website Not Available
+                    Official website unavailable
                   </button>
                 )}
               </div>

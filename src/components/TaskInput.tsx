@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { RecommendationCard } from "@/components/RecommendationCard";
+import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 
 export function TaskInput() {
   const [task, setTask] = useState("");
@@ -18,21 +20,20 @@ export function TaskInput() {
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmittedTask(trimmedTask);
-      setTask("");
-    }, 800);
+    }, 1200);
   };
 
   return (
-    <div className="w-full max-w-xl flex flex-col gap-3">
+    <div className="w-full flex flex-col items-center gap-8">
       <form 
         onSubmit={handleSubmit}
-        className="flex w-full items-center gap-2 rounded-full border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-800 dark:bg-zinc-900 transition-shadow focus-within:ring-2 focus-within:ring-brand-500"
+        className="flex w-full max-w-xl items-center gap-2 rounded-full border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-800 dark:bg-zinc-900 transition-shadow focus-within:ring-2 focus-within:ring-brand-500"
       >
         <input 
           type="text" 
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          placeholder="e.g. 'I need to generate a marketing video from a script...'" 
+          placeholder="e.g. 'I want to create a professional presentation for college'" 
           className="flex-1 bg-transparent px-4 py-2 outline-none text-foreground"
           disabled={isSubmitting}
           aria-label="Describe your task"
@@ -55,12 +56,26 @@ export function TaskInput() {
         </button>
       </form>
       
-      <div className="min-h-[60px] flex flex-col justify-start">
+      <div className="w-full min-h-[60px] flex flex-col justify-start">
         {submittedTask ? (
-          <div className="rounded-xl border border-brand-200 bg-brand-50 p-4 text-sm text-brand-800 dark:border-brand-900/50 dark:bg-brand-900/20 dark:text-brand-300 animate-in fade-in slide-in-from-bottom-2 text-left">
-            <p className="font-medium mb-1">Task received!</p>
-            <p className="text-brand-700/90 dark:text-brand-400/90 break-words">We&apos;re analyzing: &quot;{submittedTask}&quot;</p>
-            <p className="mt-2 text-xs opacity-80">AI recommendations will be implemented in the next milestone.</p>
+          <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4">
+            <div className="flex flex-col items-center text-center mb-10">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+                Recommended for your task
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-balance">
+                Based on your request: &quot;<span className="font-medium text-gray-900 dark:text-white">{submittedTask}</span>&quot;
+              </p>
+              <div className="mt-4 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-500">
+                Demo Data Mode: Showing static recommendations for milestone validation.
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left">
+              {MOCK_RECOMMENDATIONS.map((rec) => (
+                <RecommendationCard key={rec.id} recommendation={rec} />
+              ))}
+            </div>
           </div>
         ) : (
           <p className="text-sm text-center text-gray-500 dark:text-gray-500 py-2">

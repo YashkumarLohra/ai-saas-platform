@@ -3,7 +3,7 @@ import { TaskInput } from "@/components/TaskInput";
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-8 text-center sm:p-20">
-      <main className="flex w-full max-w-3xl flex-col items-center gap-8">
+      <main className="flex w-full max-w-5xl flex-col items-center gap-8">
         
         {/* Placeholder Header */}
         <div className="flex flex-col items-center gap-4">

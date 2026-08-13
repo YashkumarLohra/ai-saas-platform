@@ -1,11 +1,11 @@
 import { Recommendation } from "@/types";
 import Link from "next/link";
 
-interface RecommendationCardProps {
-  recommendation: Recommendation;
+interface ToolCardProps {
+  tool: Recommendation;
 }
 
-export function RecommendationCard({ recommendation }: RecommendationCardProps) {
+export function ToolCard({ tool }: ToolCardProps) {
   return (
     <div className="flex flex-col h-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition-all hover:shadow-md">
       <div className="flex items-start justify-between gap-4 mb-4">
@@ -14,16 +14,16 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
             Top Match
           </div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-            {recommendation.name}
+            {tool.name}
           </h3>
           <p className="mt-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            {recommendation.pricing} • Best for: {recommendation.bestFor}
+            {tool.category} • {tool.pricing}
           </p>
         </div>
       </div>
       
       <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">
-        {recommendation.description}
+        {tool.description}
       </p>
 
       <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4">
@@ -31,7 +31,7 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
           Why we recommend it
         </h4>
         <ul className="space-y-2">
-          {recommendation.reasons.map((reason, idx) => (
+          {tool.reasons.map((reason, idx) => (
             <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
               <svg className="h-5 w-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -44,7 +44,7 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
 
       <div className="mt-auto flex flex-col sm:flex-row gap-3">
         <Link 
-          href={`/tools/${recommendation.slug}`}
+          href={`/tools/${tool.slug}`}
           className="flex-1 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 text-center flex items-center justify-center"
         >
           View Tool

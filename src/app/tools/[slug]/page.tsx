@@ -1,7 +1,7 @@
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { RecommendationCard } from "@/components/RecommendationCard";
+import { ToolCard } from "@/components/ToolCard";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -170,7 +170,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Alternative Tools</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {alternatives.map((alt) => (
-                <RecommendationCard key={alt.id} recommendation={alt} />
+                <ToolCard key={alt.id} tool={alt} />
               ))}
             </div>
           </div>

@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { RecommendationCard } from "@/components/RecommendationCard";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { RecommendationResults } from "@/components/RecommendationResults";
 
 export function TaskInput() {
   const [task, setTask] = useState("");
@@ -58,25 +57,7 @@ export function TaskInput() {
       
       <div className="w-full min-h-[60px] flex flex-col justify-start">
         {submittedTask ? (
-          <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4">
-            <div className="flex flex-col items-center text-center mb-10">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-                Recommended for your task
-              </h2>
-              <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-balance">
-                Based on your request: &quot;<span className="font-medium text-gray-900 dark:text-white">{submittedTask}</span>&quot;
-              </p>
-              <div className="mt-4 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-500">
-                Demo Data Mode: Showing static recommendations for milestone validation.
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left">
-              {MOCK_RECOMMENDATIONS.map((rec) => (
-                <RecommendationCard key={rec.id} recommendation={rec} />
-              ))}
-            </div>
-          </div>
+          <RecommendationResults submittedTask={submittedTask} />
         ) : (
           <p className="text-sm text-center text-gray-500 dark:text-gray-500 py-2">
             Search functionality is coming in a future milestone.

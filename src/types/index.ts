@@ -12,3 +12,7 @@ export interface Recommendation {
   cons: string[];
   websiteUrl?: string;
 }
+
+export interface TaskContext {
+  query: string;
+}

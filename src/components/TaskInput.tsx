@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { RecommendationResults } from "@/components/RecommendationResults";
+import { TaskContext } from "@/types/index";
 
 export function TaskInput() {
   const [task, setTask] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedTask, setSubmittedTask] = useState<string | null>(null);
+  const [taskContext, setTaskContext] = useState<TaskContext | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,12 +19,27 @@ export function TaskInput() {
     // Simulate network request or processing delay for UX
     setTimeout(() => {
       setIsSubmitting(false);
-      setSubmittedTask(trimmedTask);
+      setTaskContext({ query: trimmedTask });
     }, 1200);
   };
 
+  const handleEditTask = () => {
+    setTaskContext(null);
+  };
+
+  if (taskContext) {
+    return (
+      <div className="w-full min-h-[60px] flex flex-col justify-start">
+        <RecommendationResults 
+          context={taskContext} 
+          onEditTask={handleEditTask} 
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full flex flex-col items-center gap-8">
+    <div className="w-full flex flex-col items-center gap-8 animate-in fade-in slide-in-from-top-4 duration-500">
       <form 
         onSubmit={handleSubmit}
         className="flex w-full max-w-xl items-center gap-2 rounded-full border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-800 dark:bg-zinc-900 transition-shadow focus-within:ring-2 focus-within:ring-brand-500"
@@ -56,13 +72,9 @@ export function TaskInput() {
       </form>
       
       <div className="w-full min-h-[60px] flex flex-col justify-start">
-        {submittedTask ? (
-          <RecommendationResults submittedTask={submittedTask} />
-        ) : (
-          <p className="text-sm text-center text-gray-500 dark:text-gray-500 py-2">
-            Search functionality is coming in a future milestone.
-          </p>
-        )}
+        <p className="text-sm text-center text-gray-500 dark:text-gray-500 py-2">
+          Search functionality is coming in a future milestone.
+        </p>
       </div>
     </div>
   );

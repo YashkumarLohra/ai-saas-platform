@@ -3,13 +3,15 @@
 import { useState } from "react";
 import { ToolCard } from "@/components/ToolCard";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { TaskContext } from "@/types/index";
 import Link from "next/link";
 
 interface RecommendationResultsProps {
-  submittedTask: string;
+  context: TaskContext;
+  onEditTask: () => void;
 }
 
-export function RecommendationResults({ submittedTask }: RecommendationResultsProps) {
+export function RecommendationResults({ context, onEditTask }: RecommendationResultsProps) {
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
 
   const handleToggleCompare = (slug: string) => {
@@ -32,11 +34,21 @@ export function RecommendationResults({ submittedTask }: RecommendationResultsPr
           <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
             Your Task
           </span>
-          <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl py-4 px-6 shadow-sm max-w-2xl">
+          <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl py-4 px-6 shadow-sm max-w-2xl mb-4">
             <p className="text-lg font-medium text-gray-900 dark:text-white">
-              &quot;{submittedTask}&quot;
+              &quot;{context.query}&quot;
             </p>
           </div>
+          <button 
+            onClick={onEditTask}
+            className="text-sm font-medium text-brand-600 hover:text-brand-500 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded px-2 py-1"
+            aria-label="Edit your task"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            Edit Task
+          </button>
         </div>
 
         {/* Arrow / Divider */}

@@ -1,4 +1,5 @@
 import { Recommendation } from "@/types";
+import Link from "next/link";
 
 interface RecommendationCardProps {
   recommendation: Recommendation;
@@ -42,10 +43,13 @@ export function RecommendationCard({ recommendation }: RecommendationCardProps) 
       </div>
 
       <div className="mt-auto flex flex-col sm:flex-row gap-3">
-        <button className="flex-1 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500">
+        <Link 
+          href={`/tools/${recommendation.slug}`}
+          className="flex-1 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 text-center flex items-center justify-center"
+        >
           View Tool
-        </button>
-        <button className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700">
+        </Link>
+        <button className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 text-center flex items-center justify-center">
           Compare
         </button>
       </div>

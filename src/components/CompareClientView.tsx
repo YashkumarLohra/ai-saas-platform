@@ -18,6 +18,16 @@ export function CompareClientView() {
       .filter((t): t is NonNullable<typeof t> => t !== undefined);
   }, [slugs]);
 
+  const allFeatures = useMemo(() => {
+    const features = new Set<string>();
+    tools.forEach(t => {
+      if (t.features) {
+        t.features.forEach(f => features.add(f));
+      }
+    });
+    return Array.from(features).sort();
+  }, [tools]);
+
   const removeTool = (slugToRemove: string) => {
     const newSlugs = slugs.filter(s => s !== slugToRemove);
     const newParams = new URLSearchParams(searchParams.toString());
@@ -39,15 +49,15 @@ export function CompareClientView() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">You haven&apos;t selected any tools to compare yet.</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tools to compare</h2>
         <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md">
-          Find tools from our directory and add them to your comparison to see them side-by-side.
+          Choose AI tools from Discover and compare them side by side.
         </p>
         <Link 
           href="/discover"
           className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
         >
-          Discover AI Tools
+          Explore AI Tools
         </Link>
       </div>
     );
@@ -57,9 +67,9 @@ export function CompareClientView() {
   if (tools.length === 1) {
     return (
       <div className="flex flex-col items-center justify-center p-12 text-center bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm mt-8 animate-in fade-in duration-500">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Select at least 2 tools to compare.</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">You&apos;re currently comparing 1 tool.</h2>
         <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md leading-relaxed">
-          You currently have <strong className="text-gray-900 dark:text-gray-200">{tools[0].name}</strong> selected. Add another tool to see a detailed comparison.
+          Add another tool to see meaningful differences.
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-4">
           <button 
@@ -72,7 +82,7 @@ export function CompareClientView() {
             href="/discover"
             className="w-full sm:w-auto rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
           >
-            Discover AI Tools
+            Add Another Tool
           </Link>
         </div>
       </div>
@@ -104,7 +114,7 @@ export function CompareClientView() {
               </th>
               {tools.map(tool => (
                 <th key={tool.id} className="p-4 align-top border-b border-gray-200 dark:border-zinc-800">
-                  <div className="flex flex-col items-start text-left gap-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm relative group">
+                  <div className="flex flex-col items-start text-left gap-4 bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm relative group h-full">
                     <button 
                       onClick={() => removeTool(tool.slug)}
                       className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100"
@@ -116,39 +126,74 @@ export function CompareClientView() {
                       </svg>
                     </button>
                     
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center border border-brand-200 dark:border-brand-800/50">
-                      <span className="text-xl font-bold text-brand-600 dark:text-brand-400" aria-hidden="true">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center border border-brand-200 dark:border-brand-800/50">
+                      <span className="text-2xl font-bold text-brand-600 dark:text-brand-400" aria-hidden="true">
                         {tool.name.charAt(0)}
                       </span>
                     </div>
                     
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{tool.name}</h3>
-                      <span className="inline-flex items-center rounded-full bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-600 dark:bg-brand-900/30 dark:text-brand-400">
-                        {tool.category}
-                      </span>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4 line-clamp-3">
+                        {tool.description}
+                      </p>
                     </div>
 
-                    <Link 
-                      href={`/tools/${tool.slug}`}
-                      className="mt-2 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-1 -ml-1"
-                    >
-                      View Details &rarr;
-                    </Link>
+                    <div className="mt-auto flex flex-col gap-2 w-full pt-4 border-t border-gray-100 dark:border-zinc-800/50">
+                      <Link 
+                        href={`/tools/${tool.slug}`}
+                        className="w-full text-center rounded-xl border border-gray-200 dark:border-zinc-700 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm"
+                      >
+                        View Details
+                      </Link>
+                      {tool.websiteUrl ? (
+                        <a 
+                          href={tool.websiteUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm flex items-center justify-center gap-1.5"
+                          aria-label={`Visit official website for ${tool.name} (opens in a new tab)`}
+                        >
+                          Visit Website
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ) : (
+                        <button disabled className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-2 text-sm font-semibold text-gray-400 dark:text-gray-500 cursor-not-allowed">
+                          Unavailable
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-zinc-800/50">
-            {/* Description */}
+            {/* Category */}
             <tr>
-              <th className="p-4 py-6 text-sm font-semibold text-gray-900 dark:text-white text-left align-top">
-                Overview
+              <th className="p-4 py-6 text-sm font-semibold text-gray-900 dark:text-white text-left align-top w-48">
+                Category
               </th>
               {tools.map(tool => (
                 <td key={tool.id} className="p-4 py-6 align-top">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{tool.description}</p>
+                  <span className="inline-flex items-center rounded-lg bg-gray-100 dark:bg-zinc-800 px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-gray-200 shadow-sm">
+                    {tool.category}
+                  </span>
+                </td>
+              ))}
+            </tr>
+            {/* Pricing */}
+            <tr>
+              <th className="p-4 py-6 text-sm font-semibold text-gray-900 dark:text-white text-left align-top">
+                Pricing
+              </th>
+              {tools.map(tool => (
+                <td key={tool.id} className="p-4 py-6 align-top">
+                  <span className="inline-flex items-center rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 px-3 py-1.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm">
+                    {tool.pricing || "Not specified"}
+                  </span>
                 </td>
               ))}
             </tr>
@@ -163,64 +208,42 @@ export function CompareClientView() {
                 </td>
               ))}
             </tr>
-            {/* Pricing */}
+            {/* Capabilities Header */}
             <tr>
-              <th className="p-4 py-6 text-sm font-semibold text-gray-900 dark:text-white text-left align-top">
-                Pricing
+              <th colSpan={tools.length + 1} className="p-4 pt-10 pb-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-left border-b border-gray-200 dark:border-zinc-800">
+                Capabilities
               </th>
-              {tools.map(tool => (
-                <td key={tool.id} className="p-4 py-6 align-top">
-                  <span className="inline-flex items-center rounded-lg bg-gray-100 dark:bg-zinc-800 px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-zinc-700 shadow-sm">
-                    {tool.pricing || "Not specified"}
-                  </span>
-                </td>
-              ))}
             </tr>
-            {/* Features */}
-            <tr>
-              <th className="p-4 py-6 text-sm font-semibold text-gray-900 dark:text-white text-left align-top">
-                Key Features
-              </th>
-              {tools.map(tool => (
-                <td key={tool.id} className="p-4 py-6 align-top">
-                  <ul className="space-y-3">
-                    {tool.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <svg className="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="leading-relaxed">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-              ))}
-            </tr>
-            {/* Actions */}
-            <tr>
-              <th className="p-4 py-8 text-left border-t border-gray-200 dark:border-zinc-800"></th>
-              {tools.map(tool => (
-                <td key={tool.id} className="p-4 py-8 align-top border-t border-gray-200 dark:border-zinc-800">
-                  {tool.websiteUrl ? (
-                    <a 
-                      href={tool.websiteUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full flex justify-center items-center gap-2 rounded-xl bg-gray-900 dark:bg-white px-4 py-3 text-sm font-semibold text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
-                    >
-                      Visit Website
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                    </a>
-                  ) : (
-                    <button disabled className="w-full flex justify-center items-center gap-2 rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-3 text-sm font-semibold text-gray-400 dark:text-gray-500 cursor-not-allowed border border-gray-200 dark:border-zinc-700">
-                      Unavailable
-                    </button>
-                  )}
-                </td>
-              ))}
-            </tr>
+            {/* Capabilities Rows */}
+            {allFeatures.map(feature => (
+              <tr key={feature} className="hover:bg-gray-50/50 dark:hover:bg-zinc-900/50 transition-colors">
+                <th className="p-4 py-5 text-sm font-medium text-gray-700 dark:text-gray-300 text-left align-middle border-b border-gray-100 dark:border-zinc-800/50">
+                  {feature}
+                </th>
+                {tools.map(tool => {
+                  const hasFeature = tool.features?.includes(feature);
+                  return (
+                    <td key={tool.id} className="p-4 py-5 align-middle border-b border-gray-100 dark:border-zinc-800/50 text-center sm:text-left">
+                      {hasFeature ? (
+                        <span className="inline-flex items-center justify-center sm:justify-start gap-2 text-brand-600 dark:text-brand-500 font-medium" aria-label="Yes">
+                          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span className="hidden sm:inline-block text-sm">Yes</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center sm:justify-start gap-2 text-gray-400 dark:text-gray-600" aria-label="No">
+                          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" />
+                          </svg>
+                          <span className="hidden sm:inline-block text-sm">No</span>
+                        </span>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -247,7 +270,7 @@ export function CompareClientView() {
             </div>
             <div className="flex flex-col divide-y divide-gray-100 dark:divide-zinc-800/50">
               {tools.map(tool => (
-                <div key={tool.id} className="p-5 flex flex-col gap-3 relative">
+                <div key={tool.id} className="p-5 flex flex-col gap-4 relative">
                   <button 
                     onClick={() => removeTool(tool.slug)}
                     className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 dark:bg-zinc-800 dark:hover:bg-red-900/30 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -263,10 +286,40 @@ export function CompareClientView() {
                       {tool.category}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{tool.description}</p>
-                  <Link href={`/tools/${tool.slug}`} className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline inline-flex self-start focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-1 -ml-1 mt-1">
-                    View Details &rarr;
-                  </Link>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">{tool.description}</p>
+                  
+                  <div className="flex gap-2 w-full mt-2">
+                    <Link href={`/tools/${tool.slug}`} className="flex-1 text-center rounded-xl border border-gray-200 dark:border-zinc-700 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                      View Details
+                    </Link>
+                    {tool.websiteUrl && (
+                      <a 
+                        href={tool.websiteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      >
+                        Visit Website
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section: Pricing */}
+          <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div className="px-5 py-3 bg-gray-50 dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800">
+              <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Pricing</h3>
+            </div>
+            <div className="flex flex-col divide-y divide-gray-100 dark:divide-zinc-800/50">
+              {tools.map(tool => (
+                <div key={tool.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider">{tool.name}</h4>
+                  <span className="inline-flex self-start sm:self-auto items-center rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 px-3 py-1.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm">
+                    {tool.pricing || "Not specified"}
+                  </span>
                 </div>
               ))}
             </div>
@@ -287,72 +340,38 @@ export function CompareClientView() {
             </div>
           </div>
 
-          {/* Section: Pricing */}
+          {/* Section: Capabilities */}
           <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
             <div className="px-5 py-3 bg-gray-50 dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800">
-              <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Pricing</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Capabilities</h3>
             </div>
             <div className="flex flex-col divide-y divide-gray-100 dark:divide-zinc-800/50">
-              {tools.map(tool => (
-                <div key={tool.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider">{tool.name}</h4>
-                  <span className="inline-flex self-start sm:self-auto items-center rounded-lg bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-3 py-1.5 text-sm font-medium text-gray-800 dark:text-gray-200 shadow-sm">
-                    {tool.pricing || "Not specified"}
-                  </span>
+              {allFeatures.map(feature => (
+                <div key={feature} className="p-5">
+                  <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-3">{feature}</h4>
+                  <div className="flex flex-col gap-2.5 pl-2">
+                    {tools.map(tool => {
+                      const hasFeature = tool.features?.includes(feature);
+                      return (
+                        <div key={tool.id} className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">{tool.name}</span>
+                          {hasFeature ? (
+                            <svg className="w-5 h-5 text-brand-600 dark:text-brand-500 shrink-0" aria-label="Yes" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5 text-gray-300 dark:text-gray-700 shrink-0" aria-label="No" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" />
+                            </svg>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Section: Features */}
-          <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
-            <div className="px-5 py-3 bg-gray-50 dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800">
-              <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Key Features</h3>
-            </div>
-            <div className="flex flex-col divide-y divide-gray-100 dark:divide-zinc-800/50">
-              {tools.map(tool => (
-                <div key={tool.id} className="p-5">
-                  <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider mb-3">{tool.name}</h4>
-                  <ul className="space-y-3">
-                    {tool.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
-                        <svg className="w-4 h-4 text-brand-500 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span className="leading-relaxed">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile Actions Stack */}
-          <div className="flex flex-col gap-4 mt-2">
-            {tools.map(tool => (
-              <div key={tool.id}>
-                {tool.websiteUrl ? (
-                  <a 
-                    href={tool.websiteUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full flex justify-center items-center gap-2 rounded-xl bg-gray-900 dark:bg-white px-4 py-4 text-sm font-semibold text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
-                  >
-                    Visit {tool.name}
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                ) : (
-                  <button disabled className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-4 text-sm font-semibold text-gray-400 dark:text-gray-500 cursor-not-allowed border border-gray-200 dark:border-zinc-700">
-                    {tool.name} Unavailable
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-
         </div>
       </div>
     </div>

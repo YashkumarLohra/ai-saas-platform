@@ -25,10 +25,10 @@ export default function ComparePage() {
           </nav>
           
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-            Tool Comparison
+            Compare AI Tools
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Compare features, pricing, and capabilities side-by-side.
+            Compare tools side by side to understand meaningful differences and make a confident decision.
           </p>
         </div>
 

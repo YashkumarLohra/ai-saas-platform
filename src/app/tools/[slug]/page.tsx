@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ToolCard } from "@/components/ToolCard";
 import { SaveToolButton } from "@/components/SaveToolButton";
+import { RecentlyViewedTracker } from "@/components/RecentlyViewedTracker";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -60,6 +61,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
 
   return (
     <div className="flex min-h-screen flex-col items-center p-6 sm:p-12 md:p-20 bg-gray-50 dark:bg-zinc-950">
+      <RecentlyViewedTracker slug={slug} />
       <main className="w-full max-w-4xl flex flex-col gap-12">
         
         {/* 1. Breadcrumb/navigation */}

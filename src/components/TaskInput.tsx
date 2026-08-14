@@ -4,7 +4,11 @@ import { useState } from "react";
 import { RecommendationResults } from "@/components/RecommendationResults";
 import { TaskContext } from "@/types/index";
 
-export function TaskInput() {
+interface TaskInputProps {
+  onTaskResolved?: (context: TaskContext | null) => void;
+}
+
+export function TaskInput({ onTaskResolved }: TaskInputProps = {}) {
   const [task, setTask] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [taskContext, setTaskContext] = useState<TaskContext | null>(null);
@@ -19,12 +23,15 @@ export function TaskInput() {
     // Simulate network request or processing delay for UX
     setTimeout(() => {
       setIsSubmitting(false);
-      setTaskContext({ query: trimmedTask });
+      const newContext = { query: trimmedTask };
+      setTaskContext(newContext);
+      onTaskResolved?.(newContext);
     }, 1200);
   };
 
   const handleEditTask = () => {
     setTaskContext(null);
+    onTaskResolved?.(null);
   };
 
   if (taskContext) {

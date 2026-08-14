@@ -1,6 +1,7 @@
 import { DiscoverView } from "@/components/DiscoverView";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Discover AI Tools | Platform",
@@ -29,7 +30,9 @@ export default function DiscoverPage() {
           </p>
         </div>
         
-        <DiscoverView />
+        <Suspense fallback={<div className="w-full flex justify-center p-12 text-gray-500">Loading directory...</div>}>
+          <DiscoverView />
+        </Suspense>
       </div>
     </main>
   );

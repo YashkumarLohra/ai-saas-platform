@@ -9,9 +9,10 @@ interface ToolCardProps {
   isSelected?: boolean;
   onToggleCompare?: () => void;
   disabledCompare?: boolean;
+  isRecommended?: boolean;
 }
 
-export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare }: ToolCardProps) {
+export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, isRecommended }: ToolCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const saved = isFavorite(tool.slug);
 
@@ -52,9 +53,11 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare }:
 
       <div className="flex items-start justify-between gap-4 mb-4 pr-10">
         <div>
-          <div className="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 mb-3">
-            Top Match
-          </div>
+          {isRecommended && (
+            <div className="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 mb-3">
+              Recommended
+            </div>
+          )}
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">
             {tool.name}
           </h3>

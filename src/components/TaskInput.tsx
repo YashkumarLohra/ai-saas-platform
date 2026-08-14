@@ -6,10 +6,19 @@ import { TaskContext } from "@/types/index";
 
 interface TaskInputProps {
   onTaskResolved?: (context: TaskContext | null) => void;
+  searchQuery?: string;
+  onSearchQueryChange?: (query: string) => void;
 }
 
-export function TaskInput({ onTaskResolved }: TaskInputProps = {}) {
-  const [task, setTask] = useState("");
+export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: TaskInputProps = {}) {
+  const [internalTask, setInternalTask] = useState("");
+  const task = searchQuery !== undefined ? searchQuery : internalTask;
+  
+  const handleTaskChange = (val: string) => {
+    setInternalTask(val);
+    onSearchQueryChange?.(val);
+  };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [taskContext, setTaskContext] = useState<TaskContext | null>(null);
 
@@ -54,8 +63,8 @@ export function TaskInput({ onTaskResolved }: TaskInputProps = {}) {
         <input 
           type="text" 
           value={task}
-          onChange={(e) => setTask(e.target.value)}
-          placeholder="e.g. 'I want to create a professional presentation for college'" 
+          onChange={(e) => handleTaskChange(e.target.value)}
+          placeholder="What do you want to accomplish?" 
           className="flex-1 bg-transparent px-4 py-2 outline-none text-foreground"
           disabled={isSubmitting}
           aria-label="Describe your task"

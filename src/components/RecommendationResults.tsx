@@ -72,6 +72,7 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
           <ToolCard 
             key={tool.id} 
             tool={tool}
+            isRecommended={true}
             isSelected={selectedTools.includes(tool.slug)}
             onToggleCompare={() => handleToggleCompare(tool.slug)}
             disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}

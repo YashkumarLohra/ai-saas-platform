@@ -1,16 +1,24 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { ToolCard } from "@/components/ToolCard";
+import { TaskInput } from "@/components/TaskInput";
 import Link from "next/link";
 
 type SortOption = "recommended" | "a-z" | "z-a";
 
 export function DiscoverView() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<SortOption>("recommended");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Initialize state from URL params
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get("category"));
+  const [sortBy, setSortBy] = useState<SortOption>((searchParams.get("sort") as SortOption) || "recommended");
+  
+  const [hasTask, setHasTask] = useState(false);
   
   // Compare functionality state
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
@@ -73,6 +81,33 @@ export function DiscoverView() {
 
   const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null;
 
+  // Sync state to URL
+  useEffect(() => {
+    const params = new URLSearchParams(Array.from(searchParams.entries()));
+    
+    if (searchQuery.trim()) {
+      params.set("q", searchQuery.trim());
+    } else {
+      params.delete("q");
+    }
+
+    if (selectedCategory) {
+      params.set("category", selectedCategory);
+    } else {
+      params.delete("category");
+    }
+
+    if (sortBy !== "recommended") {
+      params.set("sort", sortBy);
+    } else {
+      params.delete("sort");
+    }
+
+    const newQuery = params.toString();
+    const newUrl = newQuery ? `/discover?${newQuery}` : "/discover";
+    router.replace(newUrl, { scroll: false });
+  }, [searchQuery, selectedCategory, sortBy, router, searchParams]);
+
   const handleClearFilters = () => {
     setSearchQuery("");
     setSelectedCategory(null);
@@ -82,23 +117,18 @@ export function DiscoverView() {
   return (
     <div className="flex flex-col gap-8 w-full pb-24">
       {/* Header & Search */}
-      <div className="flex flex-col gap-6">
-        <div className="relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search AI tools (e.g. 'presentation')..."
-            className="w-full rounded-2xl border border-gray-200 bg-white px-6 py-4 pl-12 text-lg shadow-sm outline-none transition-shadow focus:ring-2 focus:ring-brand-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
-            aria-label="Search AI tools"
+      <div className="flex flex-col gap-6 items-center">
+        <div className="w-full max-w-4xl mx-auto">
+          <TaskInput 
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            onTaskResolved={(ctx) => setHasTask(!!ctx)} 
           />
-          <svg className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
+      {!hasTask && (
+        <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar Filters & Sort */}
         <div className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-6">
           
@@ -179,20 +209,22 @@ export function DiscoverView() {
               <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No tools found</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No AI tools found</h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                We couldn&apos;t find any tools matching your current search and filter criteria. Try changing your search or filters.
+                Try describing your task differently.<br/>
+                Example: &quot;Create a presentation for college&quot;
               </p>
               <button
                 onClick={handleClearFilters}
-                className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
+                className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm"
               >
-                Clear Filters
+                Explore All Tools
               </button>
             </div>
           )}
         </div>
       </div>
+      )}
 
       {/* Compare Floating Action Bar */}
       {selectedTools.length > 0 && (

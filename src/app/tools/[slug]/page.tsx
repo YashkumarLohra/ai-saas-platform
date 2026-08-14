@@ -72,7 +72,17 @@ export default async function ToolDetailPage({ params }: PageProps) {
           <svg className="mx-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <span className="text-gray-900 dark:text-gray-100 font-semibold" aria-current="page">{tool.name}</span>
+          {tool.category && (
+            <>
+              <Link href={`/discover?category=${encodeURIComponent(tool.category)}`} className="hover:text-brand-600 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-1 -ml-1 truncate max-w-[120px] sm:max-w-[200px]">
+                {tool.category}
+              </Link>
+              <svg className="mx-2 h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </>
+          )}
+          <span className="text-gray-900 dark:text-gray-100 font-semibold truncate" aria-current="page">{tool.name}</span>
         </nav>
 
         {/* 2-7. Tool Header Section */}

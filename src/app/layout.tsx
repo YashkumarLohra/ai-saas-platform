@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { FavoritesProvider } from "@/context/FavoritesContext";
+import { ProjectsProvider } from "@/context/ProjectsContext";
 import Link from "next/link";
 
 const geistSans = Geist({
@@ -26,13 +27,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <FavoritesProvider>
-          <header className="w-full border-b border-gray-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+        <ProjectsProvider>
+          <FavoritesProvider>
+            <header className="w-full border-b border-gray-100 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
               <Link href="/" className="font-bold text-xl text-brand-600 dark:text-brand-400">
                 AI Platform
               </Link>
               <nav className="flex items-center gap-6 text-sm font-medium">
+                <Link href="/projects" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  Projects
+                </Link>
                 <Link href="/discover" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
                   Discover
                 </Link>
@@ -48,7 +53,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="flex-1 flex flex-col">
             {children}
           </div>
-        </FavoritesProvider>
+          </FavoritesProvider>
+        </ProjectsProvider>
       </body>
     </html>
   );

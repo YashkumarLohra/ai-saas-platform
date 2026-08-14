@@ -1,5 +1,8 @@
+"use client";
+
 import { Recommendation } from "@/types/index";
 import Link from "next/link";
+import { useFavorites } from "@/context/FavoritesContext";
 
 interface ToolCardProps {
   tool: Recommendation;
@@ -9,8 +12,11 @@ interface ToolCardProps {
 }
 
 export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare }: ToolCardProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const saved = isFavorite(tool.slug);
+
   return (
-    <div className={`flex flex-col h-full rounded-2xl border bg-white p-6 shadow-sm dark:bg-zinc-900 transition-all hover:shadow-md relative ${
+    <div className={`flex flex-col h-full rounded-2xl border bg-white p-6 shadow-sm dark:bg-zinc-900 transition-all hover:shadow-md relative group ${
       isSelected ? 'border-brand-500 ring-1 ring-brand-500 dark:border-brand-400 dark:ring-brand-400' : 'border-gray-200 dark:border-zinc-800'
     }`}>
       {isSelected && (
@@ -20,7 +26,31 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare }:
           </svg>
         </div>
       )}
-      <div className="flex items-start justify-between gap-4 mb-4">
+      
+      <button
+        onClick={() => toggleFavorite(tool.slug)}
+        className="absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-zinc-900 shadow-sm border border-gray-100 dark:border-zinc-800 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 sm:opacity-100"
+        aria-label={saved ? `Remove ${tool.name} from favorites` : `Save ${tool.name}`}
+        title={saved ? "Saved" : "Save"}
+      >
+        <svg 
+          className="h-5 w-5" 
+          fill={saved ? "currentColor" : "none"} 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth={saved ? 0 : 2} 
+            d={saved 
+              ? "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
+              : "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"} 
+          />
+        </svg>
+      </button>
+
+      <div className="flex items-start justify-between gap-4 mb-4 pr-10">
         <div>
           <div className="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-semibold text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 mb-3">
             Top Match

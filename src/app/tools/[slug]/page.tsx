@@ -2,6 +2,7 @@ import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ToolCard } from "@/components/ToolCard";
+import { SaveToolButton } from "@/components/SaveToolButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -117,13 +118,18 @@ export default async function ToolDetailPage({ params }: PageProps) {
             {/* Compare Action */}
             <Link 
               href={`/compare?tools=${tool.slug}`}
-              className="w-full sm:w-auto rounded-xl border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-gray-900 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 text-center flex items-center justify-center gap-2"
+              className="w-full sm:w-auto rounded-xl border border-gray-200 bg-white px-5 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 text-center flex items-center justify-center gap-2 shadow-sm"
             >
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
               Compare
             </Link>
+
+            {/* Save Action */}
+            <div className="w-full sm:w-auto flex">
+              <SaveToolButton slug={tool.slug} toolName={tool.name} />
+            </div>
           </div>
         </div>
 

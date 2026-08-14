@@ -24,10 +24,10 @@ export default function FavoritesPage() {
           </nav>
           
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-            Your saved AI tools
+            Saved Tools
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Access and manage the AI tools you&apos;ve bookmarked for later.
+            AI tools you&apos;ve saved for later.
           </p>
         </div>
 

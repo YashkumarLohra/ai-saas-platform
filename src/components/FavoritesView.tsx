@@ -39,15 +39,15 @@ export function FavoritesView() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">You haven&apos;t saved any AI tools yet.</h2>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">No saved tools yet</h2>
         <p className="text-lg text-gray-500 dark:text-gray-400 mb-10 max-w-lg leading-relaxed">
-          Save tools you want to explore later by clicking the heart icon on any tool card or detail page.
+          Save AI tools you want to revisit later.
         </p>
         <Link 
           href="/discover"
           className="rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
         >
-          Discover AI Tools
+          Explore AI Tools
         </Link>
       </div>
     );
@@ -65,9 +65,10 @@ export function FavoritesView() {
             </svg>
           </div>
           <input
-            type="text"
+            type="search"
+            aria-label="Search saved tools"
             className="block w-full rounded-xl border-0 py-3 pl-11 pr-4 text-gray-900 ring-1 ring-inset ring-gray-200 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6 dark:bg-zinc-800 dark:text-white dark:ring-zinc-700 dark:focus:ring-brand-500 transition-all"
-            placeholder="Search your saved tools..."
+            placeholder="Search saved tools..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -75,7 +76,7 @@ export function FavoritesView() {
         
         {categories.length > 1 && (
           <div className="w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 flex-shrink-0">
-            <div className="flex gap-2">
+            <div className="flex gap-2" role="group" aria-label="Filter by category">
               {categories.map((cat) => (
                 <button
                   key={cat}
@@ -106,8 +107,9 @@ export function FavoritesView() {
         </div>
       ) : (
         <div className="py-20 text-center">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No saved tools found</h3>
           <p className="text-lg text-gray-500 dark:text-gray-400">
-            No saved tools match your current search or filter.
+            Try a different search.
           </p>
           <button 
             onClick={() => {

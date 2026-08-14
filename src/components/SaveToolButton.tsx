@@ -14,7 +14,7 @@ export function SaveToolButton({ slug, toolName }: SaveToolButtonProps) {
   return (
     <button 
       onClick={() => toggleFavorite(slug)}
-      aria-label={saved ? `Remove ${toolName} from favorites` : `Save ${toolName}`}
+      aria-label={saved ? `Remove ${toolName} from saved tools` : `Save ${toolName}`}
       className={`flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
         saved 
           ? "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 border border-red-200 dark:border-red-800" 

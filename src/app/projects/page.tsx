@@ -57,10 +57,10 @@ export default function ProjectsPage() {
             </nav>
             
             <h1 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-              Projects
+              Your Projects
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Organize your AI work.
+              Organize your AI tools around your work.
             </p>
           </div>
 

@@ -145,16 +145,24 @@ export default function ProjectDetailPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tools in this project yet.</h2>
-            <p className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-md">
-              Add AI tools you&apos;re planning to use for this project.
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tools in this project yet</h2>
+            <p className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-md leading-relaxed">
+              Discover AI tools and add the ones that can help with this project.
             </p>
-            <button 
-              onClick={() => setIsAddOpen(true)}
-              className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm"
-            >
-              Add Tool
-            </button>
+            <div className="flex flex-wrap justify-center gap-4">
+              <button 
+                onClick={() => setIsAddOpen(true)}
+                className="rounded-xl border border-gray-300 bg-white dark:bg-zinc-800 dark:border-zinc-700 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+              >
+                Search Saved Tools
+              </button>
+              <Link 
+                href="/discover"
+                className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+              >
+                Discover AI Tools
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

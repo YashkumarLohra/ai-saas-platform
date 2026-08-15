@@ -22,9 +22,11 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
             <h3 className="text-xl font-bold text-gray-900 dark:text-white line-clamp-1">
               {project.name}
             </h3>
-            <p className="mt-1 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
-              Created {formattedDate}
-            </p>
+            <div className="mt-1 flex items-center gap-2 text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+              <span>{project.toolIds ? project.toolIds.length : 0} {project.toolIds?.length === 1 ? 'tool' : 'tools'}</span>
+              <span>•</span>
+              <span>Created {formattedDate}</span>
+            </div>
           </div>
           <button
             onClick={() => onDelete(project)}

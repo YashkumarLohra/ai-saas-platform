@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ToolCard } from "@/components/ToolCard";
 import { SaveToolButton } from "@/components/SaveToolButton";
 import { RecentlyViewedTracker } from "@/components/RecentlyViewedTracker";
+import { AddToProjectButton } from "@/components/AddToProjectButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -157,8 +158,9 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
               </svg>
               Compare
             </Link>
-            <div className="flex-1 sm:flex-none flex">
+            <div className="flex-1 sm:flex-none flex gap-4">
               <SaveToolButton slug={tool.slug} toolName={tool.name} />
+              <AddToProjectButton slug={tool.slug} toolName={tool.name} />
             </div>
           </div>
         </div>

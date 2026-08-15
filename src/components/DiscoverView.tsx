@@ -48,16 +48,26 @@ export function DiscoverView() {
     // Apply Search
     if (searchQuery.trim() !== "") {
       const q = searchQuery.toLowerCase().trim();
-      result = result.filter(tool => 
-        tool.name.toLowerCase().includes(q) ||
-        tool.description.toLowerCase().includes(q) ||
-        tool.category.toLowerCase().includes(q) ||
-        tool.bestFor.toLowerCase().includes(q) ||
-        tool.features.some(f => f.toLowerCase().includes(q)) ||
-        tool.reasons.some(r => r.toLowerCase().includes(q)) ||
-        tool.pros.some(p => p.toLowerCase().includes(q)) ||
-        tool.cons.some(c => c.toLowerCase().includes(q))
-      );
+      
+      const stopWords = new Set(['i', 'want', 'to', 'create', 'a', 'for', 'my', 'the', 'an', 'need', 'make', 'do', 'help', 'with', 'some']);
+      const keywords = q.split(/\s+/).filter(word => !stopWords.has(word) && word.length > 2);
+      
+      if (keywords.length > 0) {
+        result = result.filter(tool => {
+          const toolText = [
+            tool.name,
+            tool.description,
+            tool.category,
+            tool.bestFor,
+            ...tool.features,
+            ...tool.reasons,
+            ...tool.pros,
+            ...tool.cons
+          ].join(" ").toLowerCase();
+
+          return keywords.some(kw => toolText.includes(kw));
+        });
+      }
     }
 
     // Apply Category Filter

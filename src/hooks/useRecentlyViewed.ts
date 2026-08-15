@@ -26,6 +26,15 @@ export function addRecentlyViewed(slug: string) {
   }
 }
 
+export function clearRecentlyViewed() {
+  try {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    window.dispatchEvent(new Event("recentlyViewedUpdated"));
+  } catch (error) {
+    console.error("Failed to clear recently viewed tools:", error);
+  }
+}
+
 export function useRecentlyViewed() {
   const [recentSlugs, setRecentSlugs] = useState<string[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);

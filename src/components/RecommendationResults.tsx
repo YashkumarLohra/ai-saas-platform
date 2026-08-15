@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { ToolCard } from "@/components/ToolCard";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { TaskContext } from "@/types/index";
@@ -26,13 +26,29 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
     });
   };
 
+  const filteredTools = useMemo(() => {
+    const q = context.query.toLowerCase().trim();
+    if (!q) return MOCK_RECOMMENDATIONS;
+    
+    return MOCK_RECOMMENDATIONS.filter(tool => 
+      tool.name.toLowerCase().includes(q) ||
+      tool.description.toLowerCase().includes(q) ||
+      tool.category.toLowerCase().includes(q) ||
+      tool.bestFor.toLowerCase().includes(q) ||
+      tool.features.some(f => f.toLowerCase().includes(q)) ||
+      tool.reasons.some(r => r.toLowerCase().includes(q)) ||
+      tool.pros.some(p => p.toLowerCase().includes(q)) ||
+      tool.cons.some(c => c.toLowerCase().includes(q))
+    );
+  }, [context.query]);
+
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4 relative pb-24">
       <div className="flex flex-col items-center text-center mb-12">
         {/* Task Context Area */}
         <div className="flex flex-col items-center mb-8">
           <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Your Task
+            Recommendations For:
           </span>
           <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl py-4 px-6 shadow-sm max-w-2xl mb-4">
             <p className="text-lg font-medium text-gray-900 dark:text-white">
@@ -47,7 +63,7 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
-            Edit Task
+            Try another task
           </button>
         </div>
 
@@ -56,29 +72,48 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-brand-500 ring-4 ring-white dark:ring-zinc-950"></div>
         </div>
 
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-          Recommended for your task
-        </h2>
-        <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-balance">
-          We&apos;ve found the best AI tools suited to help you accomplish this.
-        </p>
-        <div className="mt-4 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-500">
-          Demo Data Mode: Showing static recommendations for milestone validation.
-        </div>
+        {filteredTools.length > 0 ? (
+          <>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+              Recommended for your task
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-balance">
+              We&apos;ve found the best AI tools suited to help you accomplish this.
+            </p>
+          </>
+        ) : (
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
+            No recommendations found
+          </h2>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left">
-        {MOCK_RECOMMENDATIONS.map((tool) => (
-          <ToolCard 
-            key={tool.id} 
-            tool={tool}
-            isRecommended={true}
-            isSelected={selectedTools.includes(tool.slug)}
-            onToggleCompare={() => handleToggleCompare(tool.slug)}
-            disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}
-          />
-        ))}
-      </div>
+      {filteredTools.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left">
+          {filteredTools.map((tool, idx) => (
+            <ToolCard 
+              key={tool.id} 
+              tool={tool}
+              isRecommended={true}
+              isBestMatch={idx === 0}
+              isSelected={selectedTools.includes(tool.slug)}
+              onToggleCompare={() => handleToggleCompare(tool.slug)}
+              disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50 w-full max-w-3xl mx-auto">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">We couldn&apos;t find a strong match.</h3>
+          <p className="text-lg text-gray-500 dark:text-gray-400 mb-6">Try describing your task differently.</p>
+          <button
+            onClick={onEditTask}
+            className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm"
+          >
+            Try another task
+          </button>
+        </div>
+      )}
 
       {selectedTools.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">

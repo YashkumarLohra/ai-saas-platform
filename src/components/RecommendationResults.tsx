@@ -54,48 +54,30 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
 
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4 relative pb-24">
-      <div className="flex flex-col items-center text-center mb-12">
+      <div className="flex flex-col items-center text-center mb-10">
         {/* Task Context Area */}
-        <div className="flex flex-col items-center mb-8">
-          <span className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
-            Recommendations For:
-          </span>
-          <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl py-4 px-6 shadow-sm max-w-2xl mb-4">
-            <p className="text-lg font-medium text-gray-900 dark:text-white">
-              &quot;{context.query}&quot;
+        <div className="flex flex-col items-center mb-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 text-balance max-w-4xl">
+            AI tools for &quot;{context.query}&quot;
+          </h2>
+          {filteredTools.length > 0 && (
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl text-balance mb-6">
+              Based on your task, here are the strongest matches to help you get it done.
             </p>
-          </div>
+          )}
           <button 
             onClick={onEditTask}
-            className="text-sm font-medium text-brand-600 hover:text-brand-500 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded px-2 py-1"
+            className="text-sm font-medium text-brand-600 hover:text-brand-500 transition-colors flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded px-3 py-1.5 bg-brand-50 dark:bg-brand-900/20"
             aria-label="Edit your task"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
             </svg>
-            Try another task
+            Refine task description
           </button>
         </div>
 
-        {/* Arrow / Divider */}
-        <div className="h-8 w-px bg-gray-200 dark:bg-zinc-800 mb-8 relative">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-brand-500 ring-4 ring-white dark:ring-zinc-950"></div>
-        </div>
-
-        {filteredTools.length > 0 ? (
-          <>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-              Recommended for your task
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl text-balance">
-              We&apos;ve found the best AI tools suited to help you accomplish this.
-            </p>
-          </>
-        ) : (
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-            No recommendations found
-          </h2>
-        )}
+        {/* Divider line removed for cleaner layout */}
       </div>
 
       {filteredTools.length > 0 ? (
@@ -115,14 +97,25 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50 w-full max-w-3xl mx-auto">
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">We couldn&apos;t find a strong match.</h3>
-          <p className="text-lg text-gray-500 dark:text-gray-400 mb-6">Try describing your task differently.</p>
-          <button
-            onClick={onEditTask}
-            className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm"
-          >
-            Try another task
-          </button>
+          <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No matching AI tools found</h3>
+          <p className="text-lg text-gray-500 dark:text-gray-400 mb-6">Try describing your task differently or explore all AI tools.</p>
+          <div className="flex gap-4">
+            <button
+              onClick={onEditTask}
+              className="rounded-xl border border-gray-300 bg-white dark:bg-zinc-800 dark:border-zinc-700 px-6 py-3 text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 shadow-sm"
+            >
+              Try another task
+            </button>
+            <Link
+              href="/discover"
+              className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+            >
+              Explore Discover
+            </Link>
+          </div>
         </div>
       )}
 

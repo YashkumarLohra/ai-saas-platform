@@ -96,6 +96,7 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
               tool={tool}
               isRecommended={true}
               isBestMatch={idx === 0}
+              taskQuery={context.query}
               isSelected={selectedTools.includes(tool.slug)}
               onToggleCompare={() => handleToggleCompare(tool.slug)}
               disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}

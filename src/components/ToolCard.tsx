@@ -11,10 +11,11 @@ interface ToolCardProps {
   disabledCompare?: boolean;
   isRecommended?: boolean;
   isBestMatch?: boolean;
+  taskQuery?: string;
   onRemoveFromProject?: () => void;
 }
 
-export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, isRecommended, isBestMatch, onRemoveFromProject }: ToolCardProps) {
+export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, isRecommended, isBestMatch, taskQuery, onRemoveFromProject }: ToolCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const saved = isFavorite(tool.slug);
 
@@ -111,7 +112,7 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
 
       <div className="mt-auto flex flex-col sm:flex-row gap-3">
         <Link 
-          href={`/tools/${tool.slug}`}
+          href={`/tools/${tool.slug}${taskQuery ? `?task=${encodeURIComponent(taskQuery)}` : ''}`}
           className="flex-1 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 text-center flex items-center justify-center"
         >
           View Tool

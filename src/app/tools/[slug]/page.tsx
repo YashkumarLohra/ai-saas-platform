@@ -7,6 +7,7 @@ import { RecentlyViewedTracker } from "@/components/RecentlyViewedTracker";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateStaticParams() {
@@ -42,9 +43,17 @@ function OfficialWebsiteAction({ tool }: { tool: typeof MOCK_RECOMMENDATIONS[0] 
   );
 }
 
-export default async function ToolDetailPage({ params }: PageProps) {
+export default async function ToolDetailPage({ params, searchParams }: PageProps) {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
+  
+  let taskQuery: string | undefined;
+  if (searchParams) {
+    const resolvedSearchParams = await searchParams;
+    if (typeof resolvedSearchParams.task === 'string') {
+      taskQuery = resolvedSearchParams.task;
+    }
+  }
 
   const tool = MOCK_RECOMMENDATIONS.find((t) => t.slug === slug);
 
@@ -110,6 +119,25 @@ export default async function ToolDetailPage({ params }: PageProps) {
             </div>
           </div>
         </div>
+
+        {/* Recommendation Context */}
+        {taskQuery && (
+          <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800/30 rounded-2xl p-6 -mt-4 mb-2 shadow-sm flex items-start gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 shadow-sm border border-amber-200 dark:border-amber-800/50">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h2 className="text-sm font-bold text-amber-800 dark:text-amber-500 uppercase tracking-wider flex items-center gap-2">
+                Recommendation Match
+              </h2>
+              <p className="text-base text-amber-900 dark:text-amber-200 leading-relaxed">
+                You were recommended <span className="font-semibold">{tool.name}</span> because it strongly matches your task: <span className="italic font-medium">&quot;{taskQuery}&quot;</span>
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* 3. Actions */}
         <div className="flex flex-col sm:flex-row gap-4 pb-8 border-b border-gray-200 dark:border-zinc-800">

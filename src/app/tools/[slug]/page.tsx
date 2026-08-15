@@ -279,7 +279,7 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
                 Pricing Model
               </h2>
               <p className="text-base text-gray-900 dark:text-white font-medium">
-                {tool.pricing || "Not specified"}
+                {tool.pricing || "Pricing unavailable"}
               </p>
             </section>
 

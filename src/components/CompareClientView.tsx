@@ -192,7 +192,7 @@ export function CompareClientView() {
               {tools.map(tool => (
                 <td key={tool.id} className="p-4 py-6 align-top">
                   <span className="inline-flex items-center rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 px-3 py-1.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm">
-                    {tool.pricing || "Not specified"}
+                    {tool.pricing || "Pricing unavailable"}
                   </span>
                 </td>
               ))}
@@ -204,7 +204,7 @@ export function CompareClientView() {
               </th>
               {tools.map(tool => (
                 <td key={tool.id} className="p-4 py-6 align-top">
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{tool.bestFor || "General use"}</p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{tool.bestFor || "Not specified"}</p>
                 </td>
               ))}
             </tr>
@@ -338,7 +338,7 @@ export function CompareClientView() {
                 <div key={tool.id} className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider">{tool.name}</h4>
                   <span className="inline-flex self-start sm:self-auto items-center rounded-lg bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 px-3 py-1.5 text-sm font-semibold text-gray-900 dark:text-white shadow-sm">
-                    {tool.pricing || "Not specified"}
+                    {tool.pricing || "Pricing unavailable"}
                   </span>
                 </div>
               ))}
@@ -354,7 +354,7 @@ export function CompareClientView() {
               {tools.map(tool => (
                 <div key={tool.id} className="p-5">
                   <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider mb-2">{tool.name}</h4>
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{tool.bestFor || "General use"}</p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{tool.bestFor || "Not specified"}</p>
                 </div>
               ))}
             </div>

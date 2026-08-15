@@ -81,7 +81,7 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
             {tool.name}
           </h3>
           <p className="mt-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            {tool.category} • {tool.pricing}
+            {tool.category} • {tool.pricing || "Pricing unavailable"}
           </p>
         </div>
       </div>
@@ -90,30 +90,34 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
         {tool.description}
       </p>
 
-      <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
-          Best for
-        </h4>
-        <p className="text-sm text-gray-600 dark:text-gray-300">
-          {tool.bestFor}
-        </p>
-      </div>
+      {tool.bestFor && (
+        <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
+          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">
+            Best for
+          </h4>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            {tool.bestFor}
+          </p>
+        </div>
+      )}
 
-      <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-          Why we recommend it
-        </h4>
-        <ul className="space-y-2">
-          {tool.reasons.map((reason: string, idx: number) => (
-            <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
-              <svg className="h-5 w-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <span>{reason}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {tool.reasons && tool.reasons.length > 0 && (
+        <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
+          <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+            Why we recommend it
+          </h4>
+          <ul className="space-y-2">
+            {tool.reasons.map((reason: string, idx: number) => (
+              <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <svg className="h-5 w-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{reason}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mt-auto flex flex-col sm:flex-row gap-3">
         <Link 

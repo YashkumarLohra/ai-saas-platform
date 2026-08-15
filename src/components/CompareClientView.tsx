@@ -208,6 +208,26 @@ export function CompareClientView() {
                 </td>
               ))}
             </tr>
+            {/* Reasons */}
+            <tr>
+              <th className="p-4 py-6 text-sm font-semibold text-gray-900 dark:text-white text-left align-top">
+                Top Reasons
+              </th>
+              {tools.map(tool => (
+                <td key={tool.id} className="p-4 py-6 align-top">
+                  <ul className="flex flex-col gap-2">
+                    {tool.reasons?.map((reason, idx) => (
+                      <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                        <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="leading-relaxed">{reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+              ))}
+            </tr>
             {/* Capabilities Header */}
             <tr>
               <th colSpan={tools.length + 1} className="p-4 pt-10 pb-4 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider text-left border-b border-gray-200 dark:border-zinc-800">
@@ -335,6 +355,30 @@ export function CompareClientView() {
                 <div key={tool.id} className="p-5">
                   <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider mb-2">{tool.name}</h4>
                   <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{tool.bestFor || "General use"}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section: Top Reasons */}
+          <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+            <div className="px-5 py-3 bg-gray-50 dark:bg-zinc-950 border-b border-gray-200 dark:border-zinc-800">
+              <h3 className="font-bold text-gray-900 dark:text-white text-sm uppercase tracking-wider">Top Reasons</h3>
+            </div>
+            <div className="flex flex-col divide-y divide-gray-100 dark:divide-zinc-800/50">
+              {tools.map(tool => (
+                <div key={tool.id} className="p-5">
+                  <h4 className="text-xs font-semibold text-brand-600 dark:text-brand-500 uppercase tracking-wider mb-3">{tool.name}</h4>
+                  <ul className="flex flex-col gap-2">
+                    {tool.reasons?.map((reason, idx) => (
+                      <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                        <svg className="w-4 h-4 text-brand-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span className="leading-relaxed">{reason}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>

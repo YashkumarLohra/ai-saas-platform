@@ -118,6 +118,9 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
               </div>
             </div>
           </div>
+          <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl">
+            {tool.description}
+          </p>
         </div>
 
         {/* Recommendation Context */}
@@ -168,7 +171,7 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
             <section className="flex flex-col gap-4">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Overview</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed text-balance">
-                {tool.description}
+                {tool.longDescription || tool.description}
               </p>
             </section>
 

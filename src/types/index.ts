@@ -3,6 +3,7 @@ export interface Recommendation {
   slug: string;
   name: string;
   description: string;
+  longDescription?: string;
   category: string;
   reasons: string[];
   bestFor: string;

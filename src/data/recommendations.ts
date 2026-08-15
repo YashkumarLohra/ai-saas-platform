@@ -16,7 +16,8 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     pricing: "Free Tier Available",
     features: ["Text-to-slide generation", "AI image generation", "PowerPoint export", "Collaboration tools"],
     pros: ["Extremely fast generation", "No design skills required", "Generous free tier"],
-    cons: ["Limited custom layout controls", "Templates can look slightly repetitive"]
+    cons: ["Limited custom layout controls", "Templates can look slightly repetitive"],
+    websiteUrl: "https://example.com/slide-genius-ai"
   },
   {
     id: "presentation-ai-2",
@@ -33,7 +34,8 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     pricing: "$12/month (Student Discount Available)",
     features: ["AI Data-to-chart processing", "Brand kit enforcement", "Real-time co-editing", "Advanced animations"],
     pros: ["Highly customizable", "Great for data-heavy assignments", "Strong team features"],
-    cons: ["Steeper learning curve", "No free plan available (only trial)"]
+    cons: ["Steeper learning curve", "No free plan available (only trial)"],
+    websiteUrl: "https://example.com/deckcraft-pro"
   },
   {
     id: "presentation-ai-3",
@@ -50,7 +52,8 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     pricing: "Freemium",
     features: ["Automated image sourcing", "Storyboarding mode", "Web-based interactive presentations", "Video embedding"],
     pros: ["Beautiful aesthetics out of the box", "Interactive elements engage audiences", "Great for portfolios"],
-    cons: ["Not easily exported to PDF/PPT without formatting loss", "Can be resource-heavy on older devices"]
+    cons: ["Not easily exported to PDF/PPT without formatting loss", "Can be resource-heavy on older devices"],
+    websiteUrl: "https://example.com/visual-pitch"
   },
   {
     id: "video-ai-1",
@@ -67,7 +70,8 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     pricing: "$20/month",
     features: ["Text-to-video", "Background removal", "Auto-captioning", "Voiceovers"],
     pros: ["Easy to use", "Great background removal", "High-quality voices"],
-    cons: ["Slightly expensive", "Limited export formats"]
+    cons: ["Slightly expensive", "Limited export formats"],
+    websiteUrl: "https://example.com/video-craft-ai"
   },
   {
     id: "coding-ai-1",
@@ -84,6 +88,7 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     pricing: "Free for students / $10/month",
     features: ["Code completion", "Bug detection", "Test generation", "Code review"],
     pros: ["Excellent context awareness", "Supports all major languages", "Fast responses"],
-    cons: ["Can occasionally hallucinate complex logic", "Requires internet connection"]
+    cons: ["Can occasionally hallucinate complex logic", "Requires internet connection"],
+    websiteUrl: "https://example.com/code-pilot-ai"
   }
 ];

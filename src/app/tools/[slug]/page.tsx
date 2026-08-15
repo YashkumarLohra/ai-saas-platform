@@ -165,7 +165,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
             {tool.reasons && tool.reasons.length > 0 && (
               <section className="flex flex-col gap-4">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-                  Why We Recommend It
+                  Why consider this tool?
                 </h2>
                 <div className="bg-brand-50 dark:bg-brand-900/10 p-6 sm:p-8 rounded-2xl border border-brand-100 dark:border-brand-900/20">
                   <ul className="space-y-4">

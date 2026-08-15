@@ -71,7 +71,7 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
             type="text" 
             value={task}
             onChange={(e) => handleTaskChange(e.target.value)}
-            placeholder="Search AI tools, tasks, or categories..." 
+            placeholder="Search AI tools or describe a task..." 
             className="w-full bg-transparent px-4 py-2 pr-10 outline-none text-gray-900 dark:text-white"
             disabled={isSubmitting}
             aria-label="What are you trying to accomplish?"

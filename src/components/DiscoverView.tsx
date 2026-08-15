@@ -54,26 +54,48 @@ export function DiscoverView() {
 
     // Apply Search
     if (searchQuery.trim() !== "") {
-      const q = searchQuery.toLowerCase().trim();
-      
+      const normalizedQuery = searchQuery.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ').trim();
       const stopWords = new Set(['i', 'want', 'to', 'create', 'a', 'for', 'my', 'the', 'an', 'need', 'make', 'do', 'help', 'with', 'some']);
-      const keywords = q.split(/\s+/).filter(word => !stopWords.has(word) && word.length > 2);
-      
-      if (keywords.length > 0) {
-        result = result.filter(tool => {
-          const toolText = [
-            tool.name,
-            tool.description,
-            tool.category,
-            tool.bestFor,
-            ...tool.features,
-            ...tool.reasons,
-            ...tool.pros,
-            ...tool.cons
-          ].join(" ").toLowerCase();
+      const keywords = normalizedQuery.split(' ').filter(word => !stopWords.has(word) && word.length > 1);
 
-          return keywords.every(kw => toolText.includes(kw));
+      if (normalizedQuery.length > 0) {
+        // Map tools to their scores
+        const scoredTools = result.map(tool => {
+          let score = 0;
+          const toolName = tool.name.toLowerCase();
+          const toolCategory = tool.category.toLowerCase();
+          const toolDescription = tool.description.toLowerCase();
+          const toolBestFor = tool.bestFor?.toLowerCase() || '';
+
+          // Exact or strong name match
+          if (toolName === normalizedQuery) score += 100;
+          else if (toolName.includes(normalizedQuery)) score += 50;
+
+          // Strong category/bestFor match
+          if (toolCategory === normalizedQuery) score += 40;
+          else if (toolCategory.includes(normalizedQuery)) score += 20;
+
+          if (toolBestFor.includes(normalizedQuery)) score += 15;
+
+          // Keyword matching
+          if (keywords.length > 0) {
+            keywords.forEach(kw => {
+              if (toolName.includes(kw)) score += 10;
+              if (toolCategory.includes(kw)) score += 5;
+              if (toolBestFor.includes(kw)) score += 5;
+              if (tool.features?.some(f => f.toLowerCase().includes(kw))) score += 3;
+              if (toolDescription.includes(kw)) score += 1;
+            });
+          }
+
+          return { tool, score };
         });
+
+        // Filter out zero-score tools and unwrap
+        result = scoredTools
+          .filter(item => item.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .map(item => item.tool);
       }
     }
 
@@ -87,18 +109,21 @@ export function DiscoverView() {
       result = result.filter(tool => tool.pricing === selectedPricing);
     }
 
-    // Apply Sorting
-    switch (sortBy) {
-      case "a-z":
-        result.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "z-a":
-        result.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "recommended":
-      default:
-        // Already in recommended order from the mock array
-        break;
+    // Apply Sorting (if not searching or if explicitly overridden)
+    // When there's a search query, and sortBy is "recommended", we keep the search relevance score order above.
+    if (searchQuery.trim() === "" || sortBy !== "recommended") {
+      switch (sortBy) {
+        case "a-z":
+          result.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+        case "z-a":
+          result.sort((a, b) => b.name.localeCompare(a.name));
+          break;
+        case "recommended":
+        default:
+          // Keep default mock data order if no search
+          break;
+      }
     }
 
     return result;
@@ -274,7 +299,7 @@ export function DiscoverView() {
               </svg>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No AI tools found</h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                Try a different search term or remove some filters.
+                Try a different search or explore our categories.
               </p>
               <button
                 onClick={handleClearFilters}

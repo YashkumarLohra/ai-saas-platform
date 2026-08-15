@@ -16,6 +16,7 @@ export function DiscoverView() {
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get("category"));
+  const [selectedPricing, setSelectedPricing] = useState<string | null>(searchParams.get("pricing"));
   const [sortBy, setSortBy] = useState<SortOption>((searchParams.get("sort") as SortOption) || "recommended");
   
   const [hasTask, setHasTask] = useState(false);
@@ -39,6 +40,12 @@ export function DiscoverView() {
   const categories = useMemo(() => {
     const allCategories = MOCK_RECOMMENDATIONS.map(tool => tool.category);
     return Array.from(new Set(allCategories)).sort();
+  }, []);
+
+  // Extract unique pricing options from the data
+  const pricingOptions = useMemo(() => {
+    const allPricing = MOCK_RECOMMENDATIONS.map(tool => tool.pricing).filter(Boolean) as string[];
+    return Array.from(new Set(allPricing)).sort();
   }, []);
 
   // Filter and sort the tools
@@ -65,7 +72,7 @@ export function DiscoverView() {
             ...tool.cons
           ].join(" ").toLowerCase();
 
-          return keywords.some(kw => toolText.includes(kw));
+          return keywords.every(kw => toolText.includes(kw));
         });
       }
     }
@@ -73,6 +80,11 @@ export function DiscoverView() {
     // Apply Category Filter
     if (selectedCategory) {
       result = result.filter(tool => tool.category === selectedCategory);
+    }
+
+    // Apply Pricing Filter
+    if (selectedPricing) {
+      result = result.filter(tool => tool.pricing === selectedPricing);
     }
 
     // Apply Sorting
@@ -90,9 +102,9 @@ export function DiscoverView() {
     }
 
     return result;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [searchQuery, selectedCategory, selectedPricing, sortBy]);
 
-  const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null;
+  const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null || selectedPricing !== null;
 
   // Sync state to URL
   useEffect(() => {
@@ -110,6 +122,12 @@ export function DiscoverView() {
       params.delete("category");
     }
 
+    if (selectedPricing) {
+      params.set("pricing", selectedPricing);
+    } else {
+      params.delete("pricing");
+    }
+
     if (sortBy !== "recommended") {
       params.set("sort", sortBy);
     } else {
@@ -119,11 +137,12 @@ export function DiscoverView() {
     const newQuery = params.toString();
     const newUrl = newQuery ? `/discover?${newQuery}` : "/discover";
     router.replace(newUrl, { scroll: false });
-  }, [searchQuery, selectedCategory, sortBy, router, searchParams]);
+  }, [searchQuery, selectedCategory, selectedPricing, sortBy, router, searchParams]);
 
   const handleClearFilters = () => {
     setSearchQuery("");
     setSelectedCategory(null);
+    setSelectedPricing(null);
     setSortBy("recommended");
   };
 
@@ -188,6 +207,37 @@ export function DiscoverView() {
             </div>
           </div>
 
+          {pricingOptions.length > 0 && (
+            <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+              <h3 className="font-bold text-gray-900 dark:text-white mb-4">Pricing</h3>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => setSelectedPricing(null)}
+                  className={`text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    selectedPricing === null 
+                      ? "bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" 
+                      : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-zinc-800"
+                  }`}
+                >
+                  All Pricing
+                </button>
+                {pricingOptions.map((price) => (
+                  <button
+                    key={price}
+                    onClick={() => setSelectedPricing(price)}
+                    className={`text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      selectedPricing === price 
+                        ? "bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" 
+                        : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-zinc-800"
+                    }`}
+                  >
+                    {price}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {hasFilters && (
             <button
               onClick={handleClearFilters}
@@ -224,14 +274,13 @@ export function DiscoverView() {
               </svg>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No AI tools found</h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                Try describing your task differently.<br/>
-                Example: &quot;Create a presentation for college&quot;
+                Try a different search term or remove some filters.
               </p>
               <button
                 onClick={handleClearFilters}
-                className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm"
+                className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
               >
-                Explore All Tools
+                Clear Search
               </button>
             </div>
           )}

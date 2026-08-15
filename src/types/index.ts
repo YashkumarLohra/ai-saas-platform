@@ -21,6 +21,7 @@ export interface Project {
   id: string;
   name: string;
   description?: string;
+  toolIds?: string[];
   createdAt: string;
   updatedAt: string;
 }

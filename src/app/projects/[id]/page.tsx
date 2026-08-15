@@ -1,17 +1,23 @@
 "use client";
 
 import { useProjects } from "@/context/ProjectsContext";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
+import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { ToolCard } from "@/components/ToolCard";
+import { Dialog } from "@/components/Dialog";
 
 export default function ProjectDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const { projects } = useProjects();
+  const router = useRouter();
+  const { projects, addToolToProject, removeToolFromProject } = useProjects();
 
-  // We need to wait for client hydration to read context/localStorage reliably
   const [mounted, setMounted] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [compareSlugs, setCompareSlugs] = useState<string[]>([]);
 
   useEffect(() => {
     // eslint-disable-next-line
@@ -20,12 +26,25 @@ export default function ProjectDetailPage() {
 
   const project = useMemo(() => projects.find((p) => p.id === id), [projects, id]);
 
-  // Handle mounting state to avoid hydration mismatch
+  const projectTools = useMemo(() => {
+    if (!project || !project.toolIds) return [];
+    return project.toolIds
+      .map(slug => MOCK_RECOMMENDATIONS.find(t => t.slug === slug))
+      .filter((t): t is NonNullable<typeof t> => t !== undefined);
+  }, [project]);
+
+  const availableTools = useMemo(() => {
+    const existingIds = new Set(project?.toolIds || []);
+    return MOCK_RECOMMENDATIONS.filter(t => !existingIds.has(t.slug) && (
+      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.description.toLowerCase().includes(searchQuery.toLowerCase())
+    ));
+  }, [project, searchQuery]);
+
   if (!mounted) {
     return <div className="min-h-screen bg-gray-50 dark:bg-zinc-950" />;
   }
 
-  // Handle not found
   if (!project) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-50 dark:bg-zinc-950">
@@ -41,21 +60,30 @@ export default function ProjectDetailPage() {
     );
   }
 
-  const createdDate = new Date(project.createdAt).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const handleToggleCompare = (slug: string) => {
+    setCompareSlugs(prev => {
+      if (prev.includes(slug)) return prev.filter(s => s !== slug);
+      if (prev.length >= 3) return prev;
+      return [...prev, slug];
+    });
+  };
 
+  const navigateToCompare = () => {
+    if (compareSlugs.length > 0) {
+      router.push(`/compare?tools=${compareSlugs.join(",")}`);
+    }
+  };
+
+  const createdDate = new Date(project.createdAt).toLocaleDateString(undefined, {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
   const updatedDate = new Date(project.updatedAt).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+    year: 'numeric', month: 'long', day: 'numeric'
   });
 
   return (
     <div className="flex min-h-screen flex-col p-6 sm:p-12 md:p-20 bg-gray-50 dark:bg-zinc-950">
-      <main className="w-full max-w-5xl mx-auto flex flex-col gap-8 animate-in fade-in duration-300">
+      <main className="w-full max-w-7xl mx-auto flex flex-col gap-8 animate-in fade-in duration-300 relative pb-24">
         
         {/* Navigation */}
         <nav className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
@@ -70,14 +98,27 @@ export default function ProjectDetailPage() {
         {/* Header */}
         <div className="flex flex-col gap-6 bg-white dark:bg-zinc-900 p-8 sm:p-10 rounded-3xl border border-gray-200 dark:border-zinc-800 shadow-sm">
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
-              {project.name}
-            </h1>
-            {project.description && (
-              <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mt-2">
-                {project.description}
-              </p>
-            )}
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+                  {project.name}
+                </h1>
+                {project.description && (
+                  <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mt-2">
+                    {project.description}
+                  </p>
+                )}
+              </div>
+              <button 
+                onClick={() => setIsAddOpen(true)}
+                className="shrink-0 flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Add Tool
+              </button>
+            </div>
           </div>
           
           <div className="flex flex-wrap items-center gap-6 pt-6 border-t border-gray-100 dark:border-zinc-800 text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -96,22 +137,136 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        {/* Workspace Placeholder */}
-        <div className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Project Workspace</h2>
-          <div className="w-full flex flex-col items-center justify-center py-32 px-6 border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
+        {/* Workspace */}
+        {projectTools.length === 0 ? (
+          <div className="w-full flex flex-col items-center justify-center py-24 px-6 border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50 text-center">
             <div className="w-16 h-16 bg-gray-100 dark:bg-zinc-800 rounded-2xl flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <p className="text-lg font-medium text-gray-500 dark:text-gray-400 text-center">
-              Your project workspace will appear here.
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tools in this project yet.</h2>
+            <p className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-md">
+              Add AI tools you&apos;re planning to use for this project.
             </p>
+            <button 
+              onClick={() => setIsAddOpen(true)}
+              className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm"
+            >
+              Add Tool
+            </button>
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projectTools.map(tool => (
+              <ToolCard
+                key={tool.id}
+                tool={tool}
+                isSelected={compareSlugs.includes(tool.slug)}
+                onToggleCompare={() => handleToggleCompare(tool.slug)}
+                disabledCompare={compareSlugs.length >= 3}
+                onRemoveFromProject={() => removeToolFromProject(project.id, tool.slug)}
+              />
+            ))}
+          </div>
+        )}
 
       </main>
+
+      {/* Floating Compare Bar */}
+      {compareSlugs.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 p-4 sm:p-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-t border-gray-200 dark:border-zinc-800 shadow-[0_-8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_-8px_30px_rgb(0,0,0,0.2)] z-40 transform transition-all duration-300 translate-y-0">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-3">
+                {compareSlugs.map((slug) => {
+                  const t = MOCK_RECOMMENDATIONS.find(t => t.slug === slug);
+                  return (
+                    <div key={slug} className="w-10 h-10 rounded-full bg-brand-100 dark:bg-brand-900 border-2 border-white dark:border-zinc-900 flex items-center justify-center text-sm font-bold text-brand-700 dark:text-brand-300 shadow-sm">
+                      {t?.name.charAt(0)}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                {compareSlugs.length} {compareSlugs.length === 1 ? 'tool' : 'tools'} selected
+                <span className="text-gray-500 dark:text-gray-400 font-normal ml-1">(max 3)</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button 
+                onClick={() => setCompareSlugs([])}
+                className="flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Clear
+              </button>
+              <button 
+                onClick={navigateToCompare}
+                disabled={compareSlugs.length < 2}
+                className="flex-1 sm:flex-none rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              >
+                Compare Tools
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Tool Modal */}
+      <Dialog 
+        isOpen={isAddOpen} 
+        onClose={() => setIsAddOpen(false)} 
+        title="Add AI Tool"
+        description="Search for tools to add to this project."
+      >
+        <div className="mt-4 flex flex-col gap-6">
+          <input
+            type="search"
+            autoFocus
+            aria-label="Search available tools"
+            placeholder="Search AI tools..."
+            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-brand-500"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          <div className="flex flex-col gap-2 max-h-80 overflow-y-auto pr-2 -mr-2">
+            {availableTools.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400 text-sm">
+                No tools found.
+              </div>
+            ) : (
+              availableTools.map(tool => (
+                <div key={tool.id} className="flex items-center justify-between p-3 rounded-xl border border-gray-100 dark:border-zinc-800 bg-gray-50 dark:bg-zinc-800/50">
+                  <div className="flex flex-col pr-4">
+                    <span className="font-semibold text-gray-900 dark:text-white text-sm">{tool.name}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{tool.description}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      addToolToProject(project.id, tool.slug);
+                    }}
+                    className="shrink-0 rounded-lg bg-white dark:bg-zinc-700 border border-gray-200 dark:border-zinc-600 px-3 py-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-zinc-600 transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className="flex items-center justify-end pt-4 border-t border-gray-100 dark:border-zinc-800">
+            <button
+              onClick={() => setIsAddOpen(false)}
+              className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-200 dark:bg-zinc-800 dark:text-gray-300 dark:hover:bg-zinc-700"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </Dialog>
+
     </div>
   );
 }

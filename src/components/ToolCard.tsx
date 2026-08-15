@@ -10,9 +10,10 @@ interface ToolCardProps {
   onToggleCompare?: () => void;
   disabledCompare?: boolean;
   isRecommended?: boolean;
+  onRemoveFromProject?: () => void;
 }
 
-export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, isRecommended }: ToolCardProps) {
+export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, isRecommended, onRemoveFromProject }: ToolCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const saved = isFavorite(tool.slug);
 
@@ -103,21 +104,32 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
         >
           View Tool
         </Link>
-        <button 
-          onClick={onToggleCompare}
-          disabled={disabledCompare && !isSelected}
-          className={`flex-1 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors text-center flex items-center justify-center gap-2 ${
-            isSelected 
-              ? "bg-brand-50 border-brand-200 text-brand-700 hover:bg-brand-100 dark:bg-brand-900/30 dark:border-brand-800 dark:text-brand-300 dark:hover:bg-brand-900/50" 
-              : "bg-white border-gray-200 text-gray-900 hover:bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          }`}
-        >
-          {isSelected ? (
-            <>Remove</>
-          ) : (
-            <>Compare</>
-          )}
-        </button>
+        {onToggleCompare && (
+          <button 
+            onClick={onToggleCompare}
+            disabled={disabledCompare && !isSelected}
+            className={`flex-1 rounded-xl border px-4 py-2.5 text-sm font-semibold transition-colors text-center flex items-center justify-center gap-2 ${
+              isSelected 
+                ? "bg-brand-50 border-brand-200 text-brand-700 hover:bg-brand-100 dark:bg-brand-900/30 dark:border-brand-800 dark:text-brand-300 dark:hover:bg-brand-900/50" 
+                : "bg-white border-gray-200 text-gray-900 hover:bg-gray-50 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            }`}
+          >
+            {isSelected ? (
+              <>Remove</>
+            ) : (
+              <>Compare</>
+            )}
+          </button>
+        )}
+        {onRemoveFromProject && (
+          <button 
+            onClick={onRemoveFromProject}
+            className="flex-1 rounded-xl border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400 dark:hover:bg-red-900/30 px-4 py-2.5 text-sm font-semibold transition-colors text-center flex items-center justify-center"
+            aria-label={`Remove ${tool.name} from project`}
+          >
+            Remove
+          </button>
+        )}
       </div>
     </div>
   );

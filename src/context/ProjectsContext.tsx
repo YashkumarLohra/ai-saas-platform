@@ -7,6 +7,8 @@ interface ProjectsContextType {
   projects: Project[];
   createProject: (name: string, description?: string) => void;
   deleteProject: (id: string) => void;
+  addToolToProject: (projectId: string, toolSlug: string) => void;
+  removeToolFromProject: (projectId: string, toolSlug: string) => void;
 }
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
@@ -54,6 +56,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         id: `project-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
         name: name.trim(),
         description: description?.trim(),
+        toolIds: [],
         createdAt: now,
         updatedAt: now,
       };
@@ -80,8 +83,53 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const addToolToProject = (projectId: string, toolSlug: string) => {
+    setProjects((prev) => {
+      const newProjects = prev.map((p) => {
+        if (p.id === projectId) {
+          const currentTools = p.toolIds || [];
+          if (!currentTools.includes(toolSlug)) {
+            return {
+              ...p,
+              toolIds: [...currentTools, toolSlug],
+              updatedAt: new Date().toISOString(),
+            };
+          }
+        }
+        return p;
+      });
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+      } catch (error) {
+        console.error("Failed to update projects in localStorage:", error);
+      }
+      return newProjects;
+    });
+  };
+
+  const removeToolFromProject = (projectId: string, toolSlug: string) => {
+    setProjects((prev) => {
+      const newProjects = prev.map((p) => {
+        if (p.id === projectId && p.toolIds) {
+          return {
+            ...p,
+            toolIds: p.toolIds.filter((t) => t !== toolSlug),
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return p;
+      });
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+      } catch (error) {
+        console.error("Failed to update projects in localStorage:", error);
+      }
+      return newProjects;
+    });
+  };
+
   return (
-    <ProjectsContext.Provider value={{ projects, createProject, deleteProject }}>
+    <ProjectsContext.Provider value={{ projects, createProject, deleteProject, addToolToProject, removeToolFromProject }}>
       {children}
     </ProjectsContext.Provider>
   );

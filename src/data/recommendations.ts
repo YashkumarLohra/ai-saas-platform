@@ -51,5 +51,39 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     features: ["Automated image sourcing", "Storyboarding mode", "Web-based interactive presentations", "Video embedding"],
     pros: ["Beautiful aesthetics out of the box", "Interactive elements engage audiences", "Great for portfolios"],
     cons: ["Not easily exported to PDF/PPT without formatting loss", "Can be resource-heavy on older devices"]
+  },
+  {
+    id: "video-ai-1",
+    slug: "video-craft-ai",
+    name: "VideoCraft AI",
+    description: "An AI video generation platform that helps you create engaging videos and handles background removal effortlessly.",
+    category: "Video Creation",
+    reasons: [
+      "Extremely fast video rendering.",
+      "Flawless background removal.",
+      "High-quality automated captions."
+    ],
+    bestFor: "Content creators needing quick video edits.",
+    pricing: "$20/month",
+    features: ["Text-to-video", "Background removal", "Auto-captioning", "Voiceovers"],
+    pros: ["Easy to use", "Great background removal", "High-quality voices"],
+    cons: ["Slightly expensive", "Limited export formats"]
+  },
+  {
+    id: "coding-ai-1",
+    slug: "code-pilot-ai",
+    name: "CodePilot AI",
+    description: "An intelligent coding assistant that helps you write, debug, and review code faster in any IDE.",
+    category: "Coding & Development",
+    reasons: [
+      "Deeply understands your codebase.",
+      "Provides highly accurate coding suggestions.",
+      "Helps write unit tests automatically."
+    ],
+    bestFor: "Software engineers and students learning coding.",
+    pricing: "Free for students / $10/month",
+    features: ["Code completion", "Bug detection", "Test generation", "Code review"],
+    pros: ["Excellent context awareness", "Supports all major languages", "Fast responses"],
+    cons: ["Can occasionally hallucinate complex logic", "Requires internet connection"]
   }
 ];

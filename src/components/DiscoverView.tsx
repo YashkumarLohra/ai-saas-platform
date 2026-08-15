@@ -53,7 +53,10 @@ export function DiscoverView() {
         tool.description.toLowerCase().includes(q) ||
         tool.category.toLowerCase().includes(q) ||
         tool.bestFor.toLowerCase().includes(q) ||
-        tool.features.some(f => f.toLowerCase().includes(q))
+        tool.features.some(f => f.toLowerCase().includes(q)) ||
+        tool.reasons.some(r => r.toLowerCase().includes(q)) ||
+        tool.pros.some(p => p.toLowerCase().includes(q)) ||
+        tool.cons.some(c => c.toLowerCase().includes(q))
       );
     }
 

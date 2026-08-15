@@ -15,7 +15,9 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
   const task = searchQuery !== undefined ? searchQuery : internalTask;
   
   const handleTaskChange = (val: string) => {
-    setInternalTask(val);
+    if (searchQuery === undefined) {
+      setInternalTask(val);
+    }
     onSearchQueryChange?.(val);
   };
 
@@ -43,6 +45,10 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
     onTaskResolved?.(null);
   };
 
+  const handleClear = () => {
+    handleTaskChange("");
+  };
+
   if (taskContext) {
     return (
       <div className="w-full min-h-[60px] flex flex-col justify-start">
@@ -60,19 +66,33 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
         onSubmit={handleSubmit}
         className="flex w-full max-w-xl items-center gap-2 rounded-full border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-800 dark:bg-zinc-900 transition-shadow focus-within:ring-2 focus-within:ring-brand-500"
       >
-        <input 
-          type="text" 
-          value={task}
-          onChange={(e) => handleTaskChange(e.target.value)}
-          placeholder="What do you want to accomplish?" 
-          className="flex-1 bg-transparent px-4 py-2 outline-none text-foreground"
-          disabled={isSubmitting}
-          aria-label="Describe your task"
-        />
+        <div className="relative flex-1 flex items-center">
+          <input 
+            type="text" 
+            value={task}
+            onChange={(e) => handleTaskChange(e.target.value)}
+            placeholder="Search AI tools, tasks, or categories..." 
+            className="w-full bg-transparent px-4 py-2 pr-10 outline-none text-gray-900 dark:text-white"
+            disabled={isSubmitting}
+            aria-label="What are you trying to accomplish?"
+          />
+          {task.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute right-2 p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded-full"
+              aria-label="Clear search"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
         <button 
           type="submit"
           disabled={isSubmitting || !task.trim()}
-          className="rounded-full bg-brand-600 px-6 py-2 font-medium text-white transition-colors hover:bg-brand-500 disabled:opacity-50 flex items-center justify-center min-w-[110px]"
+          className="rounded-full bg-brand-600 px-6 py-2 font-medium text-white transition-colors hover:bg-brand-500 disabled:opacity-50 flex items-center justify-center min-w-[110px] focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
         >
           {isSubmitting ? (
             <span className="flex items-center gap-2" aria-label="Loading">
@@ -88,8 +108,8 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
       </form>
       
       <div className="w-full min-h-[60px] flex flex-col justify-start">
-        <p className="text-sm text-center text-gray-500 dark:text-gray-500 py-2">
-          Search functionality is coming in a future milestone.
+        <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-2">
+          Discover the perfect AI tools for your next project.
         </p>
       </div>
     </div>

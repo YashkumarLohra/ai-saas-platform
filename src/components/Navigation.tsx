@@ -32,7 +32,11 @@ export function Navigation() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive = 
+              pathname === link.href || 
+              (link.href !== '/' && pathname.startsWith(link.href)) || 
+              (link.href === '/discover' && pathname.startsWith('/tools'));
+              
             return (
               <Link
                 key={link.href}
@@ -80,7 +84,11 @@ export function Navigation() {
         <div className="md:hidden border-t border-gray-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-4 space-y-3 shadow-lg">
           <nav className="flex flex-col gap-3">
             {navLinks.map((link) => {
-              const isActive = pathname === link.href;
+              const isActive = 
+                pathname === link.href || 
+                (link.href !== '/' && pathname.startsWith(link.href)) || 
+                (link.href === '/discover' && pathname.startsWith('/tools'));
+                
               return (
                 <Link
                   key={link.href}

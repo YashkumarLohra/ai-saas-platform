@@ -50,8 +50,8 @@ export function DashboardView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-20 bg-gray-50 dark:bg-zinc-950">
-      <main className="w-full max-w-6xl flex flex-col gap-12 sm:gap-16">
+    <div className="flex min-h-screen flex-col p-6 sm:p-12 md:p-20 bg-gray-50 dark:bg-zinc-950">
+      <main className="w-full max-w-7xl mx-auto flex flex-col gap-12 sm:gap-16">
         
         {/* Top Header / Workspace Introduction */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-8 sm:p-10 shadow-sm">

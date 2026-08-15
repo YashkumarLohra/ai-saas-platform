@@ -83,9 +83,9 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-20 bg-gray-50 dark:bg-zinc-950">
+    <div className="flex min-h-screen flex-col p-6 sm:p-12 md:p-20 bg-gray-50 dark:bg-zinc-950">
       <RecentlyViewedTracker slug={slug} />
-      <main className="w-full max-w-5xl flex flex-col gap-12">
+      <main className="w-full max-w-5xl mx-auto flex flex-col gap-8 animate-in fade-in duration-300 relative">
         
         {/* 1. Breadcrumb/navigation */}
         <nav className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">

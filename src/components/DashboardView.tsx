@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { TaskInput } from "@/components/TaskInput";
 import { ToolCard } from "@/components/ToolCard";
 import { ProjectCard } from "@/components/ProjectCard";
 import { useProjects } from "@/context/ProjectsContext";
@@ -14,7 +13,6 @@ import { Dialog } from "@/components/Dialog";
 
 export function DashboardView() {
   const [mounted, setMounted] = useState(false);
-  const [hasTask, setHasTask] = useState(false);
   
   const { projects, deleteProject } = useProjects();
   const { favorites } = useFavorites();
@@ -28,8 +26,6 @@ export function DashboardView() {
   }, []);
 
   // Derived state for the dashboard widgets
-  const fallbackRecommendations = useMemo(() => MOCK_RECOMMENDATIONS.slice(0, 3), []);
-  
   const recentProjects = useMemo(() => projects.slice(0, 3), [projects]);
   
   const savedTools = useMemo(() => {
@@ -54,156 +50,166 @@ export function DashboardView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center p-6 sm:p-12 md:p-20 bg-gray-50 dark:bg-zinc-950">
-      <main className="w-full max-w-7xl flex flex-col gap-12">
+    <div className="flex min-h-screen flex-col items-center p-4 sm:p-8 md:p-12 lg:p-20 bg-gray-50 dark:bg-zinc-950">
+      <main className="w-full max-w-6xl flex flex-col gap-12 sm:gap-16">
         
-        {/* Top Header / Greeting */}
-        {!hasTask && (
-          <div className="flex flex-col items-center text-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-gray-900 dark:text-white">
-              What are you working on?
+        {/* Top Header / Workspace Introduction */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-8 sm:p-10 shadow-sm">
+          <div className="flex flex-col gap-3">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-gray-900 dark:text-white">
+              Your AI Workspace
             </h1>
-            <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-400">
-              Describe your task, and we&apos;ll recommend the best AI tools to help you get it done.
+            <p className="max-w-2xl text-lg text-gray-600 dark:text-gray-400 text-balance">
+              Continue exploring tools and discover the right AI solutions for your work.
             </p>
           </div>
-        )}
-
-        {/* Task Input takes over state handling natively */}
-        <div className="w-full max-w-4xl mx-auto">
-          <TaskInput onTaskResolved={(ctx) => setHasTask(!!ctx)} />
+          <Link 
+            href="/discover"
+            className="inline-flex items-center justify-center rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 whitespace-nowrap gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Discover AI Tools
+          </Link>
         </div>
 
-        {/* Dashboard Sections (Hidden when a task is active) */}
-        {!hasTask && (
-          <div className="flex flex-col gap-16 mt-8">
+        {/* Dashboard Sections */}
+        {mounted && (
+          <div className="flex flex-col gap-16 animate-in fade-in duration-500">
             
-            {/* Recommendations Fallback */}
-            <section className="flex flex-col gap-6 animate-in fade-in duration-700 delay-100 fill-mode-both">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-                Recommended for you
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {fallbackRecommendations.map(tool => (
-                  <ToolCard key={tool.id} tool={tool} />
-                ))}
+            {/* Recently Viewed Tools */}
+            <section className="flex flex-col gap-6">
+              <div className="flex items-end justify-between">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2 tracking-tight">
+                  <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Recently Viewed
+                </h2>
+                {recentlyViewedTools.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      import("@/hooks/useRecentlyViewed").then(m => m.clearRecentlyViewed());
+                    }} 
+                    className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1 -mr-2 transition-colors"
+                  >
+                    Clear history
+                  </button>
+                )}
               </div>
+              
+              {recentlyViewedTools.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {recentlyViewedTools.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
+                  <svg className="h-10 w-10 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">No recently viewed tools</p>
+                  <p className="text-base text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+                    Tools you explore will appear here.
+                  </p>
+                  <Link href="/discover" className="rounded-xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-6 py-2.5 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+                    Discover AI Tools
+                  </Link>
+                </div>
+              )}
             </section>
 
-            {/* Dashboard Widgets that depend on client storage */}
-            {mounted && (
-              <div className="flex flex-col gap-16 animate-in fade-in duration-500">
-                {/* Recent Projects */}
-                <section className="flex flex-col gap-6">
-                  <div className="flex items-end justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                      </svg>
-                      Recent Projects
-                    </h2>
-                    {projects.length > 0 && (
-                      <Link href="/projects" className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-                        View all projects
-                      </Link>
-                    )}
-                  </div>
-                  
-                  {recentProjects.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {recentProjects.map(project => (
-                        <ProjectCard key={project.id} project={project} onDelete={(p) => setProjectToDelete(p)} />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
-                      <p className="text-lg text-gray-500 dark:text-gray-400 mb-6">You haven&apos;t created any projects yet.</p>
-                      <Link href="/projects" className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm flex items-center gap-2">
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                        </svg>
-                        Create Project
-                      </Link>
-                    </div>
-                  )}
-                </section>
-
-                {/* Saved Tools */}
-                <section className="flex flex-col gap-6">
-                  <div className="flex items-end justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                      Saved Tools
-                    </h2>
-                    {favorites.length > 0 && (
-                      <Link href="/favorites" className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-                        View all saved tools
-                      </Link>
-                    )}
-                  </div>
-
-                  {savedTools.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {savedTools.map(tool => (
-                        <ToolCard key={tool.id} tool={tool} />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
-                      <p className="text-lg text-gray-500 dark:text-gray-400 mb-6">You haven&apos;t saved any AI tools yet.</p>
-                      <Link href="/discover" className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm flex items-center gap-2">
-                        Explore AI Tools
-                      </Link>
-                    </div>
-                  )}
-                </section>
-
-                {/* Recently Viewed Tools */}
-                <section className="flex flex-col gap-6">
-                  <div className="flex items-end justify-between">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                      <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Recently Viewed
-                    </h2>
-                    {recentlyViewedTools.length > 0 && (
-                      <button 
-                        onClick={() => {
-                          import("@/hooks/useRecentlyViewed").then(m => m.clearRecentlyViewed());
-                        }} 
-                        className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-1 -mr-1 transition-colors"
-                      >
-                        Clear history
-                      </button>
-                    )}
-                  </div>
-                  
-                  {recentlyViewedTools.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {recentlyViewedTools.map(tool => (
-                        <ToolCard key={tool.id} tool={tool} />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
-                      <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">No recently viewed tools</p>
-                      <p className="text-base text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                        Tools you explore will appear here so you can quickly return to them later.
-                      </p>
-                      <Link href="/discover" className="rounded-xl bg-brand-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
-                        Discover AI Tools
-                      </Link>
-                    </div>
-                  )}
-                </section>
+            {/* Saved Tools */}
+            <section className="flex flex-col gap-6">
+              <div className="flex items-end justify-between">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2 tracking-tight">
+                  <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  Saved Tools
+                </h2>
+                {favorites.length > 0 && (
+                  <Link href="/favorites" className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1 -mr-2 transition-colors">
+                    View all saved tools
+                  </Link>
+                )}
               </div>
-            )}
+
+              {savedTools.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {savedTools.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
+                  <svg className="h-10 w-10 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">No saved tools yet</p>
+                  <p className="text-base text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+                    Save useful AI tools so you can quickly return to them.
+                  </p>
+                  <Link href="/discover" className="rounded-xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-6 py-2.5 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+                    Discover AI Tools
+                  </Link>
+                </div>
+              )}
+            </section>
+
+            {/* Recent Projects */}
+            <section className="flex flex-col gap-6">
+              <div className="flex items-end justify-between">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2 tracking-tight">
+                  <svg className="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                  Recent Projects
+                </h2>
+                {projects.length > 0 && (
+                  <Link href="/projects" className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1 -mr-2 transition-colors">
+                    View all projects
+                  </Link>
+                )}
+              </div>
+              
+              {recentProjects.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {recentProjects.map(project => (
+                    <ProjectCard key={project.id} project={project} onDelete={(p) => setProjectToDelete(p)} />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 px-6 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50">
+                  <svg className="h-10 w-10 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                  </svg>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mb-2">No projects yet</p>
+                  <p className="text-base text-gray-500 dark:text-gray-400 mb-6 max-w-md">
+                    Create projects to organize your favorite AI tools by use-case.
+                  </p>
+                  <Link href="/projects" className="rounded-xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-6 py-2.5 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex items-center gap-2 mx-auto">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Create Project
+                  </Link>
+                </div>
+              )}
+            </section>
+
+            {/* Continue Exploring Block */}
+            <section className="flex flex-col items-center justify-center py-16 px-6 text-center border border-gray-200 dark:border-zinc-800 rounded-3xl bg-white dark:bg-zinc-900 shadow-sm mt-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">Explore AI Tools</h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md">
+                Browse our curated directory of premium AI tools to find your next solution.
+              </p>
+              <Link href="/discover" className="rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+                Browse Discover
+              </Link>
+            </section>
 
           </div>
         )}

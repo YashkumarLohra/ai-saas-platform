@@ -47,7 +47,7 @@ export function FavoritesView() {
           href="/discover"
           className="rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
         >
-          Explore AI Tools
+          Discover AI Tools
         </Link>
       </div>
     );
@@ -56,6 +56,16 @@ export function FavoritesView() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-300">
       
+      {/* Header */}
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+          Your Saved AI Tools
+        </h1>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
+          Access and manage your favorited tools. ({favorites.length} saved)
+        </p>
+      </div>
+
       {/* Search and Filter Row */}
       <div className="flex flex-col sm:flex-row gap-4 items-center bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
         <div className="relative w-full sm:flex-1">

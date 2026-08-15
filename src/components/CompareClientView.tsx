@@ -146,22 +146,29 @@ export function CompareClientView() {
                       >
                         View Details
                       </Link>
-                      {tool.websiteUrl ? (
+                      {tool.isIntegrated ? (
+                        <button className="w-full text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm flex items-center justify-center gap-1.5">
+                          Use in Platform
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                          </svg>
+                        </button>
+                      ) : tool.websiteUrl ? (
                         <a 
                           href={tool.websiteUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-full text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm flex items-center justify-center gap-1.5"
-                          aria-label={`Visit official website for ${tool.name} (opens in a new tab)`}
+                          aria-label={`Visit official tool website for ${tool.name} (opens in a new tab)`}
                         >
-                          Visit Website
+                          Visit Official Tool
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                         </a>
                       ) : (
                         <button disabled className="w-full rounded-xl bg-gray-100 dark:bg-zinc-800 px-4 py-2 text-sm font-semibold text-gray-400 dark:text-gray-500 cursor-not-allowed">
-                          Unavailable
+                          Website unavailable
                         </button>
                       )}
                     </div>
@@ -312,16 +319,23 @@ export function CompareClientView() {
                     <Link href={`/tools/${tool.slug}`} className="flex-1 text-center rounded-xl border border-gray-200 dark:border-zinc-700 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                       View Details
                     </Link>
-                    {tool.websiteUrl && (
+                    {tool.isIntegrated ? (
+                      <button className="flex-1 text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        Use in Platform
+                      </button>
+                    ) : tool.websiteUrl ? (
                       <a 
                         href={tool.websiteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        className="flex-1 text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 flex items-center justify-center gap-1"
                       >
-                        Visit Website
+                        Visit Official Tool
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
                       </a>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               ))}

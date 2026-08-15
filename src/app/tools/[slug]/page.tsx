@@ -18,15 +18,28 @@ export async function generateStaticParams() {
 }
 
 function OfficialWebsiteAction({ tool }: { tool: typeof MOCK_RECOMMENDATIONS[0] }) {
+  if (tool.isIntegrated) {
+    return (
+      <button 
+        className="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2 shadow-sm"
+      >
+        Use in Platform
+        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
+    );
+  }
+
   return tool.websiteUrl ? (
     <a 
       href={tool.websiteUrl} 
       target="_blank" 
       rel="noopener noreferrer"
       className="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2 shadow-sm"
-      aria-label={`Visit official website for ${tool.name} (opens in a new tab)`}
+      aria-label={`Visit official tool website for ${tool.name} (opens in a new tab)`}
     >
-      Visit Official Website
+      Visit Official Tool
       <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
       </svg>
@@ -36,7 +49,7 @@ function OfficialWebsiteAction({ tool }: { tool: typeof MOCK_RECOMMENDATIONS[0] 
       disabled
       className="w-full sm:w-auto rounded-xl bg-gray-200 dark:bg-zinc-800 px-8 py-4 text-base font-semibold text-gray-500 dark:text-gray-400 cursor-not-allowed flex justify-center items-center gap-2"
     >
-      Official website unavailable
+      Website unavailable
       <svg className="h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
       </svg>

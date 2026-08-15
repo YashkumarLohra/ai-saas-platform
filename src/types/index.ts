@@ -12,6 +12,7 @@ export interface Recommendation {
   pros: string[];
   cons: string[];
   websiteUrl?: string;
+  isIntegrated?: boolean;
 }
 
 export interface TaskContext {

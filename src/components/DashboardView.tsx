@@ -10,6 +10,7 @@ import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import Link from "next/link";
 import { Project } from "@/types/index";
 import { Dialog } from "@/components/Dialog";
+import { TaskInput } from "@/components/TaskInput";
 
 export function DashboardView() {
   const [mounted, setMounted] = useState(false);
@@ -74,9 +75,14 @@ export function DashboardView() {
           </Link>
         </div>
 
+        {/* Task Input Section */}
+        <div className="flex flex-col gap-4 items-center animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+          <TaskInput mode="task" />
+        </div>
+
         {/* Dashboard Sections */}
         {mounted && (
-          <div className="flex flex-col gap-16 animate-in fade-in duration-500">
+          <div className="flex flex-col gap-16 animate-in fade-in duration-500 delay-200">
             
             {/* Recently Viewed Tools */}
             <section className="flex flex-col gap-6">

@@ -8,9 +8,10 @@ interface TaskInputProps {
   onTaskResolved?: (context: TaskContext | null) => void;
   searchQuery?: string;
   onSearchQueryChange?: (query: string) => void;
+  mode?: "search" | "task";
 }
 
-export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: TaskInputProps = {}) {
+export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange, mode = "task" }: TaskInputProps = {}) {
   const [internalTask, setInternalTask] = useState("");
   const task = searchQuery !== undefined ? searchQuery : internalTask;
   
@@ -28,6 +29,13 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
     e.preventDefault();
     const trimmedTask = task.trim();
     if (!trimmedTask) return;
+
+    if (mode === "search") {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+      return;
+    }
 
     setIsSubmitting(true);
     
@@ -71,10 +79,10 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
             type="text" 
             value={task}
             onChange={(e) => handleTaskChange(e.target.value)}
-            placeholder="Search AI tools or describe a task..." 
+            placeholder={mode === "search" ? "Search AI tools..." : "Search AI tools or describe a task..."}
             className="w-full bg-transparent px-4 py-2 pr-10 outline-none text-gray-900 dark:text-white"
             disabled={isSubmitting}
-            aria-label="What are you trying to accomplish?"
+            aria-label={mode === "search" ? "Search AI tools" : "What are you trying to accomplish?"}
           />
           {task.length > 0 && (
             <button
@@ -102,16 +110,18 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange }: 
               </svg>
             </span>
           ) : (
-            "Discover"
+            mode === "search" ? "Search" : "Discover"
           )}
         </button>
       </form>
       
-      <div className="w-full min-h-[60px] flex flex-col justify-start">
-        <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-2">
-          Discover the perfect AI tools for your next project.
-        </p>
-      </div>
+      {mode === "task" && (
+        <div className="w-full min-h-[60px] flex flex-col justify-start">
+          <p className="text-sm text-center text-gray-500 dark:text-gray-400 py-2">
+            Discover the perfect AI tools for your next project.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

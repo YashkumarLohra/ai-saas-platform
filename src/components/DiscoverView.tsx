@@ -180,6 +180,7 @@ export function DiscoverView() {
             searchQuery={searchQuery}
             onSearchQueryChange={setSearchQuery}
             onTaskResolved={(ctx) => setHasTask(!!ctx)} 
+            mode="search"
           />
         </div>
       </div>

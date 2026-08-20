@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 const LOCAL_STORAGE_KEY = "ai_saas_recent_views";
-const MAX_RECENT_VIEWS = 5;
+const MAX_RECENT_VIEWS = 12;
 
 export function addRecentlyViewed(slug: string) {
   try {
@@ -14,7 +14,7 @@ export function addRecentlyViewed(slug: string) {
     current = current.filter(s => s !== slug);
     // Add to front
     current.unshift(slug);
-    // Limit to 5
+    // Limit to 12
     current = current.slice(0, MAX_RECENT_VIEWS);
 
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(current));

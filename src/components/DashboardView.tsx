@@ -30,16 +30,16 @@ export function DashboardView() {
   
   const savedTools = useMemo(() => {
     return favorites
-      .slice(0, 3)
       .map(slug => MOCK_RECOMMENDATIONS.find(t => t.slug === slug))
-      .filter((t): t is NonNullable<typeof t> => t !== undefined);
+      .filter((t): t is NonNullable<typeof t> => t !== undefined)
+      .slice(0, 3);
   }, [favorites]);
 
   const recentlyViewedTools = useMemo(() => {
     return recentSlugs
-      .slice(0, 3)
       .map(slug => MOCK_RECOMMENDATIONS.find(t => t.slug === slug))
-      .filter((t): t is NonNullable<typeof t> => t !== undefined);
+      .filter((t): t is NonNullable<typeof t> => t !== undefined)
+      .slice(0, 6);
   }, [recentSlugs]);
 
   const confirmDelete = () => {

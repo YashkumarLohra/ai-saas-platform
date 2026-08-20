@@ -31,29 +31,42 @@ function OfficialWebsiteAction({ tool }: { tool: typeof MOCK_RECOMMENDATIONS[0] 
     );
   }
 
-  return tool.websiteUrl ? (
-    <a 
-      href={tool.websiteUrl} 
-      target="_blank" 
-      rel="noopener noreferrer"
-      className="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2 shadow-sm"
-      aria-label={`Visit official tool website for ${tool.name} (opens in a new tab)`}
-    >
-      Visit Official Tool
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-      </svg>
-    </a>
-  ) : (
-    <button 
-      disabled
-      className="w-full sm:w-auto rounded-xl bg-gray-200 dark:bg-zinc-800 px-8 py-4 text-base font-semibold text-gray-500 dark:text-gray-400 cursor-not-allowed flex justify-center items-center gap-2"
-    >
-      Website unavailable
-      <svg className="h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-      </svg>
-    </button>
+  return (
+    <div className="flex flex-col gap-2 items-center sm:items-start">
+      {tool.websiteUrl ? (
+        <a 
+          href={tool.websiteUrl} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2 shadow-sm"
+          aria-label={`Visit official tool website for ${tool.name} (opens in a new tab)`}
+        >
+          Visit Official Tool
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </a>
+      ) : (
+        <button 
+          disabled
+          className="w-full sm:w-auto rounded-xl bg-gray-200 dark:bg-zinc-800 px-8 py-4 text-base font-semibold text-gray-500 dark:text-gray-400 cursor-not-allowed flex justify-center items-center gap-2"
+        >
+          Website unavailable
+          <svg className="h-5 w-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+        </button>
+      )}
+      
+      {tool.websiteUrl && (
+        <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          You&apos;ll continue on the tool&apos;s official website.
+        </span>
+      )}
+    </div>
   );
 }
 

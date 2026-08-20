@@ -172,10 +172,17 @@ export function DiscoverView() {
   };
 
   return (
-    <div className="flex flex-col gap-8 w-full pb-24">
+    <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24">
       {/* Header & Search */}
-      <div className="flex flex-col gap-6 items-center">
-        <div className="w-full max-w-4xl mx-auto">
+      <div className="flex flex-col items-center text-center gap-8 mb-4">
+        <div className="flex flex-col gap-3">
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">Discover AI Tools</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl text-balance">
+            Explore AI tools for every kind of work.
+          </p>
+        </div>
+        
+        <div className="w-full max-w-2xl mx-auto">
           <TaskInput 
             searchQuery={searchQuery}
             onSearchQueryChange={setSearchQuery}
@@ -186,52 +193,54 @@ export function DiscoverView() {
       </div>
 
       {!hasTask && (
-        <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar Filters & Sort */}
-        <div className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           
-          <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-            <h3 className="font-bold text-gray-900 dark:text-white mb-4">Sort By</h3>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
-              aria-label="Sort tools"
+          {/* Categories */}
+          <div className="flex flex-wrap items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
+                selectedCategory === null 
+                  ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm" 
+                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 dark:bg-zinc-900 dark:text-gray-300 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:border-zinc-700"
+              }`}
+              aria-pressed={selectedCategory === null}
             >
-              <option value="recommended">Recommended</option>
-              <option value="a-z">Name (A–Z)</option>
-              <option value="z-a">Name (Z–A)</option>
-            </select>
+              All Categories
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 ${
+                  selectedCategory === cat 
+                    ? "bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm" 
+                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 dark:bg-zinc-900 dark:text-gray-300 dark:border-zinc-800 dark:hover:bg-zinc-800 dark:hover:border-zinc-700"
+                }`}
+                aria-pressed={selectedCategory === cat}
+              >
+                {cat}
+              </button>
+            ))}
           </div>
 
-          <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
-            <h3 className="font-bold text-gray-900 dark:text-white mb-4">Category</h3>
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  selectedCategory === null 
-                    ? "bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" 
-                    : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-zinc-800"
-                }`}
-              >
-                All Categories
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    selectedCategory === cat 
-                      ? "bg-brand-50 text-brand-700 dark:bg-brand-900/30 dark:text-brand-400" 
-                      : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-zinc-800"
-                  }`}
+          <div className="flex flex-col lg:flex-row gap-8 mt-4 animate-in fade-in duration-700">
+            {/* Sidebar Filters & Sort */}
+            <div className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-6">
+              
+              <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
+                <h3 className="font-bold text-gray-900 dark:text-white mb-4">Sort By</h3>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as SortOption)}
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white transition-shadow"
+                  aria-label="Sort tools"
                 >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
+                  <option value="recommended">Recommended</option>
+                  <option value="a-z">Name (A–Z)</option>
+                  <option value="z-a">Name (Z–A)</option>
+                </select>
+              </div>
 
           {pricingOptions.length > 0 && (
             <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-200 dark:border-zinc-800 shadow-sm">
@@ -277,8 +286,15 @@ export function DiscoverView() {
 
         {/* Main Grid */}
         <div className="flex-1">
-          <div className="mb-4 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-            <span>Showing {filteredAndSortedTools.length} tool{filteredAndSortedTools.length !== 1 && 's'}</span>
+          <div className="mb-6 flex items-center justify-between text-sm">
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {filteredAndSortedTools.length} AI tool{filteredAndSortedTools.length !== 1 && 's'}
+            </span>
+            {hasFilters && (
+              <span className="text-gray-500 dark:text-gray-400">
+                filtered from catalog
+              </span>
+            )}
           </div>
 
           {filteredAndSortedTools.length > 0 ? (
@@ -294,23 +310,24 @@ export function DiscoverView() {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center p-12 text-center border border-gray-200 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900 shadow-sm animate-in fade-in">
+            <div className="flex flex-col items-center justify-center p-16 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50 animate-in fade-in">
               <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No AI tools found</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No tools found</h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                Try a different search or explore our categories.
+                Try another search or clear your filters.
               </p>
               <button
                 onClick={handleClearFilters}
                 className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
               >
-                Clear Search
+                Clear filters
               </button>
             </div>
           )}
         </div>
+      </div>
       </div>
       )}
 

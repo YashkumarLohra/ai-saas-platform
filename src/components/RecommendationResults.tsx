@@ -5,6 +5,7 @@ import { ToolCard } from "@/components/ToolCard";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { TaskContext } from "@/types/index";
 import Link from "next/link";
+import { FeedbackWidget } from "@/components/FeedbackWidget";
 
 interface RecommendationResultsProps {
   context: TaskContext;
@@ -83,16 +84,18 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
       {filteredTools.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full text-left">
           {filteredTools.map((tool, idx) => (
-            <ToolCard 
-              key={tool.id} 
-              tool={tool}
-              isRecommended={true}
-              isBestMatch={idx === 0}
-              taskQuery={context.query}
-              isSelected={selectedTools.includes(tool.slug)}
-              onToggleCompare={() => handleToggleCompare(tool.slug)}
-              disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}
-            />
+            <div key={tool.id} className="flex flex-col gap-3">
+              <ToolCard 
+                tool={tool}
+                isRecommended={true}
+                isBestMatch={idx === 0}
+                taskQuery={context.query}
+                isSelected={selectedTools.includes(tool.slug)}
+                onToggleCompare={() => handleToggleCompare(tool.slug)}
+                disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}
+              />
+              <FeedbackWidget toolId={tool.slug} taskQuery={context.query} />
+            </div>
           ))}
         </div>
       ) : (

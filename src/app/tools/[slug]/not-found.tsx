@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function NotFound() {
+export default function ToolNotFound() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center p-6 text-center">
       <div className="flex flex-col items-center gap-6 max-w-md">
@@ -12,27 +12,19 @@ export default function NotFound() {
         
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">
-            Page not found
+            Tool not found
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            The page you&apos;re looking for doesn&apos;t exist or has been moved.
+            We couldn&apos;t find the AI tool you&apos;re looking for.
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 mt-4 w-full justify-center">
-          <Link 
-            href="/discover" 
-            className="rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
-          >
-            Back to Discover
-          </Link>
-          <Link 
-            href="/" 
-            className="rounded-xl border border-gray-200 bg-white px-8 py-4 text-base font-semibold text-gray-900 transition-colors hover:bg-gray-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
-          >
-            Go Home
-          </Link>
-        </div>
+        <Link 
+          href="/discover" 
+          className="mt-4 rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
+        >
+          Explore AI Tools
+        </Link>
       </div>
     </div>
   );

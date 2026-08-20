@@ -177,7 +177,7 @@ export default function ProjectDetailPage() {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No tools in this project yet</h2>
             <p className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-md leading-relaxed">
-              Discover AI tools and add the ones that can help with this project.
+              Add AI tools you want to use for this project.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button 

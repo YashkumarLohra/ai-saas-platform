@@ -118,7 +118,7 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
               </svg>
             </>
           )}
-          <span className="text-gray-900 dark:text-gray-100 font-semibold truncate" aria-current="page">{tool.name}</span>
+          <span className="text-gray-900 dark:text-gray-100 font-semibold truncate" aria-current="page">{tool.name || "Unnamed Tool"}</span>
         </nav>
 
         {/* 2. Tool Identity */}
@@ -126,12 +126,12 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
           <div className="flex items-center gap-5 sm:gap-6">
             <div className="w-16 h-16 sm:w-24 sm:h-24 shrink-0 rounded-2xl bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center border border-brand-200 dark:border-brand-800/50 shadow-sm">
               <span className="text-3xl sm:text-5xl font-bold text-brand-600 dark:text-brand-400" aria-hidden="true">
-                {tool.name.charAt(0)}
+                {tool.name ? tool.name.charAt(0) : "?"}
               </span>
             </div>
             <div className="flex flex-col gap-2">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-                {tool.name}
+                {tool.name || "Unnamed Tool"}
               </h1>
               <div className="flex items-center gap-3 flex-wrap">
                 <Link href={`/discover?category=${encodeURIComponent(tool.category)}`} className="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-600 dark:bg-brand-900/30 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-900/50 transition-colors">
@@ -146,7 +146,7 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
             </div>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl">
-            {tool.description}
+            {tool.description || "No description available for this tool."}
           </p>
         </div>
 
@@ -199,7 +199,7 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
             <section className="flex flex-col gap-4">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">Overview</h2>
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed text-balance">
-                {tool.longDescription || tool.description}
+                {tool.longDescription || tool.description || "No description available for this tool."}
               </p>
             </section>
 

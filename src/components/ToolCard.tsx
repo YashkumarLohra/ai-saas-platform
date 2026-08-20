@@ -80,16 +80,16 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
             )}
           </div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-            {tool.name}
+            {tool.name || "Unnamed Tool"}
           </h3>
           <p className="mt-1 text-sm font-medium text-gray-500 dark:text-gray-400">
-            {tool.category} • {tool.pricing || "Pricing unavailable"}
+            {tool.category || "Uncategorized"} • {tool.pricing || "Pricing unavailable"}
           </p>
         </div>
       </div>
       
       <p className="text-gray-600 dark:text-gray-300 mb-6 flex-grow">
-        {tool.description}
+        {tool.description || "No description available for this tool."}
       </p>
 
       {tool.bestFor && (

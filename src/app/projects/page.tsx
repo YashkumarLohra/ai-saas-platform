@@ -87,7 +87,7 @@ export default function ProjectsPage() {
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">No projects yet</h2>
             <p className="text-lg text-gray-500 dark:text-gray-400 mb-10 max-w-sm leading-relaxed">
-              Create a project to organize your AI-powered work.
+              Organize AI tools around the work you&apos;re doing.
             </p>
             <button 
               onClick={() => setIsCreateOpen(true)}

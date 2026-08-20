@@ -7,6 +7,7 @@ interface ProjectsContextType {
   projects: Project[];
   createProject: (name: string, description?: string) => void;
   deleteProject: (id: string) => void;
+  renameProject: (id: string, newName: string) => void;
   addToolToProject: (projectId: string, toolSlug: string) => void;
   removeToolFromProject: (projectId: string, toolSlug: string) => void;
 }
@@ -83,6 +84,23 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const renameProject = (id: string, newName: string) => {
+    setProjects((prev) => {
+      const newProjects = prev.map((p) => {
+        if (p.id === id) {
+          return { ...p, name: newName.trim(), updatedAt: new Date().toISOString() };
+        }
+        return p;
+      });
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+      } catch (error) {
+        console.error("Failed to update projects in localStorage:", error);
+      }
+      return newProjects;
+    });
+  };
+
   const addToolToProject = (projectId: string, toolSlug: string) => {
     setProjects((prev) => {
       const newProjects = prev.map((p) => {
@@ -129,7 +147,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ProjectsContext.Provider value={{ projects, createProject, deleteProject, addToolToProject, removeToolFromProject }}>
+    <ProjectsContext.Provider value={{ projects, createProject, deleteProject, renameProject, addToolToProject, removeToolFromProject }}>
       {children}
     </ProjectsContext.Provider>
   );

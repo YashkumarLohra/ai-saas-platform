@@ -127,6 +127,7 @@ export default function ProjectsPage() {
                 id="projectName"
                 type="text"
                 autoFocus
+                maxLength={50}
                 className={`w-full rounded-xl border ${createError ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-200'} bg-white px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-brand-500`}
                 placeholder="e.g., College Presentation"
                 value={newProjectName}
@@ -145,6 +146,7 @@ export default function ProjectsPage() {
               <textarea
                 id="projectDesc"
                 rows={3}
+                maxLength={150}
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-brand-500 resize-none"
                 placeholder="Briefly describe what this project is about..."
                 value={newProjectDesc}

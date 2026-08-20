@@ -12,10 +12,13 @@ export default function ProjectDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const router = useRouter();
-  const { projects, addToolToProject, removeToolFromProject } = useProjects();
+  const { projects, addToolToProject, removeToolFromProject, renameProject } = useProjects();
 
   const [mounted, setMounted] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
+  const [isRenameOpen, setIsRenameOpen] = useState(false);
+  const [renameValue, setRenameValue] = useState("");
+  const [renameError, setRenameError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [compareSlugs, setCompareSlugs] = useState<string[]>([]);
 
@@ -25,6 +28,17 @@ export default function ProjectDetailPage() {
   }, []);
 
   const project = useMemo(() => projects.find((p) => p.id === id), [projects, id]);
+
+  const handleRename = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!renameValue.trim()) {
+      setRenameError("Project name is required.");
+      return;
+    }
+    renameProject(project!.id, renameValue);
+    setIsRenameOpen(false);
+    setRenameError("");
+  };
 
   const projectTools = useMemo(() => {
     if (!project || !project.toolIds) return [];
@@ -100,9 +114,25 @@ export default function ProjectDetailPage() {
           <div className="flex flex-col gap-2">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
               <div>
-                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
-                  {project.name}
-                </h1>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    {project.name}
+                  </h1>
+                  <button 
+                    onClick={() => {
+                      setRenameValue(project.name);
+                      setRenameError("");
+                      setIsRenameOpen(true);
+                    }}
+                    className="p-2 text-gray-400 hover:text-brand-600 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    aria-label={`Rename ${project.name}`}
+                    title="Rename Project"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </button>
+                </div>
                 {project.description && (
                   <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl mt-2">
                     {project.description}
@@ -273,6 +303,51 @@ export default function ProjectDetailPage() {
             </button>
           </div>
         </div>
+      </Dialog>
+
+      {/* Rename Project Modal */}
+      <Dialog 
+        isOpen={isRenameOpen} 
+        onClose={() => setIsRenameOpen(false)} 
+        title="Rename Project"
+      >
+        <form onSubmit={handleRename} className="flex flex-col gap-6 mt-4">
+          <div className="flex flex-col gap-2">
+            <label htmlFor="renameProjectName" className="text-sm font-semibold text-gray-900 dark:text-white">
+              Project Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="renameProjectName"
+              type="text"
+              autoFocus
+              maxLength={50}
+              className={`w-full rounded-xl border ${renameError ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-200'} bg-white px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white dark:focus:ring-brand-500`}
+              placeholder="e.g., College Presentation"
+              value={renameValue}
+              onChange={(e) => {
+                setRenameValue(e.target.value);
+                if (e.target.value.trim()) setRenameError("");
+              }}
+            />
+            {renameError && <p className="text-sm text-red-500 font-medium">{renameError}</p>}
+          </div>
+
+          <div className="flex items-center justify-end gap-3 mt-4 pt-6 border-t border-gray-100 dark:border-zinc-800">
+            <button
+              type="button"
+              onClick={() => setIsRenameOpen(false)}
+              className="rounded-xl px-5 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-zinc-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
+            >
+              Save
+            </button>
+          </div>
+        </form>
       </Dialog>
 
     </div>

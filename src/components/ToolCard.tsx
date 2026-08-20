@@ -34,9 +34,13 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
       
       <button
         onClick={() => toggleFavorite(tool.slug)}
-        className="absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-zinc-900 shadow-sm border border-gray-100 dark:border-zinc-800 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 z-10 opacity-0 group-hover:opacity-100 focus:opacity-100 sm:opacity-100"
-        aria-label={saved ? `Remove ${tool.name} from favorites` : `Save ${tool.name}`}
-        title={saved ? "Saved" : "Save"}
+        className={`absolute top-4 right-4 p-2 rounded-full shadow-sm border z-10 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 ${
+          saved 
+            ? 'bg-red-50 border-red-100 text-red-500 dark:bg-red-900/20 dark:border-red-900/30' 
+            : 'bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 opacity-0 group-hover:opacity-100 focus:opacity-100 sm:opacity-100'
+        }`}
+        aria-label={saved ? `Remove ${tool.name} from favorites` : `Add ${tool.name} to favorites`}
+        title={saved ? "Remove from favorites" : "Add to favorites"}
       >
         <svg 
           className="h-5 w-5" 
@@ -48,9 +52,7 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
             strokeLinecap="round" 
             strokeLinejoin="round" 
             strokeWidth={saved ? 0 : 2} 
-            d={saved 
-              ? "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
-              : "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"} 
+            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" 
           />
         </svg>
       </button>

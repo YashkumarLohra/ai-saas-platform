@@ -56,14 +56,9 @@ export function FavoritesView() {
   return (
     <div className="flex flex-col gap-10 animate-in fade-in duration-300">
       
-      {/* Header */}
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
-          Your Saved AI Tools
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
-          Access and manage your favorited tools. ({favorites.length} saved)
-        </p>
+      {/* Header Info */}
+      <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+        <span>{favorites.length} saved tool{favorites.length !== 1 && 's'}</span>
       </div>
 
       {/* Search and Filter Row */}

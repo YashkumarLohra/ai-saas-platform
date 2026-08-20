@@ -28,6 +28,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
   // Sync state changes across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
@@ -52,6 +54,13 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       
       try {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newFavorites));
+        
+        // Show toast notification
+        if (isSaved) {
+          showToast("Removed from Favorites");
+        } else {
+          showToast("Saved to Favorites");
+        }
       } catch (error) {
         console.error("Failed to save favorites to localStorage:", error);
       }
@@ -59,14 +68,27 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const isFavorite = (slug: string) => favorites.includes(slug);
 
-  // Return a context provider, but to avoid hydration mismatch, 
-  // you might conditionally render children if strict matching is required.
-  // However, returning children is usually fine as long as components safely handle the empty state.
   return (
     <FavoritesContext.Provider value={{ favorites, toggleFavorite, isFavorite }}>
       {children}
+      {/* Lightweight Toast */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-300">
+          <div className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-xl rounded-full px-6 py-3 flex items-center gap-3 border border-gray-800 dark:border-gray-200">
+            <svg className="w-5 h-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="font-semibold text-sm whitespace-nowrap">{toastMessage}</span>
+          </div>
+        </div>
+      )}
     </FavoritesContext.Provider>
   );
 }

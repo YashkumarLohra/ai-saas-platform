@@ -72,31 +72,43 @@ export function DiscoverView() {
         const toolDescription = tool.description.toLowerCase();
         const toolBestFor = tool.bestFor?.toLowerCase() || '';
 
-        // 1. Task/Search Relevance (Strong signals)
+        // 1. Task/Search Relevance
         if (isSearchActive) {
-          if (toolName === normalizedQuery) score += 100;
-          else if (toolName.includes(normalizedQuery)) score += 50;
+          // Exact tool-name match
+          if (toolName === normalizedQuery) score += 1000;
+          // Strong tool-name match
+          else if (toolName.includes(normalizedQuery)) score += 500;
 
-          if (toolCategory === normalizedQuery) score += 40;
-          else if (toolCategory.includes(normalizedQuery)) score += 20;
+          // Category match
+          if (toolCategory === normalizedQuery) score += 400;
+          else if (toolCategory.includes(normalizedQuery)) score += 200;
 
-          if (toolBestFor.includes(normalizedQuery)) score += 15;
+          // Capability match (Features)
+          if (tool.features?.some(f => f.toLowerCase().includes(normalizedQuery))) score += 100;
+
+          // Use-case match (BestFor)
+          if (toolBestFor.includes(normalizedQuery)) score += 50;
+
+          // Description match
+          if (toolDescription.includes(normalizedQuery)) score += 25;
 
           if (keywords.length > 0) {
             keywords.forEach(kw => {
               if (toolName.includes(kw)) score += 10;
-              if (toolCategory.includes(kw)) score += 5;
-              if (toolBestFor.includes(kw)) score += 5;
-              if (tool.features?.some(f => f.toLowerCase().includes(kw))) score += 3;
-              if (toolDescription.includes(kw)) score += 1;
+              if (toolCategory.includes(kw)) score += 8;
+              if (tool.features?.some(f => f.toLowerCase().includes(kw))) score += 6;
+              if (toolBestFor.includes(kw)) score += 4;
+              if (toolDescription.includes(kw)) score += 2;
             });
           }
         }
 
-        // 2. Preference Bonus (Weak signal, doesn't override strong task match)
+        // 2. Preference Match (Does NOT override search ranking)
         if (hasPreferences && preferences.preferredCategories.includes(tool.category)) {
-          score += 8;
           isPreferenceMatch = true;
+          if (!isSearchActive) {
+            score += 1; // Only applies to recommended sort when no search is active
+          }
         }
 
         return { tool, score, originalIndex: index, isPreferenceMatch };
@@ -335,16 +347,18 @@ export function DiscoverView() {
               <svg className="h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No tools found</h3>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No matching tools found</h3>
               <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md">
-                Try another search or clear your filters.
+                We couldn&apos;t find anything matching your search. Try a broader search term or explore all tools.
               </p>
-              <button
-                onClick={handleClearFilters}
-                className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-              >
-                Clear filters
-              </button>
+              <div className="flex gap-4">
+                <button
+                  onClick={handleClearFilters}
+                  className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+                >
+                  Browse all tools
+                </button>
+              </div>
             </div>
           )}
         </div>

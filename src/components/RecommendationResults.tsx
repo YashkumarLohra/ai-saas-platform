@@ -31,26 +31,57 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
     const q = context.query.toLowerCase().trim();
     if (!q) return MOCK_RECOMMENDATIONS;
     
-    // Split query into keywords, removing short/common words
+    // Normalize and extract keywords
+    const normalizedQuery = q.replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ').trim();
     const stopWords = new Set(['i', 'want', 'to', 'create', 'a', 'for', 'my', 'the', 'an', 'need', 'make', 'do', 'help', 'with', 'some']);
-    const keywords = q.split(/\s+/).filter(word => !stopWords.has(word) && word.length > 2);
+    const keywords = normalizedQuery ? normalizedQuery.split(' ').filter(word => !stopWords.has(word) && word.length > 1) : [];
     
     if (keywords.length === 0) return MOCK_RECOMMENDATIONS;
 
-    return MOCK_RECOMMENDATIONS.filter(tool => {
-      const toolText = [
-        tool.name,
-        tool.description,
-        tool.category,
-        tool.bestFor,
-        ...tool.features,
-        ...tool.reasons,
-        ...tool.pros,
-        ...tool.cons
-      ].join(" ").toLowerCase();
+    const scoredTools = MOCK_RECOMMENDATIONS.map(tool => {
+      let score = 0;
+      const toolName = tool.name.toLowerCase();
+      const toolCategory = tool.category.toLowerCase();
+      const toolDescription = tool.description.toLowerCase();
+      const toolBestFor = tool.bestFor?.toLowerCase() || '';
 
-      return keywords.some(kw => toolText.includes(kw));
+      // Exact tool-name match
+      if (toolName === normalizedQuery) score += 1000;
+      // Strong tool-name match
+      else if (toolName.includes(normalizedQuery)) score += 500;
+
+      // Category match
+      if (toolCategory === normalizedQuery) score += 400;
+      else if (toolCategory.includes(normalizedQuery)) score += 200;
+
+      // Capability match (Features)
+      if (tool.features?.some(f => f.toLowerCase().includes(normalizedQuery))) score += 100;
+
+      // Use-case match (BestFor)
+      if (toolBestFor.includes(normalizedQuery)) score += 50;
+
+      // Description match
+      if (toolDescription.includes(normalizedQuery)) score += 25;
+
+      // Keyword matching
+      if (keywords.length > 0) {
+        keywords.forEach(kw => {
+          if (toolName.includes(kw)) score += 10;
+          if (toolCategory.includes(kw)) score += 8;
+          if (tool.features?.some(f => f.toLowerCase().includes(kw))) score += 6;
+          if (toolBestFor.includes(kw)) score += 4;
+          if (toolDescription.includes(kw)) score += 2;
+        });
+      }
+
+      return { tool, score };
     });
+
+    // Filter tools with a score > 0, then sort by score descending
+    return scoredTools
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(item => item.tool);
   }, [context.query]);
 
   return (

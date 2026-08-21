@@ -11,6 +11,15 @@ interface FavoritesContextType {
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
+/**
+ * TODO (Authentication Readiness):
+ * Favorites are currently stored globally in localStorage for demo purposes.
+ * This is NOT secure production user storage.
+ * When real authentication is introduced, this context should:
+ * 1. Read/write to a backend database associated with the authenticated user ID.
+ * 2. Clear favorites from memory upon logout.
+ * 3. Not store user-specific data in localStorage.
+ */
 const LOCAL_STORAGE_KEY = "ai_saas_favorites";
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {

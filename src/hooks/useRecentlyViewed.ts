@@ -2,6 +2,15 @@
 
 import { useEffect, useState } from "react";
 
+/**
+ * TODO (Authentication Readiness):
+ * Recently Viewed history is currently stored globally in localStorage for demo purposes.
+ * This is NOT secure production user storage.
+ * When real authentication is introduced, this hook should:
+ * 1. Read/write to a backend database associated with the authenticated user ID.
+ * 2. Clear history from memory upon logout.
+ * 3. Not store user-specific browsing history in localStorage.
+ */
 const LOCAL_STORAGE_KEY = "ai_saas_recent_views";
 const MAX_RECENT_VIEWS = 12;
 

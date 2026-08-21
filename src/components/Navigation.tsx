@@ -53,9 +53,20 @@ export function Navigation() {
             );
           })}
           
-          {/* Minimal Profile Avatar */}
-          <div className="ml-2 w-8 h-8 rounded-full bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center border border-brand-200 dark:border-brand-800/50 cursor-default" aria-label="User Profile">
-             <span className="text-brand-600 dark:text-brand-400 font-bold text-xs">U</span>
+          {/* Auth Actions (Logged Out State) */}
+          <div className="ml-4 flex items-center gap-3 border-l border-gray-200 dark:border-zinc-800 pl-4">
+            <Link
+              href="/login"
+              className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              className="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
+            >
+              Sign Up
+            </Link>
           </div>
         </nav>
 
@@ -107,14 +118,21 @@ export function Navigation() {
             })}
           </nav>
           
-          <div className="pt-4 mt-2 border-t border-gray-100 dark:border-zinc-800 flex items-center gap-3 px-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-100 to-brand-50 dark:from-brand-900/40 dark:to-brand-800/20 flex items-center justify-center border border-brand-200 dark:border-brand-800/50">
-               <span className="text-brand-600 dark:text-brand-400 font-bold">U</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">User Account</span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">user@example.com</span>
-            </div>
+          <div className="pt-4 mt-2 border-t border-gray-100 dark:border-zinc-800 flex flex-col gap-3 px-2">
+            <Link
+              href="/login"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center rounded-xl border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-4 py-3 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full text-center rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 shadow-sm"
+            >
+              Sign Up
+            </Link>
           </div>
         </div>
       )}

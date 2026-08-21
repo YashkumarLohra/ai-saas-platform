@@ -15,6 +15,15 @@ interface ProjectsContextType {
 
 const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined);
 
+/**
+ * TODO (Authentication Readiness):
+ * Projects are currently stored globally in localStorage for demo purposes.
+ * This is NOT secure production user storage.
+ * When real authentication is introduced, this context should:
+ * 1. Read/write to a backend database associated with the authenticated user ID.
+ * 2. Clear projects from memory upon logout.
+ * 3. Ensure a user cannot access or modify projects they do not own.
+ */
 const LOCAL_STORAGE_KEY = "ai_saas_projects";
 
 export function ProjectsProvider({ children }: { children: ReactNode }) {

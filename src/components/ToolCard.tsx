@@ -19,6 +19,76 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
   const { isFavorite, toggleFavorite } = useFavorites();
   const saved = isFavorite(tool.slug);
 
+  // Generate deterministic reasons list based on priority: Task -> Capability -> Preference -> Others
+  const displayReasons: { text: string; icon: React.ReactNode; colorClass: string }[] = [];
+
+  // 1. Task Match
+  if (isBestMatch) {
+    displayReasons.push({
+      text: "Strong match for your task",
+      icon: (
+        <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      colorClass: "text-amber-700 dark:text-amber-500",
+    });
+  } else if (taskQuery) {
+    displayReasons.push({
+      text: "Relevant for your search",
+      icon: (
+        <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      ),
+      colorClass: "text-blue-700 dark:text-blue-500",
+    });
+  }
+
+  // 2. Capability/use-case match (Use existing tool reasons)
+  if (tool.reasons && tool.reasons.length > 0) {
+    tool.reasons.slice(0, 2).forEach(reason => {
+      displayReasons.push({
+        text: reason,
+        icon: (
+          <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        ),
+        colorClass: "text-brand-700 dark:text-brand-400",
+      });
+    });
+  }
+
+  // 3. Preference Match
+  if (tool.isPreferenceMatch) {
+    displayReasons.push({
+      text: "Matches your selected interests",
+      icon: (
+        <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+      colorClass: "text-purple-700 dark:text-purple-400",
+    });
+  }
+
+  // 4. Fallback if no reasons exist
+  if (displayReasons.length === 0) {
+    displayReasons.push({
+      text: taskQuery ? "Recommended based on your task." : "Recommended for this category.",
+      icon: (
+        <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
+      ),
+      colorClass: "text-gray-600 dark:text-gray-400",
+    });
+  }
+
+  // Limit to top 3 reasons max to avoid overwhelming
+  const topReasons = displayReasons.slice(0, 3);
+
   return (
     <div className={`flex flex-col h-full rounded-2xl border bg-white p-6 shadow-sm dark:bg-zinc-900 transition-all hover:shadow-md relative group ${
       isSelected ? 'border-brand-500 ring-1 ring-brand-500 dark:border-brand-400 dark:ring-brand-400' : 
@@ -108,26 +178,16 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
         </div>
       )}
 
-      {((tool.reasons && tool.reasons.length > 0) || tool.isPreferenceMatch) && (
+      {topReasons.length > 0 && (
         <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
           <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
             Why we recommend it
           </h4>
           <ul className="space-y-2">
-            {tool.isPreferenceMatch && (
-              <li className="flex items-start gap-2 text-sm text-purple-700 dark:text-purple-400 font-medium">
-                <svg className="h-5 w-5 text-purple-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Recommended because it matches your interests.</span>
-              </li>
-            )}
-            {tool.reasons?.map((reason: string, idx: number) => (
-              <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
-                <svg className="h-5 w-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>{reason}</span>
+            {topReasons.map((reason, idx) => (
+              <li key={idx} className={`flex items-start gap-2 text-sm font-medium ${reason.colorClass}`}>
+                {reason.icon}
+                <span className="text-gray-600 dark:text-gray-300 font-normal">{reason.text}</span>
               </li>
             ))}
           </ul>

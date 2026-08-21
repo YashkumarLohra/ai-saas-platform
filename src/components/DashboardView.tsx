@@ -199,7 +199,7 @@ export function DashboardView() {
                 </svg>
                 Quick Actions
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Link 
                   href="/discover" 
                   className="flex flex-col p-6 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl hover:border-brand-500 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 group"
@@ -237,6 +237,19 @@ export function DashboardView() {
                   </div>
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Create Project</h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">Organize tools around your work.</p>
+                </Link>
+
+                <Link 
+                  href="/preferences" 
+                  className="flex flex-col p-6 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-2xl hover:border-brand-500 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 group"
+                >
+                  <div className="w-10 h-10 bg-brand-100 dark:bg-brand-900/30 rounded-xl flex items-center justify-center mb-4 text-brand-600 dark:text-brand-400 group-hover:scale-110 transition-transform">
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                    </svg>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Personalize</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Tell us what you are interested in.</p>
                 </Link>
               </div>
             </section>

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { ToolCard } from "@/components/ToolCard";
 import { TaskInput } from "@/components/TaskInput";
+import { usePreferences } from "@/context/PreferencesContext";
 import Link from "next/link";
 
 type SortOption = "recommended" | "a-z" | "z-a";
@@ -12,6 +13,8 @@ type SortOption = "recommended" | "a-z" | "z-a";
 export function DiscoverView() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { preferences } = usePreferences(); // Prepared for future personalized ranking integration
 
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");

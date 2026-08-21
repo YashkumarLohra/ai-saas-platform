@@ -27,3 +27,10 @@ export interface Project {
   createdAt: string;
   updatedAt: string;
 }
+
+export type ExperienceLevel = "beginner" | "intermediate" | "advanced";
+
+export interface UserPreferences {
+  preferredCategories: string[];
+  experienceLevel?: ExperienceLevel;
+}

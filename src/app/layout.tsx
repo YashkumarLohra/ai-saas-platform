@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   description: "Discover the right AI solution for your tasks.",
 };
 
+import { PreferencesProvider } from "@/context/PreferencesContext";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -29,14 +31,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full flex flex-col">
         <ToastProvider>
-          <ProjectsProvider>
-            <FavoritesProvider>
-              <Navigation />
-              <div className="flex-1 flex flex-col">
-                {children}
-              </div>
-            </FavoritesProvider>
-          </ProjectsProvider>
+          <PreferencesProvider>
+            <ProjectsProvider>
+              <FavoritesProvider>
+                <Navigation />
+                <div className="flex-1 flex flex-col">
+                  {children}
+                </div>
+              </FavoritesProvider>
+            </ProjectsProvider>
+          </PreferencesProvider>
         </ToastProvider>
       </body>
     </html>

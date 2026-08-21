@@ -78,6 +78,11 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
                 Recommended
               </div>
             )}
+            {tool.isPreferenceMatch && (
+              <div className="inline-flex items-center rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-semibold text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-100 dark:border-purple-800/30">
+                Matches your interests
+              </div>
+            )}
           </div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">
             {tool.name || "Unnamed Tool"}
@@ -103,13 +108,21 @@ export function ToolCard({ tool, isSelected, onToggleCompare, disabledCompare, i
         </div>
       )}
 
-      {tool.reasons && tool.reasons.length > 0 && (
+      {((tool.reasons && tool.reasons.length > 0) || tool.isPreferenceMatch) && (
         <div className="mb-6 rounded-xl bg-gray-50 dark:bg-zinc-800/50 p-4 border border-gray-100 dark:border-zinc-800/80">
           <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
             Why we recommend it
           </h4>
           <ul className="space-y-2">
-            {tool.reasons.map((reason: string, idx: number) => (
+            {tool.isPreferenceMatch && (
+              <li className="flex items-start gap-2 text-sm text-purple-700 dark:text-purple-400 font-medium">
+                <svg className="h-5 w-5 text-purple-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Recommended because it matches your interests.</span>
+              </li>
+            )}
+            {tool.reasons?.map((reason: string, idx: number) => (
               <li key={idx} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
                 <svg className="h-5 w-5 text-brand-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

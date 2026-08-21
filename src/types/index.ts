@@ -13,6 +13,7 @@ export interface Recommendation {
   cons: string[];
   websiteUrl?: string;
   isIntegrated?: boolean;
+  isPreferenceMatch?: boolean;
 }
 
 export interface TaskContext {

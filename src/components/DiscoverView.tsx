@@ -13,7 +13,6 @@ type SortOption = "recommended" | "a-z" | "z-a";
 export function DiscoverView() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { preferences } = usePreferences(); // Prepared for future personalized ranking integration
 
   // Initialize state from URL params
@@ -55,32 +54,34 @@ export function DiscoverView() {
   const filteredAndSortedTools = useMemo(() => {
     let result = [...MOCK_RECOMMENDATIONS];
 
-    // Apply Search
-    if (searchQuery.trim() !== "") {
-      const normalizedQuery = searchQuery.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ').trim();
+    const isSearchActive = searchQuery.trim() !== "";
+    const hasPreferences = preferences?.preferredCategories && preferences.preferredCategories.length > 0;
+
+    // Apply Search and Preference Scoring
+    if (isSearchActive || hasPreferences) {
+      const normalizedQuery = isSearchActive ? searchQuery.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ').trim() : "";
       const stopWords = new Set(['i', 'want', 'to', 'create', 'a', 'for', 'my', 'the', 'an', 'need', 'make', 'do', 'help', 'with', 'some']);
-      const keywords = normalizedQuery.split(' ').filter(word => !stopWords.has(word) && word.length > 1);
+      const keywords = normalizedQuery ? normalizedQuery.split(' ').filter(word => !stopWords.has(word) && word.length > 1) : [];
 
-      if (normalizedQuery.length > 0) {
-        // Map tools to their scores
-        const scoredTools = result.map(tool => {
-          let score = 0;
-          const toolName = tool.name.toLowerCase();
-          const toolCategory = tool.category.toLowerCase();
-          const toolDescription = tool.description.toLowerCase();
-          const toolBestFor = tool.bestFor?.toLowerCase() || '';
+      const scoredTools = result.map((tool, index) => {
+        let score = 0;
+        let isPreferenceMatch = false;
 
-          // Exact or strong name match
+        const toolName = tool.name.toLowerCase();
+        const toolCategory = tool.category.toLowerCase();
+        const toolDescription = tool.description.toLowerCase();
+        const toolBestFor = tool.bestFor?.toLowerCase() || '';
+
+        // 1. Task/Search Relevance (Strong signals)
+        if (isSearchActive) {
           if (toolName === normalizedQuery) score += 100;
           else if (toolName.includes(normalizedQuery)) score += 50;
 
-          // Strong category/bestFor match
           if (toolCategory === normalizedQuery) score += 40;
           else if (toolCategory.includes(normalizedQuery)) score += 20;
 
           if (toolBestFor.includes(normalizedQuery)) score += 15;
 
-          // Keyword matching
           if (keywords.length > 0) {
             keywords.forEach(kw => {
               if (toolName.includes(kw)) score += 10;
@@ -90,16 +91,36 @@ export function DiscoverView() {
               if (toolDescription.includes(kw)) score += 1;
             });
           }
+        }
 
-          return { tool, score };
-        });
+        // 2. Preference Bonus (Weak signal, doesn't override strong task match)
+        if (hasPreferences && preferences.preferredCategories.includes(tool.category)) {
+          score += 8;
+          isPreferenceMatch = true;
+        }
 
-        // Filter out zero-score tools and unwrap
-        result = scoredTools
-          .filter(item => item.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .map(item => item.tool);
+        return { tool, score, originalIndex: index, isPreferenceMatch };
+      });
+
+      // Filter out zero-score tools only if searching
+      let validTools = scoredTools;
+      if (isSearchActive) {
+        validTools = validTools.filter(item => item.score > 0);
       }
+
+      // Sort by score if recommended, otherwise preserve original index for later sorting
+      if (sortBy === "recommended") {
+        validTools.sort((a, b) => {
+          if (b.score !== a.score) return b.score - a.score;
+          return a.originalIndex - b.originalIndex;
+        });
+      }
+
+      // Map back to Tool objects and attach preference match flag
+      result = validTools.map(item => ({
+        ...item.tool,
+        isPreferenceMatch: item.isPreferenceMatch
+      }));
     }
 
     // Apply Category Filter
@@ -112,9 +133,8 @@ export function DiscoverView() {
       result = result.filter(tool => tool.pricing === selectedPricing);
     }
 
-    // Apply Sorting (if not searching or if explicitly overridden)
-    // When there's a search query, and sortBy is "recommended", we keep the search relevance score order above.
-    if (searchQuery.trim() === "" || sortBy !== "recommended") {
+    // Apply Alphabetical Sorting (if explicitly overridden)
+    if (sortBy !== "recommended") {
       switch (sortBy) {
         case "a-z":
           result.sort((a, b) => a.name.localeCompare(b.name));
@@ -122,15 +142,13 @@ export function DiscoverView() {
         case "z-a":
           result.sort((a, b) => b.name.localeCompare(a.name));
           break;
-        case "recommended":
         default:
-          // Keep default mock data order if no search
           break;
       }
     }
 
     return result;
-  }, [searchQuery, selectedCategory, selectedPricing, sortBy]);
+  }, [searchQuery, selectedCategory, selectedPricing, sortBy, preferences]);
 
   const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null || selectedPricing !== null;
 

@@ -40,6 +40,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       if (stored) {
         const parsed = JSON.parse(stored);
         // Basic validation of stored structure
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setPreferences({
           preferredCategories: Array.isArray(parsed?.preferredCategories) ? parsed.preferredCategories : [],
           experienceLevel: ["beginner", "intermediate", "advanced"].includes(parsed?.experienceLevel) 

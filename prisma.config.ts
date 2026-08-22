@@ -9,6 +9,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // For Prisma CLI (migrations), we must use the direct connection (session mode)
+    // because Supabase transaction pooler (port 6543) does not support structural changes.
+    url: process.env["DIRECT_URL"],
   },
 });

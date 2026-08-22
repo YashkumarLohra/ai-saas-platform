@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================================
+// PUBLIC DATA
+// ============================================================================
+
+model Tool {
+  id              String   @id @default(uuid())
+  slug            String   @unique
+  name            String
+  description     String
+  longDescription String?
+  category        String
+  pricing         String?
+  websiteUrl      String?
+
+  // Relationships
+  favorites       Favorite[]
+  recentViews     RecentlyViewed[]
+  projects        ProjectTool[]
+
+  @@index([category])
+}
+
+// ============================================================================
+// PRIVATE DATA (Requires Authentication & RLS)
+// ============================================================================
+
+// Note: The User model is often managed entirely by the Auth Provider (e.g. Supabase Auth)
+// In Supabase, this table can reference auth.users via foreign key or simply store the UUID.
+model User {
+  id        String   @id // Maps to the Auth provider's UUID
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  // Relationships
+  favorites   Favorite[]
+  projects    Project[]
+  preferences Preference?
+  recentViews RecentlyViewed[]
+}
+
+model Favorite {
+  createdAt DateTime @default(now())
+  
+  user_id   String
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  
+  tool_id   String
+  tool      Tool     @relation(fields: [tool_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, tool_id])
+  @@index([user_id])
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  user_id     String
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  // Relationships
+  tools       ProjectTool[]
+
+  @@index([user_id])
+}
+
+// Join table for Project <-> Tool
+model ProjectTool {
+  addedAt   DateTime @default(now())
+
+  project_id String
+  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  tool_id    String
+  tool       Tool     @relation(fields: [tool_id], references: [id], onDelete: Cascade)
+
+  @@id([project_id, tool_id])
+}
+
+model Preference {
+  id                  String   @id @default(uuid())
+  preferredCategories Json     @default("[]") // Array of strings
+  experienceLevel     String?
+  updatedAt           DateTime @updatedAt
+
+  user_id             String   @unique
+  user                User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+}
+
+model RecentlyViewed {
+  viewedAt DateTime @default(now())
+
+  user_id  String
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  tool_id  String
+  tool     Tool     @relation(fields: [tool_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, tool_id])
+  @@index([user_id])
+}

@@ -82,6 +82,7 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange, mo
             placeholder={mode === "search" ? "Search AI tools..." : "Search AI tools or describe a task..."}
             className="w-full bg-transparent px-4 py-2 pr-10 outline-none text-gray-900 dark:text-white"
             disabled={isSubmitting}
+            maxLength={300}
             aria-label={mode === "search" ? "Search AI tools" : "What are you trying to accomplish?"}
           />
           {task.length > 0 && (

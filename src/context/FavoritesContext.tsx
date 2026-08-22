@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useToast } from "./ToastContext";
-
 import { useAuth } from "./AuthContext";
+import { favoritesRepository } from "@/services/storage";
 
 interface FavoritesContextType {
   favorites: string[];
@@ -15,44 +15,27 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 
 /**
  * TODO (Authentication Readiness):
- * Favorites are currently stored globally in localStorage for demo purposes.
- * This is NOT secure production user storage.
- * When real authentication is introduced, this context should:
- * 1. Read/write to a backend database associated with the authenticated user ID.
- * 2. Clear favorites from memory upon logout.
- * 3. Not store user-specific data in localStorage.
+ * Favorites are currently managed via the favoritesRepository (backed by localStorage).
+ * When real authentication is introduced, simply swap the favoritesRepository implementation
+ * in `src/services/storage.ts` to use a backend API.
  */
-const LOCAL_STORAGE_KEY_BASE = "ai_saas_favorites";
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const { showToast } = useToast();
   const { user } = useAuth();
 
-  const getStorageKey = () => user ? `${LOCAL_STORAGE_KEY_BASE}_${user.id}` : LOCAL_STORAGE_KEY_BASE;
-
-  // Load from localStorage on mount and when user changes
+  // Load from storage on mount and when user changes
   useEffect(() => {
-    try {
-      const key = getStorageKey();
-      const stored = localStorage.getItem(key);
-      if (stored) {
-        // eslint-disable-next-line
-        setFavorites(JSON.parse(stored));
-      } else {
-        setFavorites([]);
-      }
-    } catch (error) {
-      console.error("Failed to load favorites from localStorage:", error);
-    }
+    setFavorites(favoritesRepository.get(user?.id || null));
   }, [user]);
 
 
   // Sync state changes across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      const key = getStorageKey();
-      if (e.key === key && e.newValue) {
+      const expectedKey = favoritesRepository.getKey(user?.id || null);
+      if (e.key === expectedKey && e.newValue) {
         try {
           setFavorites(JSON.parse(e.newValue));
         } catch {
@@ -72,8 +55,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         : [...prev, slug];
       
       try {
-        const key = getStorageKey();
-        localStorage.setItem(key, JSON.stringify(newFavorites));
+        favoritesRepository.set(user?.id || null, newFavorites);
         
         // Show toast notification
         if (isSaved) {

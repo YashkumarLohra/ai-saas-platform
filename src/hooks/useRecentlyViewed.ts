@@ -1,23 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { recentlyViewedRepository } from "@/services/storage";
+import { useAuth } from "@/context/AuthContext";
 
-/**
- * TODO (Authentication Readiness):
- * Recently Viewed history is currently stored globally in localStorage for demo purposes.
- * This is NOT secure production user storage.
- * When real authentication is introduced, this hook should:
- * 1. Read/write to a backend database associated with the authenticated user ID.
- * 2. Clear history from memory upon logout.
- * 3. Not store user-specific browsing history in localStorage.
- */
-const LOCAL_STORAGE_KEY = "ai_saas_recent_views";
 const MAX_RECENT_VIEWS = 12;
 
-export function addRecentlyViewed(slug: string) {
+export function addRecentlyViewed(userId: string | null, slug: string) {
   try {
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-    let current: string[] = stored ? JSON.parse(stored) : [];
+    let current = recentlyViewedRepository.get(userId);
 
     // Remove if already exists
     current = current.filter(s => s !== slug);
@@ -26,7 +17,7 @@ export function addRecentlyViewed(slug: string) {
     // Limit to 12
     current = current.slice(0, MAX_RECENT_VIEWS);
 
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(current));
+    recentlyViewedRepository.set(userId, current);
     
     // Dispatch custom event since storage event only fires in OTHER tabs
     window.dispatchEvent(new Event("recentlyViewedUpdated"));
@@ -35,9 +26,9 @@ export function addRecentlyViewed(slug: string) {
   }
 }
 
-export function clearRecentlyViewed() {
+export function clearRecentlyViewed(userId: string | null) {
   try {
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    recentlyViewedRepository.remove(userId);
     window.dispatchEvent(new Event("recentlyViewedUpdated"));
   } catch (error) {
     console.error("Failed to clear recently viewed tools:", error);
@@ -46,38 +37,20 @@ export function clearRecentlyViewed() {
 
 export function useRecentlyViewed() {
   const [recentSlugs, setRecentSlugs] = useState<string[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (isInitialized) return;
-    try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (stored) {
-        // eslint-disable-next-line
-        setRecentSlugs(JSON.parse(stored));
-      }
-    } catch (error) {
-      console.error("Failed to load recently viewed tools:", error);
-    }
-    setIsInitialized(true);
-  }, [isInitialized]);
+    setRecentSlugs(recentlyViewedRepository.get(user?.id || null));
+  }, [user]);
 
   useEffect(() => {
     const loadFromStorage = () => {
-      try {
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        if (stored) {
-          setRecentSlugs(JSON.parse(stored));
-        } else {
-          setRecentSlugs([]);
-        }
-      } catch {
-        // ignore
-      }
+      setRecentSlugs(recentlyViewedRepository.get(user?.id || null));
     };
 
     const handleStorageEvent = (e: StorageEvent) => {
-      if (e.key === LOCAL_STORAGE_KEY) {
+      const expectedKey = recentlyViewedRepository.getKey(user?.id || null);
+      if (e.key === expectedKey) {
         loadFromStorage();
       }
     };
@@ -89,7 +62,7 @@ export function useRecentlyViewed() {
       window.removeEventListener("storage", handleStorageEvent);
       window.removeEventListener("recentlyViewedUpdated", loadFromStorage);
     };
-  }, []);
+  }, [user]);
 
   return recentSlugs;
 }

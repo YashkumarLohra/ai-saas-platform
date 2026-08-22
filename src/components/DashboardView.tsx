@@ -11,7 +11,10 @@ import Link from "next/link";
 import { Project } from "@/types/index";
 import { Dialog } from "@/components/Dialog";
 
+import { useAuth } from "@/context/AuthContext";
+
 export function DashboardView() {
+  const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   
   const { projects, deleteProject } = useProjects();
@@ -81,7 +84,7 @@ export function DashboardView() {
                 {recentlyViewedTools.length > 0 && (
                   <button 
                     onClick={() => {
-                      import("@/hooks/useRecentlyViewed").then(m => m.clearRecentlyViewed());
+                      import("@/hooks/useRecentlyViewed").then(m => m.clearRecentlyViewed(user?.id || null));
                     }} 
                     className="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-500 hover:underline focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1 -mr-2 transition-colors"
                   >

@@ -19,6 +19,13 @@ model Tool {
   category        String
   pricing         String?
   websiteUrl      String?
+  reasons         String[]
+  bestFor         String?
+  features        String[]
+  pros            String[]
+  cons            String[]
+  isIntegrated    Boolean  @default(false)
+  isPreferenceMatch Boolean @default(false)
 
   // Relationships
   favorites       Favorite[]

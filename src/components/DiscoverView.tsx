@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { useTools } from "@/context/ToolsContext";
 import { ToolCard } from "@/components/ToolCard";
 import { TaskInput } from "@/components/TaskInput";
 import { usePreferences } from "@/context/PreferencesContext";
@@ -11,6 +11,7 @@ import Link from "next/link";
 type SortOption = "recommended" | "a-z" | "z-a";
 
 export function DiscoverView() {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { preferences } = usePreferences(); // Prepared for future personalized ranking integration
@@ -42,13 +43,13 @@ export function DiscoverView() {
   const categories = useMemo(() => {
     const allCategories = MOCK_RECOMMENDATIONS.map(tool => tool.category);
     return Array.from(new Set(allCategories)).sort();
-  }, []);
+  }, [MOCK_RECOMMENDATIONS]);
 
   // Extract unique pricing options from the data
   const pricingOptions = useMemo(() => {
     const allPricing = MOCK_RECOMMENDATIONS.map(tool => tool.pricing).filter(Boolean) as string[];
     return Array.from(new Set(allPricing)).sort();
-  }, []);
+  }, [MOCK_RECOMMENDATIONS]);
 
   // Filter and sort the tools
   const filteredAndSortedTools = useMemo(() => {
@@ -160,7 +161,7 @@ export function DiscoverView() {
     }
 
     return result;
-  }, [searchQuery, selectedCategory, selectedPricing, sortBy, preferences]);
+  }, [searchQuery, selectedCategory, selectedPricing, sortBy, preferences, MOCK_RECOMMENDATIONS]);
 
   const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null || selectedPricing !== null;
 

@@ -6,7 +6,7 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { useProjects } from "@/context/ProjectsContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { useTools } from "@/context/ToolsContext";
 import Link from "next/link";
 import { Project } from "@/types/index";
 import { Dialog } from "@/components/Dialog";
@@ -14,6 +14,7 @@ import { Dialog } from "@/components/Dialog";
 import { useAuth } from "@/context/AuthContext";
 
 export function DashboardView() {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   

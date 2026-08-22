@@ -1,11 +1,13 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { useTools } from "@/context/ToolsContext";
+import { ToolCard } from "@/components/ToolCard";
 import Link from "next/link";
 import { useMemo } from "react";
 
 export function CompareClientView() {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const searchParams = useSearchParams();
   const router = useRouter();
 

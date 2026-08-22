@@ -23,16 +23,21 @@ export const metadata: Metadata = {
 };
 
 import { PreferencesProvider } from "@/context/PreferencesContext";
+import { ToolsProvider } from "@/context/ToolsContext";
+import { toolService } from "@/services/toolService";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const tools = await toolService.getTools();
+  
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <ToastProvider>
-          <AuthProvider>
+        <ToolsProvider initialTools={tools}>
+          <ToastProvider>
+            <AuthProvider>
             <PreferencesProvider>
               <ProjectsProvider>
                 <FavoritesProvider>
@@ -45,8 +50,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </PreferencesProvider>
           </AuthProvider>
         </ToastProvider>
-      </body>
-    </html>
+      </ToolsProvider>
+    </body>
+  </html>
   );
 }
 

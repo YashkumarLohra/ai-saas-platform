@@ -1,4 +1,5 @@
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { toolService } from "@/services/toolService";
+import { Recommendation } from "@/types/index";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ToolCard } from "@/components/ToolCard";
@@ -12,12 +13,13 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return MOCK_RECOMMENDATIONS.map((tool) => ({
+  const tools = await toolService.getTools();
+  return tools.map((tool) => ({
     slug: tool.slug,
   }));
 }
 
-function OfficialWebsiteAction({ tool }: { tool: typeof MOCK_RECOMMENDATIONS[0] }) {
+function OfficialWebsiteAction({ tool }: { tool: Recommendation }) {
   if (tool.isIntegrated) {
     return (
       <button 
@@ -82,17 +84,18 @@ export default async function ToolDetailPage({ params, searchParams }: PageProps
     }
   }
 
-  const tool = MOCK_RECOMMENDATIONS.find((t) => t.slug === slug);
+  const tools = await toolService.getTools();
+  const tool = tools.find((t) => t.slug === slug);
 
   if (!tool) {
     notFound();
   }
 
   // Get some alternative tools (just excluding current, maybe filtering by category)
-  const alternatives = MOCK_RECOMMENDATIONS.filter((t) => t.category === tool.category && t.slug !== slug).slice(0, 3);
+  const alternatives = tools.filter((t) => t.category === tool.category && t.slug !== slug).slice(0, 3);
   if (alternatives.length === 0) {
     // fallback if no alternatives in same category
-    alternatives.push(...MOCK_RECOMMENDATIONS.filter((t) => t.slug !== slug).slice(0, 3));
+    alternatives.push(...tools.filter((t) => t.slug !== slug).slice(0, 3));
   }
 
   return (

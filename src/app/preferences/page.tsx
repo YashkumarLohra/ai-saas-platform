@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePreferences } from "@/context/PreferencesContext";
 import { AuthGuard } from "@/components/AuthGuard";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { useTools } from "@/context/ToolsContext";
 import { ExperienceLevel } from "@/types/index";
 
 export default function PreferencesPage() {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const { preferences, savePreferences, clearPreferences } = usePreferences();
   
   // Local state for editing

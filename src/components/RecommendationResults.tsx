@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { ToolCard } from "@/components/ToolCard";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { useTools } from "@/context/ToolsContext";
 import { TaskContext } from "@/types/index";
 import Link from "next/link";
 import { FeedbackWidget } from "@/components/FeedbackWidget";
@@ -13,6 +13,7 @@ interface RecommendationResultsProps {
 }
 
 export function RecommendationResults({ context, onEditTask }: RecommendationResultsProps) {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
 
   const handleToggleCompare = (slug: string) => {
@@ -82,7 +83,7 @@ export function RecommendationResults({ context, onEditTask }: RecommendationRes
       .filter(item => item.score > 0)
       .sort((a, b) => b.score - a.score)
       .map(item => item.tool);
-  }, [context.query]);
+  }, [context.query, MOCK_RECOMMENDATIONS]);
 
   return (
     <div className="w-full animate-in fade-in slide-in-from-bottom-4 duration-500 mt-4 relative pb-24">

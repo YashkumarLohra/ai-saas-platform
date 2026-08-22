@@ -1,15 +1,16 @@
 "use client";
 
 import { useProjects } from "@/context/ProjectsContext";
+import { useTools } from "@/context/ToolsContext";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState, useMemo } from "react";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { ToolCard } from "@/components/ToolCard";
 import { AuthGuard } from "@/components/AuthGuard";
 import { Dialog } from "@/components/Dialog";
 
 export default function ProjectDetailPage() {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const params = useParams();
   const id = params.id as string;
   const router = useRouter();

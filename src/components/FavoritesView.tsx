@@ -2,11 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
-import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
 import { ToolCard } from "@/components/ToolCard";
 import Link from "next/link";
+import { useTools } from "@/context/ToolsContext";
 
 export function FavoritesView() {
+  const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const { favorites } = useFavorites();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | "All">("All");
@@ -14,8 +15,8 @@ export function FavoritesView() {
   const savedTools = useMemo(() => {
     return favorites
       .map(slug => MOCK_RECOMMENDATIONS.find(t => t.slug === slug))
-      .filter((t): t is NonNullable<typeof t> => t !== undefined);
-  }, [favorites]);
+      .filter((t): t is typeof MOCK_RECOMMENDATIONS[0] => t !== undefined);
+  }, [favorites, MOCK_RECOMMENDATIONS]);
 
   const categories = useMemo(() => {
     const cats = new Set(savedTools.map(t => t.category));

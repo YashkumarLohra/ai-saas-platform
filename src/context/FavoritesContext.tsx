@@ -3,6 +3,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useToast } from "./ToastContext";
 
+import { useAuth } from "./AuthContext";
+
 interface FavoritesContextType {
   favorites: string[];
   toggleFavorite: (slug: string) => void;
@@ -20,30 +22,37 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
  * 2. Clear favorites from memory upon logout.
  * 3. Not store user-specific data in localStorage.
  */
-const LOCAL_STORAGE_KEY = "ai_saas_favorites";
+const LOCAL_STORAGE_KEY_BASE = "ai_saas_favorites";
 
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const { showToast } = useToast();
+  const { user } = useAuth();
 
-  // Load from localStorage on mount
+  const getStorageKey = () => user ? `${LOCAL_STORAGE_KEY_BASE}_${user.id}` : LOCAL_STORAGE_KEY_BASE;
+
+  // Load from localStorage on mount and when user changes
   useEffect(() => {
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const key = getStorageKey();
+      const stored = localStorage.getItem(key);
       if (stored) {
         // eslint-disable-next-line
         setFavorites(JSON.parse(stored));
+      } else {
+        setFavorites([]);
       }
     } catch (error) {
       console.error("Failed to load favorites from localStorage:", error);
     }
-  }, []);
+  }, [user]);
 
 
   // Sync state changes across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === LOCAL_STORAGE_KEY && e.newValue) {
+      const key = getStorageKey();
+      if (e.key === key && e.newValue) {
         try {
           setFavorites(JSON.parse(e.newValue));
         } catch {
@@ -53,7 +62,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [user]);
 
   const toggleFavorite = (slug: string) => {
     setFavorites((prev) => {
@@ -63,7 +72,8 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         : [...prev, slug];
       
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newFavorites));
+        const key = getStorageKey();
+        localStorage.setItem(key, JSON.stringify(newFavorites));
         
         // Show toast notification
         if (isSaved) {

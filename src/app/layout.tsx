@@ -4,6 +4,7 @@ import "./globals.css";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ProjectsProvider } from "@/context/ProjectsContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { Navigation } from "@/components/Navigation";
 
 const geistSans = Geist({
@@ -31,16 +32,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full flex flex-col">
         <ToastProvider>
-          <PreferencesProvider>
-            <ProjectsProvider>
-              <FavoritesProvider>
-                <Navigation />
-                <div className="flex-1 flex flex-col">
-                  {children}
-                </div>
-              </FavoritesProvider>
-            </ProjectsProvider>
-          </PreferencesProvider>
+          <AuthProvider>
+            <PreferencesProvider>
+              <ProjectsProvider>
+                <FavoritesProvider>
+                  <Navigation />
+                  <div className="flex-1 flex flex-col">
+                    {children}
+                  </div>
+                </FavoritesProvider>
+              </ProjectsProvider>
+            </PreferencesProvider>
+          </AuthProvider>
         </ToastProvider>
       </body>
     </html>

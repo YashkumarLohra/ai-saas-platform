@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { Project } from "@/types/index";
 import { useToast } from "./ToastContext";
+import { useAuth } from "./AuthContext";
 
 interface ProjectsContextType {
   projects: Project[];
@@ -24,32 +25,36 @@ const ProjectsContext = createContext<ProjectsContextType | undefined>(undefined
  * 2. Clear projects from memory upon logout.
  * 3. Ensure a user cannot access or modify projects they do not own.
  */
-const LOCAL_STORAGE_KEY = "ai_saas_projects";
+const LOCAL_STORAGE_KEY_BASE = "ai_saas_projects";
 
 export function ProjectsProvider({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
   const { showToast } = useToast();
+  const { user } = useAuth();
+  
+  const getStorageKey = () => user ? `${LOCAL_STORAGE_KEY_BASE}_${user.id}` : LOCAL_STORAGE_KEY_BASE;
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount and when user changes
   useEffect(() => {
-    if (isInitialized) return;
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const key = getStorageKey();
+      const stored = localStorage.getItem(key);
       if (stored) {
         // eslint-disable-next-line
         setProjects(JSON.parse(stored));
+      } else {
+        setProjects([]);
       }
     } catch (error) {
       console.error("Failed to load projects from localStorage:", error);
     }
-    setIsInitialized(true);
-  }, [isInitialized]);
+  }, [user]);
 
   // Sync state changes across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === LOCAL_STORAGE_KEY && e.newValue) {
+      const key = getStorageKey();
+      if (e.key === key && e.newValue) {
         try {
           setProjects(JSON.parse(e.newValue));
         } catch {
@@ -59,7 +64,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [user]);
 
   const createProject = (name: string, description?: string) => {
     setProjects((prev) => {
@@ -75,7 +80,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       
       const newProjects = [newProject, ...prev];
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+        const key = getStorageKey();
+        localStorage.setItem(key, JSON.stringify(newProjects));
         showToast("Project created");
       } catch (error) {
         console.error("Failed to save project to localStorage:", error);
@@ -89,7 +95,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     setProjects((prev) => {
       const newProjects = prev.filter((p) => p.id !== id);
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+        const key = getStorageKey();
+        localStorage.setItem(key, JSON.stringify(newProjects));
         showToast("Project deleted");
       } catch (error) {
         console.error("Failed to update projects in localStorage:", error);
@@ -108,7 +115,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         return p;
       });
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+        const key = getStorageKey();
+        localStorage.setItem(key, JSON.stringify(newProjects));
         showToast("Project renamed");
       } catch (error) {
         console.error("Failed to update projects in localStorage:", error);
@@ -134,7 +142,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         return p;
       });
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+        const key = getStorageKey();
+        localStorage.setItem(key, JSON.stringify(newProjects));
         showToast("Added to Project");
       } catch (error) {
         console.error("Failed to update projects in localStorage:", error);
@@ -157,7 +166,8 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
         return p;
       });
       try {
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newProjects));
+        const key = getStorageKey();
+        localStorage.setItem(key, JSON.stringify(newProjects));
         showToast("Removed from Project");
       } catch (error) {
         console.error("Failed to update projects in localStorage:", error);

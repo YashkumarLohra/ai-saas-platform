@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { UserPreferences } from "@/types/index";
 import { useToast } from "@/context/ToastContext";
+import { useAuth } from "./AuthContext";
 
 interface PreferencesContextType {
   preferences: UserPreferences;
@@ -21,7 +22,7 @@ const PreferencesContext = createContext<PreferencesContextType | undefined>(und
  * 2. Clear preferences from memory upon logout.
  * 3. Not store user-specific data in localStorage.
  */
-const LOCAL_STORAGE_KEY = "ai_saas_preferences";
+const LOCAL_STORAGE_KEY_BASE = "ai_saas_preferences";
 
 const DEFAULT_PREFERENCES: UserPreferences = {
   preferredCategories: [],
@@ -30,13 +31,15 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
-  const [isInitialized, setIsInitialized] = useState(false);
   const { showToast } = useToast();
+  const { user } = useAuth();
+  
+  const getStorageKey = () => user ? `${LOCAL_STORAGE_KEY_BASE}_${user.id}` : LOCAL_STORAGE_KEY_BASE;
 
   useEffect(() => {
-    if (isInitialized) return;
     try {
-      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const key = getStorageKey();
+      const stored = localStorage.getItem(key);
       if (stored) {
         const parsed = JSON.parse(stored);
         // Basic validation of stored structure
@@ -47,17 +50,19 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
             ? parsed.experienceLevel 
             : undefined,
         });
+      } else {
+        setPreferences(DEFAULT_PREFERENCES);
       }
     } catch (error) {
       console.error("Failed to load preferences from localStorage:", error);
     }
-    setIsInitialized(true);
-  }, [isInitialized]);
+  }, [user]);
 
   // Sync state changes across tabs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === LOCAL_STORAGE_KEY) {
+      const key = getStorageKey();
+      if (e.key === key) {
         try {
           if (e.newValue) {
             const parsed = JSON.parse(e.newValue);
@@ -77,12 +82,13 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [user]);
 
   const savePreferences = (newPrefs: UserPreferences) => {
     try {
       setPreferences(newPrefs);
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newPrefs));
+      const key = getStorageKey();
+      localStorage.setItem(key, JSON.stringify(newPrefs));
       showToast("Preferences saved successfully.");
     } catch (error) {
       console.error("Failed to save preferences:", error);
@@ -93,7 +99,8 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
   const clearPreferences = () => {
     try {
       setPreferences(DEFAULT_PREFERENCES);
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
+      const key = getStorageKey();
+      localStorage.removeItem(key);
       showToast("Preferences cleared.");
     } catch (error) {
       console.error("Failed to clear preferences:", error);

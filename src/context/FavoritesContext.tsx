@@ -3,78 +3,97 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useToast } from "./ToastContext";
 import { useAuth } from "./AuthContext";
-import { favoritesRepository } from "@/services/storage";
+import { apiClient } from "@/lib/api-client";
 
 interface FavoritesContextType {
   favorites: string[];
-  toggleFavorite: (slug: string) => void;
+  isLoadingFavorites: boolean;
+  toggleFavorite: (slug: string) => Promise<void>;
   isFavorite: (slug: string) => boolean;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-/**
- * TODO (Authentication Readiness):
- * Favorites are currently managed via the favoritesRepository (backed by localStorage).
- * When real authentication is introduced, simply swap the favoritesRepository implementation
- * in `src/services/storage.ts` to use a backend API.
- */
-
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
   const { showToast } = useToast();
   const { user } = useAuth();
 
-  // Load from storage on mount and when user changes
   useEffect(() => {
-    setFavorites(favoritesRepository.get(user?.id || null));
-  }, [user]);
+    let isMounted = true;
 
-
-  // Sync state changes across tabs
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      const expectedKey = favoritesRepository.getKey(user?.id || null);
-      if (e.key === expectedKey && e.newValue) {
-        try {
-          setFavorites(JSON.parse(e.newValue));
-        } catch {
-          // ignore
+    async function loadFavorites() {
+      if (!user) {
+        if (isMounted) {
+          setFavorites([]);
+          setIsLoadingFavorites(false);
         }
+        return;
       }
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, [user]);
 
-  const toggleFavorite = (slug: string) => {
-    setFavorites((prev) => {
-      const isSaved = prev.includes(slug);
-      const newFavorites = isSaved 
-        ? prev.filter((s) => s !== slug) 
-        : [...prev, slug];
-      
+      setIsLoadingFavorites(true);
       try {
-        favoritesRepository.set(user?.id || null, newFavorites);
-        
-        // Show toast notification
-        if (isSaved) {
-          showToast("Removed from Favorites");
-        } else {
-          showToast("Saved to Favorites");
+        const response = await apiClient.get('/favorites');
+        if (response && response.success && Array.isArray(response.data)) {
+          if (isMounted) {
+            setFavorites(response.data.map((fav: any) => fav.tool.slug));
+          }
         }
       } catch (error) {
-        console.error("Failed to save favorites to localStorage:", error);
-        showToast("Something went wrong. Please try again.");
+        console.error("Failed to load favorites:", error);
+        if (isMounted) {
+          setFavorites([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingFavorites(false);
+        }
       }
-      return newFavorites;
-    });
+    }
+
+    loadFavorites();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
+  const toggleFavorite = async (slug: string) => {
+    if (!user) {
+      showToast("Please log in to save favorites.");
+      return;
+    }
+
+    const isSaved = favorites.includes(slug);
+    
+    // Optimistic UI update
+    setFavorites((prev) => 
+      isSaved ? prev.filter((s) => s !== slug) : [...prev, slug]
+    );
+
+    try {
+      if (isSaved) {
+        await apiClient.delete(`/favorites/${slug}`);
+        showToast("Removed from Favorites");
+      } else {
+        await apiClient.post('/favorites', { slug });
+        showToast("Saved to Favorites");
+      }
+    } catch (error) {
+      console.error("Failed to toggle favorite:", error);
+      // Revert optimistic update on failure
+      setFavorites((prev) => 
+        isSaved ? [...prev, slug] : prev.filter((s) => s !== slug)
+      );
+      showToast("Failed to update favorites. Please try again.");
+    }
   };
 
   const isFavorite = (slug: string) => favorites.includes(slug);
 
   return (
-    <FavoritesContext.Provider value={{ favorites, toggleFavorite, isFavorite }}>
+    <FavoritesContext.Provider value={{ favorites, isLoadingFavorites, toggleFavorite, isFavorite }}>
       {children}
     </FavoritesContext.Provider>
   );

@@ -8,7 +8,7 @@ import { useTools } from "@/context/ToolsContext";
 
 export function FavoritesView() {
   const { tools: MOCK_RECOMMENDATIONS } = useTools();
-  const { favorites } = useFavorites();
+  const { favorites, isLoadingFavorites } = useFavorites();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | "All">("All");
 
@@ -31,6 +31,18 @@ export function FavoritesView() {
       return matchesSearch && matchesCategory;
     });
   }, [savedTools, searchQuery, selectedCategory]);
+
+  if (isLoadingFavorites) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-6 text-center animate-in fade-in duration-500 min-h-[400px]">
+        <svg className="animate-spin h-10 w-10 text-brand-600 dark:text-brand-400 mb-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">Loading your favorites...</p>
+      </div>
+    );
+  }
 
   if (favorites.length === 0) {
     return (

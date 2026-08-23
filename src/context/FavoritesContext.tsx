@@ -17,6 +17,7 @@ const FavoritesContext = createContext<FavoritesContextType | undefined>(undefin
 export function FavoritesProvider({ children }: { children: ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
+  const [mutatingFavorites, setMutatingFavorites] = useState<Set<string>>(new Set());
   const { showToast } = useToast();
   const { user } = useAuth();
 
@@ -37,7 +38,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         const response = await apiClient.get('/favorites');
         if (response && response.success && Array.isArray(response.data)) {
           if (isMounted) {
-            setFavorites(response.data.map((fav: any) => fav.tool.slug));
+            setFavorites(response.data.map((fav: { tool: { slug: string } }) => fav.tool.slug));
           }
         }
       } catch (error) {
@@ -65,6 +66,12 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    // Prevent concurrent mutations for the same tool to avoid race conditions
+    if (mutatingFavorites.has(slug)) return;
+    
+    // Lock this slug
+    setMutatingFavorites((prev) => new Set(prev).add(slug));
+
     const isSaved = favorites.includes(slug);
     
     // Optimistic UI update
@@ -87,6 +94,13 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
         isSaved ? [...prev, slug] : prev.filter((s) => s !== slug)
       );
       showToast("Failed to update favorites. Please try again.");
+    } finally {
+      // Unlock this slug
+      setMutatingFavorites((prev) => {
+        const next = new Set(prev);
+        next.delete(slug);
+        return next;
+      });
     }
   };
 

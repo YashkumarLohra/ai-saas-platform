@@ -33,7 +33,7 @@ function LoginForm() {
 
     setIsSubmitting(true);
     try {
-      await login(email);
+      await login(email, password);
       router.push(redirectTo);
     } catch (err) {
       setError("Invalid credentials. Please try again.");

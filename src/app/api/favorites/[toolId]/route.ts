@@ -45,9 +45,9 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Prisma code P2025: Record to delete does not exist.
-    if (error.code === 'P2025') {
+    if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: string }).code === 'P2025') {
       return NextResponse.json(
         { error: "Favorite not found or already deleted." },
         { status: 404 }

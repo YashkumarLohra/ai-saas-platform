@@ -39,7 +39,7 @@ function SignupForm() {
 
     setIsSubmitting(true);
     try {
-      await signup(email, name);
+      await signup(email, name, password);
       router.push(redirectTo);
     } catch (err) {
       setError("Failed to create account. Please try again.");

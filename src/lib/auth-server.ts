@@ -1,13 +1,5 @@
-/**
- * Secure Server-Side Authentication Utility
- * 
- * TODO: Integrate real Supabase Auth or NextAuth here.
- * 
- * SECURITY WARNING: 
- * We currently use a mock localStorage authentication on the frontend.
- * We MUST NOT trust any client-provided user IDs (e.g. from headers/cookies)
- * until a real, cryptographically secure server-side session mechanism is in place.
- */
+import { createClient } from './supabase/server';
+import prisma from './prisma';
 
 export interface AuthenticatedUser {
   id: string;
@@ -15,7 +7,32 @@ export interface AuthenticatedUser {
 }
 
 export async function getAuthenticatedUser(): Promise<AuthenticatedUser | null> {
-  // Deliberately returning null to lock down all backend endpoints that require auth.
-  // This prevents unauthorized users from modifying data by spoofing a deterministic mock ID.
-  return null;
+  try {
+    const supabase = await createClient();
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error || !user) {
+      return null;
+    }
+
+    // Ensure the authenticated user exists in the Prisma 'User' table.
+    // This is required because our Favorites schema defines a foreign key
+    // relationship between Favorite and User.
+    const prismaUser = await prisma.user.upsert({
+      where: { id: user.id },
+      update: { email: user.email! },
+      create: { 
+        id: user.id, 
+        email: user.email! 
+      }
+    });
+
+    return {
+      id: prismaUser.id,
+      email: prismaUser.email,
+    };
+  } catch (err) {
+    console.error("Error in getAuthenticatedUser:", err);
+    return null;
+  }
 }

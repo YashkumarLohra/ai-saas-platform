@@ -131,6 +131,10 @@ function SignupForm() {
         </button>
       </form>
 
+      <p className="text-sm text-slate-500 mb-6">
+        By signing up, you agree to our Terms of Service and Privacy Policy. You&apos;ll also receive occasional updates.
+      </p>
+
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
         <Link href={`/login${redirectTo !== '/dashboard' ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">

@@ -18,7 +18,7 @@ export function DashboardView() {
   const { user } = useAuth();
   const [mounted, setMounted] = useState(false);
   
-  const { projects, deleteProject } = useProjects();
+  const { projects, isLoadingProjects, deleteProject } = useProjects();
   const { favorites, isLoadingFavorites } = useFavorites();
   const recentSlugs = useRecentlyViewed();
 
@@ -132,7 +132,14 @@ export function DashboardView() {
                 )}
               </div>
               
-              {recentProjects.length > 0 ? (
+              {isLoadingProjects ? (
+                <div className="flex justify-center items-center py-16 min-h-[200px]">
+                  <svg className="animate-spin h-8 w-8 text-brand-600 dark:text-brand-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
+              ) : recentProjects.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {recentProjects.map(project => (
                     <ProjectCard key={project.id} project={project} onDelete={(p) => setProjectToDelete(p)} />

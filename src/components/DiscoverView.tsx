@@ -14,7 +14,7 @@ export function DiscoverView() {
   const { tools: MOCK_RECOMMENDATIONS } = useTools();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { preferences } = usePreferences(); // Prepared for future personalized ranking integration
+  const { preferences, isLoadingPreferences } = usePreferences(); // Prepared for future personalized ranking integration
 
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -331,7 +331,12 @@ export function DiscoverView() {
             )}
           </div>
 
-          {filteredAndSortedTools.length > 0 ? (
+          {isLoadingPreferences ? (
+            <div className="flex flex-col items-center justify-center p-16 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50 animate-in fade-in min-h-[400px]">
+              <div className="w-8 h-8 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin"></div>
+              <p className="mt-4 text-sm font-medium text-gray-500 dark:text-gray-400 animate-pulse">Loading personalized recommendations...</p>
+            </div>
+          ) : filteredAndSortedTools.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredAndSortedTools.map(tool => (
                 <ToolCard 

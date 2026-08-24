@@ -9,7 +9,7 @@ import { ExperienceLevel } from "@/types/index";
 
 export default function PreferencesPage() {
   const { tools: MOCK_RECOMMENDATIONS } = useTools();
-  const { preferences, savePreferences, clearPreferences } = usePreferences();
+  const { preferences, isLoadingPreferences, savePreferences, clearPreferences } = usePreferences();
   
   // Local state for editing
   const [selectedCategories, setSelectedCategories] = useState<string[]>(preferences.preferredCategories || []);
@@ -73,11 +73,18 @@ export default function PreferencesPage() {
             </p>
           </div>
 
-          {/* Preferences Form */}
-          <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-10 shadow-sm flex flex-col gap-10">
-            
-            {/* Categories */}
-            <section className="flex flex-col gap-4">
+          {/* Preferences Form or Loading State */}
+          {isLoadingPreferences ? (
+            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-16 shadow-sm flex flex-col items-center justify-center min-h-[300px]">
+              <div className="w-8 h-8 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin"></div>
+              <p className="mt-4 text-sm font-medium text-gray-500 dark:text-gray-400 animate-pulse">Loading preferences...</p>
+            </div>
+          ) : (
+            <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-3xl p-6 sm:p-10 shadow-sm flex flex-col gap-10">
+              
+              {/* Categories */}
+              <section className="flex flex-col gap-4">
+
               <div>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Topics of Interest</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -179,6 +186,7 @@ export default function PreferencesPage() {
             </div>
 
           </div>
+          )}
         </main>
       </div>
     </AuthGuard>

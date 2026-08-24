@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 };
 
 import { PreferencesProvider } from "@/context/PreferencesContext";
+import { RecentlyViewedProvider } from "@/context/RecentlyViewedContext";
 import { ToolsProvider } from "@/context/ToolsContext";
 import { toolService } from "@/services/toolService";
 
@@ -41,10 +42,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <PreferencesProvider>
               <ProjectsProvider>
                 <FavoritesProvider>
-                  <Navigation />
-                  <div className="flex-1 flex flex-col">
-                    {children}
-                  </div>
+                  <RecentlyViewedProvider>
+                    <Navigation />
+                    <div className="flex-1 flex flex-col">
+                      {children}
+                    </div>
+                  </RecentlyViewedProvider>
                 </FavoritesProvider>
               </ProjectsProvider>
             </PreferencesProvider>

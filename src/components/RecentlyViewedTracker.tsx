@@ -1,21 +1,19 @@
 "use client";
 
 import { useEffect } from "react";
-import { addRecentlyViewed } from "@/hooks/useRecentlyViewed";
-
-import { useAuth } from "@/context/AuthContext";
+import { useRecentlyViewedContext } from "@/context/RecentlyViewedContext";
 
 export function RecentlyViewedTracker({ slug }: { slug: string }) {
-  const { user } = useAuth();
+  const { addRecentlyViewed } = useRecentlyViewedContext();
   
   useEffect(() => {
     // Only track if slug exists
     if (slug) {
       // Slight timeout so it doesn't interrupt immediate rendering priority
-      const timer = setTimeout(() => addRecentlyViewed(user?.id || null, slug), 500);
+      const timer = setTimeout(() => addRecentlyViewed(slug), 500);
       return () => clearTimeout(timer);
     }
-  }, [slug, user?.id]);
+  }, [slug, addRecentlyViewed]);
 
   return null; // This component renders nothing visually
 }

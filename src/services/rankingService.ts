@@ -39,7 +39,7 @@ export const rankingService = {
           );
           if (matchedOutputs.length > 0) {
             score += matchedOutputs.length * 40;
-            reasons.push(`Matches requested output type(s): ${matchedOutputs.join(", ")}`);
+            reasons.push(`Matches your requested output`);
           }
         }
 
@@ -50,14 +50,14 @@ export const rankingService = {
           );
           if (matchedInputs.length > 0) {
             score += matchedInputs.length * 30;
-            reasons.push(`Matches requested input type(s): ${matchedInputs.join(", ")}`);
+            reasons.push(`Supports your required input`);
           }
         }
 
         // Difficulty Match (+15)
         if (intent.preferredDifficulty && candidate.difficulty === intent.preferredDifficulty) {
           score += 15;
-          reasons.push(`Matches preferred difficulty: ${intent.preferredDifficulty}`);
+          reasons.push(`Matches your preferred difficulty`);
         }
 
         // Audience Match (+15 capped)
@@ -67,7 +67,7 @@ export const rankingService = {
           );
           if (audienceOverlap) {
             score += 15;
-            reasons.push(`Tailored for your target audience`);
+            reasons.push(`Tailored to your intended audience`);
           }
         }
 
@@ -79,7 +79,7 @@ export const rankingService = {
           );
           if (hasOverlap) {
             score += 10;
-            reasons.push(`Matches inferred category`);
+            reasons.push(`Matches your selected category`);
           }
         }
 
@@ -112,7 +112,7 @@ export const rankingService = {
 
           if (semScore > 0) {
             score += semScore;
-            reasons.push(`Provides required capabilities: ${matchedSems.join(", ")}`);
+            reasons.push(`Strong match for your specific task`);
           }
         }
       }
@@ -125,7 +125,7 @@ export const rankingService = {
         );
         if (hasPrefOverlap) {
           score += 10;
-          reasons.push(`Matches your saved category preferences`);
+          reasons.push(`Matches your interests`);
         }
       }
 

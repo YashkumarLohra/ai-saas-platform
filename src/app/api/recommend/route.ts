@@ -34,11 +34,15 @@ export async function POST(req: Request) {
     // NOTE: preferences could be fetched and passed here in a future update
     const recommendations = rankingService.rankCandidates(intent, candidates).slice(0, 20);
 
+    // Map recommendations for public API boundary
+    const publicRecommendations = recommendations.map(rec => ({
+      tool: rec.tool,
+      reasons: rec.reasons
+    }));
+
     return NextResponse.json({
       success: true,
-      intent,
-      candidates,
-      recommendations
+      recommendations: publicRecommendations
     });
 
   } catch (error: unknown) {

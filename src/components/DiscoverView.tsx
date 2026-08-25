@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTools } from "@/context/ToolsContext";
 import { ToolCard } from "@/components/ToolCard";
@@ -191,7 +191,7 @@ export function DiscoverView() {
     return result;
   }, [backendRecommendations, filteredAndSortedTools, selectedCategory, selectedPricing, sortBy]);
 
-  const triggerRecommendation = async (query: string) => {
+  const triggerRecommendation = useCallback(async (query: string) => {
     if (!query.trim()) {
       setBackendRecommendations(null);
       setRecommendationError(null);
@@ -227,7 +227,7 @@ export function DiscoverView() {
         setIsRecommendationLoading(false);
       }
     }
-  };
+  }, [preferences]);
 
   const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null || selectedPricing !== null;
 
@@ -262,7 +262,8 @@ export function DiscoverView() {
     const newQuery = params.toString();
     const newUrl = newQuery ? `/discover?${newQuery}` : "/discover";
     router.replace(newUrl, { scroll: false });
-  }, [searchQuery, selectedCategory, selectedPricing, sortBy, router, searchParams]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, selectedCategory, selectedPricing, sortBy]);
 
   const handleClearFilters = () => {
     setSearchQuery("");
@@ -425,13 +426,16 @@ export function DiscoverView() {
             </div>
           ) : displayedTools.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {displayedTools.map(tool => (
+              {displayedTools.map((tool, index) => (
                 <ToolCard 
                   key={tool.id} 
                   tool={tool} 
                   isSelected={selectedTools.includes(tool.slug)}
                   onToggleCompare={() => handleToggleCompare(tool.slug)}
                   disabledCompare={selectedTools.length >= 3 && !selectedTools.includes(tool.slug)}
+                  isRecommended={!!backendRecommendations}
+                  isBestMatch={!!backendRecommendations && index === 0}
+                  taskQuery={!!backendRecommendations ? searchQuery : undefined}
                 />
               ))}
             </div>

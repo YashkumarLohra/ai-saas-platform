@@ -39,3 +39,34 @@ export interface UserPreferences {
   preferredCategories: string[];
   experienceLevel?: ExperienceLevel;
 }
+
+export type ExtractionConfidence = "HIGH" | "MEDIUM" | "LOW";
+
+export type ToolPricing = "FREE" | "PAID";
+export type ToolMediaType = "TEXT" | "IMAGE" | "AUDIO" | "VIDEO" | "CODE" | "DOCUMENT" | "PRESENTATION";
+export type ToolDifficulty = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
+export type ToolAudience = "STUDENTS" | "PROFESSIONALS" | "CREATORS" | "MARKETERS" | "DEVELOPERS" | "DESIGNERS" | "BUSINESS";
+
+export interface StructuredIntent {
+  // Original context
+  originalQuery: string;
+  
+  // Hard Constraints (Must Match or NULL)
+  requiredPricing: ToolPricing | null;
+  requiredInputTypes: ToolMediaType[];
+  requiredOutputTypes: ToolMediaType[];
+  
+  // Soft Ranking Signals (Preferences)
+  preferredDifficulty: ToolDifficulty | null;
+  inferredAudiences: ToolAudience[];
+  inferredCategories: string[];   
+  
+  // Semantic Search Payload
+  semanticCapabilities: string[];
+  
+  // Confidence metadata
+  confidence: {
+    overall: ExtractionConfidence;
+    ambiguous: boolean;
+  };
+}

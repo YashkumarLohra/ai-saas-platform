@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Tool" DROP COLUMN "isPreferenceMatch",
+ADD COLUMN "difficulty" TEXT NOT NULL DEFAULT 'INTERMEDIATE',
+ADD COLUMN "inputTypes" TEXT[] DEFAULT ARRAY[]::TEXT[],
+ADD COLUMN "outputTypes" TEXT[] DEFAULT ARRAY[]::TEXT[],
+ADD COLUMN "targetAudience" TEXT[] DEFAULT ARRAY[]::TEXT[];

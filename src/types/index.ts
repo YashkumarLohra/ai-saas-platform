@@ -14,6 +14,10 @@ export interface Recommendation {
   websiteUrl?: string;
   isIntegrated?: boolean;
   isPreferenceMatch?: boolean;
+  inputTypes?: string[];
+  outputTypes?: string[];
+  difficulty?: string;
+  targetAudience?: string[];
 }
 
 export interface TaskContext {

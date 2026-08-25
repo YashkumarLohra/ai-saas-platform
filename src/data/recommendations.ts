@@ -18,7 +18,11 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     features: ["Text-to-slide generation", "AI image generation", "PowerPoint export", "Collaboration tools"],
     pros: ["Extremely fast generation", "No design skills required", "Generous free tier"],
     cons: ["Limited custom layout controls", "Templates can look slightly repetitive"],
-    websiteUrl: "https://example.com/slide-genius-ai"
+    websiteUrl: "https://example.com/slide-genius-ai",
+    inputTypes: ["TEXT"],
+    outputTypes: ["PRESENTATION", "IMAGE", "TEXT"],
+    difficulty: "BEGINNER",
+    targetAudience: ["STUDENTS", "PROFESSIONALS", "BUSINESS"]
   },
   {
     id: "presentation-ai-2",
@@ -37,7 +41,11 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     features: ["AI Data-to-chart processing", "Brand kit enforcement", "Real-time co-editing", "Advanced animations"],
     pros: ["Highly customizable", "Great for data-heavy assignments", "Strong team features"],
     cons: ["Steeper learning curve", "No free plan available (only trial)"],
-    websiteUrl: "https://example.com/deckcraft-pro"
+    websiteUrl: "https://example.com/deckcraft-pro",
+    inputTypes: ["DOCUMENT", "TEXT"],
+    outputTypes: ["PRESENTATION", "IMAGE"],
+    difficulty: "ADVANCED",
+    targetAudience: ["PROFESSIONALS", "BUSINESS", "STUDENTS"]
   },
   {
     id: "presentation-ai-3",
@@ -56,7 +64,11 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     features: ["Automated image sourcing", "Storyboarding mode", "Web-based interactive presentations", "Video embedding"],
     pros: ["Beautiful aesthetics out of the box", "Interactive elements engage audiences", "Great for portfolios"],
     cons: ["Not easily exported to PDF/PPT without formatting loss", "Can be resource-heavy on older devices"],
-    websiteUrl: "https://example.com/visual-pitch"
+    websiteUrl: "https://example.com/visual-pitch",
+    inputTypes: ["TEXT"],
+    outputTypes: ["PRESENTATION", "IMAGE", "VIDEO"],
+    difficulty: "INTERMEDIATE",
+    targetAudience: ["CREATORS", "DESIGNERS", "STUDENTS"]
   },
   {
     id: "video-ai-1",
@@ -75,7 +87,11 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     features: ["Text-to-video", "Background removal", "Auto-captioning", "Voiceovers"],
     pros: ["Easy to use", "Great background removal", "High-quality voices"],
     cons: ["Slightly expensive", "Limited export formats"],
-    websiteUrl: "https://example.com/video-craft-ai"
+    websiteUrl: "https://example.com/video-craft-ai",
+    inputTypes: ["TEXT", "VIDEO", "AUDIO"],
+    outputTypes: ["VIDEO", "TEXT", "AUDIO"],
+    difficulty: "BEGINNER",
+    targetAudience: ["CREATORS", "MARKETERS"]
   },
   {
     id: "coding-ai-1",
@@ -94,6 +110,10 @@ export const MOCK_RECOMMENDATIONS: Recommendation[] = [
     features: ["Code completion", "Bug detection", "Test generation", "Code review"],
     pros: ["Excellent context awareness", "Supports all major languages", "Fast responses"],
     cons: ["Can occasionally hallucinate complex logic", "Requires internet connection"],
-    websiteUrl: "https://example.com/code-pilot-ai"
+    websiteUrl: "https://example.com/code-pilot-ai",
+    inputTypes: ["CODE", "TEXT"],
+    outputTypes: ["CODE", "TEXT"],
+    difficulty: "INTERMEDIATE",
+    targetAudience: ["DEVELOPERS", "STUDENTS"]
   }
 ];

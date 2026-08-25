@@ -25,12 +25,15 @@ model Tool {
   pros            String[]
   cons            String[]
   isIntegrated    Boolean  @default(false)
-  isPreferenceMatch Boolean @default(false)
+  inputTypes      String[] @default([])
+  outputTypes     String[] @default([])
+  difficulty      String   @default("INTERMEDIATE")
+  targetAudience  String[] @default([])
 
   // Relationships
-  favorites       Favorite[]
-  recentViews     RecentlyViewed[]
-  projects        ProjectTool[]
+  favorites   Favorite[]
+  recentViews RecentlyViewed[]
+  projects    ProjectTool[]
 
   @@index([category])
 }
@@ -55,12 +58,12 @@ model User {
 
 model Favorite {
   createdAt DateTime @default(now())
-  
-  user_id   String
-  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  
-  tool_id   String
-  tool      Tool     @relation(fields: [tool_id], references: [id], onDelete: Cascade)
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  tool_id String
+  tool    Tool   @relation(fields: [tool_id], references: [id], onDelete: Cascade)
 
   @@id([user_id, tool_id])
   @@index([user_id])
@@ -72,25 +75,25 @@ model Project {
   description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
-  user_id     String
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   // Relationships
-  tools       ProjectTool[]
+  tools ProjectTool[]
 
   @@index([user_id])
 }
 
 // Join table for Project <-> Tool
 model ProjectTool {
-  addedAt   DateTime @default(now())
+  addedAt DateTime @default(now())
 
   project_id String
-  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  project    Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
-  tool_id    String
-  tool       Tool     @relation(fields: [tool_id], references: [id], onDelete: Cascade)
+  tool_id String
+  tool    Tool   @relation(fields: [tool_id], references: [id], onDelete: Cascade)
 
   @@id([project_id, tool_id])
 }
@@ -101,8 +104,8 @@ model Preference {
   experienceLevel     String?
   updatedAt           DateTime @updatedAt
 
-  user_id             String   @unique
-  user                User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String @unique
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
 }
@@ -110,11 +113,11 @@ model Preference {
 model RecentlyViewed {
   viewedAt DateTime @default(now())
 
-  user_id  String
-  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  tool_id  String
-  tool     Tool     @relation(fields: [tool_id], references: [id], onDelete: Cascade)
+  tool_id String
+  tool    Tool   @relation(fields: [tool_id], references: [id], onDelete: Cascade)
 
   @@id([user_id, tool_id])
   @@index([user_id])

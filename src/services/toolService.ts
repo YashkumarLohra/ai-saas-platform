@@ -18,7 +18,10 @@ function mapApiToolToRecommendation(apiTool: any): Recommendation {
     cons: apiTool.cons || [],
     websiteUrl: apiTool.websiteUrl || undefined,
     isIntegrated: apiTool.isIntegrated || false,
-    isPreferenceMatch: apiTool.isPreferenceMatch || false,
+    inputTypes: apiTool.inputTypes || [],
+    outputTypes: apiTool.outputTypes || [],
+    difficulty: apiTool.difficulty || "INTERMEDIATE",
+    targetAudience: apiTool.targetAudience || [],
   };
 }
 

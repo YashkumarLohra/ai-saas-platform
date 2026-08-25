@@ -1,6 +1,7 @@
 import { apiClient } from "@/lib/api-client";
 import { Recommendation } from "@/types/index";
 import { MOCK_RECOMMENDATIONS } from "@/data/recommendations";
+import { RecommendRequest } from "@/lib/schemas/recommendation";
 
 function mapApiToolToRecommendation(apiTool: any): Recommendation {
   return {
@@ -25,6 +26,12 @@ function mapApiToolToRecommendation(apiTool: any): Recommendation {
   };
 }
 
+function mapRankedCandidateToRecommendation(candidate: any): Recommendation {
+  const rec = mapApiToolToRecommendation(candidate.tool);
+  rec.reasons = candidate.reasons || [];
+  return rec;
+}
+
 export const toolService = {
   getTools: async (): Promise<Recommendation[]> => {
     try {
@@ -43,6 +50,37 @@ export const toolService = {
       console.error("Failed to fetch tools from /api/tools:", error);
       // Fallback to local data on error to prevent UI crash
       return MOCK_RECOMMENDATIONS;
+    }
+  },
+  
+  recommendTools: async (request: RecommendRequest, signal?: AbortSignal): Promise<Recommendation[]> => {
+    try {
+      const response = await fetch('/api/recommend', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+        signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Recommendation API failed with status ${response.status}`);
+      }
+
+      const json = await response.json();
+      
+      if (!json.success || !Array.isArray(json.recommendations)) {
+        throw new Error('Invalid recommendation API response format');
+      }
+
+      return json.recommendations.map(mapRankedCandidateToRecommendation);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw error;
+      }
+      console.error("Failed to fetch recommendations from /api/recommend:", error);
+      throw error;
     }
   }
 };

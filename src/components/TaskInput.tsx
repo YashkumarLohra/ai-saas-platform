@@ -8,10 +8,11 @@ interface TaskInputProps {
   onTaskResolved?: (context: TaskContext | null) => void;
   searchQuery?: string;
   onSearchQueryChange?: (query: string) => void;
+  onSearchSubmit?: (query: string) => void;
   mode?: "search" | "task";
 }
 
-export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange, mode = "task" }: TaskInputProps = {}) {
+export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange, onSearchSubmit, mode = "task" }: TaskInputProps = {}) {
   const [internalTask, setInternalTask] = useState("");
   const task = searchQuery !== undefined ? searchQuery : internalTask;
   
@@ -34,6 +35,7 @@ export function TaskInput({ onTaskResolved, searchQuery, onSearchQueryChange, mo
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
+      onSearchSubmit?.(trimmedTask);
       return;
     }
 

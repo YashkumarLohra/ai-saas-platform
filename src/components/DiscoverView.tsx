@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTools } from "@/context/ToolsContext";
 import { ToolCard } from "@/components/ToolCard";
 import { TaskInput } from "@/components/TaskInput";
 import { usePreferences } from "@/context/PreferencesContext";
+import { toolService } from "@/services/toolService";
+import { Recommendation } from "@/types/index";
 import Link from "next/link";
 
 type SortOption = "recommended" | "a-z" | "z-a";
@@ -24,6 +26,12 @@ export function DiscoverView() {
   
   const [hasTask, setHasTask] = useState(false);
   
+  // Backend recommendation state
+  const [backendRecommendations, setBackendRecommendations] = useState<Recommendation[] | null>(null);
+  const [isRecommendationLoading, setIsRecommendationLoading] = useState(false);
+  const [recommendationError, setRecommendationError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   // Compare functionality state
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
 
@@ -163,6 +171,64 @@ export function DiscoverView() {
     return result;
   }, [searchQuery, selectedCategory, selectedPricing, sortBy, preferences, MOCK_RECOMMENDATIONS]);
 
+  const displayedTools = useMemo(() => {
+    if (!backendRecommendations) return filteredAndSortedTools;
+
+    let result = [...backendRecommendations];
+    if (selectedCategory) {
+      result = result.filter(tool => tool.category === selectedCategory);
+    }
+    if (selectedPricing) {
+      result = result.filter(tool => tool.pricing === selectedPricing);
+    }
+    if (sortBy !== "recommended") {
+      if (sortBy === "a-z") {
+        result.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortBy === "z-a") {
+        result.sort((a, b) => b.name.localeCompare(a.name));
+      }
+    }
+    return result;
+  }, [backendRecommendations, filteredAndSortedTools, selectedCategory, selectedPricing, sortBy]);
+
+  const triggerRecommendation = async (query: string) => {
+    if (!query.trim()) {
+      setBackendRecommendations(null);
+      setRecommendationError(null);
+      return;
+    }
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+    
+    setIsRecommendationLoading(true);
+    setRecommendationError(null);
+    
+    try {
+      const results = await toolService.recommendTools({
+        query,
+        experienceLevel: preferences?.experienceLevel,
+        preferredCategories: preferences?.preferredCategories
+      }, abortController.signal);
+      
+      setBackendRecommendations(results);
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        return; // Ignore aborted requests
+      }
+      setRecommendationError(error instanceof Error ? error.message : "Failed to get recommendations");
+      setBackendRecommendations(null);
+    } finally {
+      if (abortControllerRef.current === abortController) {
+        setIsRecommendationLoading(false);
+      }
+    }
+  };
+
   const hasFilters = searchQuery.trim() !== "" || selectedCategory !== null || selectedPricing !== null;
 
   // Sync state to URL
@@ -219,7 +285,14 @@ export function DiscoverView() {
         <div className="w-full max-w-2xl mx-auto">
           <TaskInput 
             searchQuery={searchQuery}
-            onSearchQueryChange={setSearchQuery}
+            onSearchQueryChange={(val) => {
+              setSearchQuery(val);
+              if (!val.trim()) {
+                setBackendRecommendations(null);
+                setRecommendationError(null);
+              }
+            }}
+            onSearchSubmit={triggerRecommendation}
             onTaskResolved={(ctx) => setHasTask(!!ctx)} 
             mode="search"
           />
@@ -322,7 +395,7 @@ export function DiscoverView() {
         <div className="flex-1">
           <div className="mb-6 flex items-center justify-between text-sm">
             <span className="font-semibold text-gray-900 dark:text-white">
-              {filteredAndSortedTools.length} AI tool{filteredAndSortedTools.length !== 1 && 's'}
+              {displayedTools.length} AI tool{displayedTools.length !== 1 && 's'}
             </span>
             {hasFilters && (
               <span className="text-gray-500 dark:text-gray-400">
@@ -331,14 +404,28 @@ export function DiscoverView() {
             )}
           </div>
 
-          {isLoadingPreferences ? (
+          {recommendationError && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-50 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400 border border-amber-200 dark:border-amber-800/30 flex items-center gap-3 animate-in fade-in">
+              <svg className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+              <div>
+                <p className="font-semibold text-sm">AI Recommendation Unavailable</p>
+                <p className="text-sm opacity-90">{recommendationError}. Using standard search results instead.</p>
+              </div>
+            </div>
+          )}
+
+          {isLoadingPreferences || isRecommendationLoading ? (
             <div className="flex flex-col items-center justify-center p-16 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-3xl bg-white/50 dark:bg-zinc-900/50 animate-in fade-in min-h-[400px]">
               <div className="w-8 h-8 border-4 border-brand-200 border-t-brand-600 rounded-full animate-spin"></div>
-              <p className="mt-4 text-sm font-medium text-gray-500 dark:text-gray-400 animate-pulse">Loading personalized recommendations...</p>
+              <p className="mt-4 text-sm font-medium text-gray-500 dark:text-gray-400 animate-pulse">
+                {isRecommendationLoading ? "Understanding your task..." : "Loading personalized recommendations..."}
+              </p>
             </div>
-          ) : filteredAndSortedTools.length > 0 ? (
+          ) : displayedTools.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredAndSortedTools.map(tool => (
+              {displayedTools.map(tool => (
                 <ToolCard 
                   key={tool.id} 
                   tool={tool} 

@@ -39,7 +39,6 @@ export const candidateService = {
 
     let candidates = await prisma.tool.findMany({
       where,
-      take: 20,
       orderBy: { name: "asc" },
     });
 
@@ -57,7 +56,6 @@ export const candidateService = {
 
       candidates = await prisma.tool.findMany({
         where: fallbackWhere,
-        take: 20,
         orderBy: { name: "asc" },
       });
     }

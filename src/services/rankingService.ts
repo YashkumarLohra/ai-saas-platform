@@ -12,6 +12,10 @@ function normalize(str: string | null | undefined): string {
   return (str || "").toLowerCase().trim();
 }
 
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
 export const rankingService = {
   rankCandidates(
     intent: StructuredIntentParsed,
@@ -94,7 +98,13 @@ export const rankingService = {
           const matchedSems = [];
           for (const cap of intent.semanticCapabilities) {
             if (semScore >= 40) break;
-            if (searchableText.includes(normalize(cap))) {
+            const normalizedCap = normalize(cap);
+            if (!normalizedCap) continue;
+            
+            const escapedCap = escapeRegExp(normalizedCap);
+            const regex = new RegExp(`\\b${escapedCap}\\b`, 'i');
+            
+            if (regex.test(searchableText)) {
               semScore += 20;
               matchedSems.push(cap);
             }

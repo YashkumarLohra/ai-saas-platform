@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     // Call ranking service to order candidates deterministically
     // NOTE: preferences could be fetched and passed here in a future update
-    const recommendations = rankingService.rankCandidates(intent, candidates);
+    const recommendations = rankingService.rankCandidates(intent, candidates).slice(0, 20);
 
     return NextResponse.json({
       success: true,

@@ -66,82 +66,45 @@ export function DiscoverView() {
     const isSearchActive = searchQuery.trim() !== "";
     const hasPreferences = preferences?.preferredCategories && preferences.preferredCategories.length > 0;
 
-    // Apply Search and Preference Scoring
+    // Apply Search and Preference Match
     if (isSearchActive || hasPreferences) {
-      const normalizedQuery = isSearchActive ? searchQuery.toLowerCase().replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ').trim() : "";
-      const stopWords = new Set(['i', 'want', 'to', 'create', 'a', 'for', 'my', 'the', 'an', 'need', 'make', 'do', 'help', 'with', 'some']);
-      const keywords = normalizedQuery ? normalizedQuery.split(' ').filter(word => !stopWords.has(word) && word.length > 1) : [];
+      const queryTerms = isSearchActive 
+        ? searchQuery.toLowerCase().split(/\s+/).filter(Boolean) 
+        : [];
 
-      const scoredTools = result.map((tool, index) => {
-        let score = 0;
-        let isPreferenceMatch = false;
+      result = result.filter(tool => {
+        let matchesSearch = !isSearchActive;
 
-        const toolName = tool.name.toLowerCase();
-        const toolCategory = tool.category.toLowerCase();
-        const toolDescription = tool.description.toLowerCase();
-        const toolBestFor = tool.bestFor?.toLowerCase() || '';
-
-        // 1. Task/Search Relevance
         if (isSearchActive) {
-          // Exact tool-name match
-          if (toolName === normalizedQuery) score += 1000;
-          // Strong tool-name match
-          else if (toolName.includes(normalizedQuery)) score += 500;
+          const searchableText = [
+            tool.name,
+            tool.category,
+            tool.description,
+            tool.bestFor || '',
+            ...(tool.features || [])
+          ].join(" ").toLowerCase();
 
-          // Category match
-          if (toolCategory === normalizedQuery) score += 400;
-          else if (toolCategory.includes(normalizedQuery)) score += 200;
-
-          // Capability match (Features)
-          if (tool.features?.some(f => f.toLowerCase().includes(normalizedQuery))) score += 100;
-
-          // Use-case match (BestFor)
-          if (toolBestFor.includes(normalizedQuery)) score += 50;
-
-          // Description match
-          if (toolDescription.includes(normalizedQuery)) score += 25;
-
-          if (keywords.length > 0) {
-            keywords.forEach(kw => {
-              if (toolName.includes(kw)) score += 10;
-              if (toolCategory.includes(kw)) score += 8;
-              if (tool.features?.some(f => f.toLowerCase().includes(kw))) score += 6;
-              if (toolBestFor.includes(kw)) score += 4;
-              if (toolDescription.includes(kw)) score += 2;
-            });
-          }
+          // Lightweight deterministic search: check if terms appear in text
+          matchesSearch = queryTerms.every(term => searchableText.includes(term));
         }
 
-        // 2. Preference Match (Does NOT override search ranking)
-        if (hasPreferences && preferences.preferredCategories.includes(tool.category)) {
-          isPreferenceMatch = true;
-          if (!isSearchActive) {
-            score += 1; // Only applies to recommended sort when no search is active
-          }
-        }
-
-        return { tool, score, originalIndex: index, isPreferenceMatch };
+        return matchesSearch;
+      }).map(tool => {
+        const isPreferenceMatch = hasPreferences && preferences.preferredCategories.includes(tool.category);
+        return {
+          ...tool,
+          isPreferenceMatch
+        };
       });
 
-      // Filter out zero-score tools only if searching
-      let validTools = scoredTools;
-      if (isSearchActive) {
-        validTools = validTools.filter(item => item.score > 0);
-      }
-
-      // Sort by score if recommended, otherwise preserve original index for later sorting
-      if (sortBy === "recommended") {
-        validTools.sort((a, b) => {
-          if (b.score !== a.score) return b.score - a.score;
-          return a.originalIndex - b.originalIndex;
+      // If no active search, but recommended sort is selected, bubble up preference matches
+      if (!isSearchActive && sortBy === "recommended" && hasPreferences) {
+        result.sort((a, b) => {
+          if (a.isPreferenceMatch && !b.isPreferenceMatch) return -1;
+          if (!a.isPreferenceMatch && b.isPreferenceMatch) return 1;
+          return 0;
         });
       }
-
-      // Map back to Tool objects and attach preference match flag
-      result = validTools.map(item => ({
-        ...item.tool,
-        isPreferenceMatch: item.isPreferenceMatch
-      }));
     }
 
     // Apply Category Filter

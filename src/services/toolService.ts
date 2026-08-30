@@ -28,7 +28,15 @@ function mapApiToolToRecommendation(apiTool: any): Recommendation {
 
 function mapRankedCandidateToRecommendation(candidate: any): Recommendation {
   const rec = mapApiToolToRecommendation(candidate.tool);
-  rec.reasons = candidate.reasons || [];
+  const reasons: string[] = candidate.reasons || [];
+  const preferenceMatchReason = "Matches your interests";
+  
+  if (reasons.includes(preferenceMatchReason)) {
+    rec.isPreferenceMatch = true;
+  }
+  
+  rec.reasons = reasons.filter((reason) => reason !== preferenceMatchReason);
+  
   return rec;
 }
 

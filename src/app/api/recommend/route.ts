@@ -6,7 +6,18 @@ import { rankingService } from '@/services/rankingService';
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch (e) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "Invalid request payload" 
+        },
+        { status: 400 }
+      );
+    }
 
     // Validate request using Zod schema
     const validationResult = RecommendRequestSchema.safeParse(body);
@@ -30,9 +41,15 @@ export async function POST(req: Request) {
     // Call candidate service to retrieve bounded candidate pool
     const candidates = await candidateService.getCandidates(intent);
 
+    const preferences = validData.preferredCategories
+      ? {
+          preferredCategories: validData.preferredCategories,
+          experienceLevel: validData.experienceLevel,
+        }
+      : undefined;
+
     // Call ranking service to order candidates deterministically
-    // NOTE: preferences could be fetched and passed here in a future update
-    const recommendations = rankingService.rankCandidates(intent, candidates)
+    const recommendations = rankingService.rankCandidates(intent, candidates, preferences)
       .filter(rec => rec.score > 0)
       .slice(0, 20);
 

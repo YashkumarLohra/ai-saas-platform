@@ -2,7 +2,66 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getAuthenticatedUser } from '@/lib/auth-server';
 
-export async function PATCH(
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const user = await getAuthenticatedUser();
+  
+  if (!user) {
+    return NextResponse.json(
+      { error: "Unauthorized. Authentication is required to access Projects." },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const { id } = await params;
+
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: { 
+        tools: {
+          include: {
+            tool: {
+              select: { slug: true }
+            }
+          }
+        } 
+      }
+    });
+
+    if (!project) {
+      return NextResponse.json({ error: "Project not found." }, { status: 404 });
+    }
+
+    if (project.user_id !== user.id) {
+      return NextResponse.json({ error: "Unauthorized access to project." }, { status: 403 });
+    }
+
+    const formattedProject = {
+      id: project.id,
+      name: project.name,
+      description: project.description,
+      toolIds: project.tools.map(t => t.tool.slug),
+      createdAt: project.createdAt,
+      updatedAt: project.updatedAt
+    };
+
+    return NextResponse.json({
+      success: true,
+      data: formattedProject
+    });
+  } catch (error) {
+    console.error("Database error in GET /api/projects/[id]:", error);
+    return NextResponse.json(
+      { success: false, error: "An unexpected error occurred." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {

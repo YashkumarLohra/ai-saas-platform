@@ -37,28 +37,10 @@ export const candidateService = {
       };
     }
 
-    let candidates = await prisma.tool.findMany({
+    const candidates = await prisma.tool.findMany({
       where,
       orderBy: { name: "asc" },
     });
-
-    // Zero-candidate fallback: if the strict query found nothing, relax the
-    // input/output capability filters, but maintain the pricing requirement.
-    if (candidates.length === 0) {
-      const fallbackWhere: Prisma.ToolWhereInput = {};
-
-      if (intent.requiredPricing === "FREE") {
-        fallbackWhere.pricing = {
-          contains: "Free",
-          mode: "insensitive",
-        };
-      }
-
-      candidates = await prisma.tool.findMany({
-        where: fallbackWhere,
-        orderBy: { name: "asc" },
-      });
-    }
 
     return candidates;
   }

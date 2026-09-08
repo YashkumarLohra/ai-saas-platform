@@ -15,7 +15,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password?: string) => Promise<void>;
-  signup: (email: string, name: string, password?: string) => Promise<void>;
+  signup: (email: string, name: string, password?: string) => Promise<{ sessionCreated: boolean }>;
   logout: () => Promise<void>;
 }
 
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error("Password is required");
     }
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw error;
     }
     
-    showToast("Account created successfully!");
+    return { sessionCreated: !!data.session };
   };
 
   const logout = async () => {

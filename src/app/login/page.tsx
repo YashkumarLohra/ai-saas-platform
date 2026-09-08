@@ -14,7 +14,7 @@ function LoginForm() {
   const { login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
+  const redirectTo = searchParams.get("redirectTo") || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,7 +111,7 @@ function LoginForm() {
 
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Don&apos;t have an account?{" "}
-        <Link href={`/signup${redirectTo !== '/dashboard' ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
+        <Link href={`/signup${redirectTo !== '/' ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
           Sign up
         </Link>
       </p>

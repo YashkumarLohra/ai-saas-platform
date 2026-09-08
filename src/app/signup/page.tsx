@@ -11,15 +11,17 @@ function SignupForm() {
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
   const { signup } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
+  const redirectTo = searchParams.get("redirectTo") || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setSuccessMessage(null);
 
     if (!name || !email || !password) {
       setError("Please fill out all fields.");
@@ -39,8 +41,16 @@ function SignupForm() {
 
     setIsSubmitting(true);
     try {
-      await signup(email, name, password);
-      router.push(redirectTo);
+      const { sessionCreated } = await signup(email, name, password);
+      if (sessionCreated) {
+        router.push(redirectTo);
+      } else {
+        setSuccessMessage("Account created successfully. Please check your email to confirm your account before signing in.");
+        // Clear form fields
+        setName("");
+        setEmail("");
+        setPassword("");
+      }
     } catch (err) {
       setError("Failed to create account. Please try again.");
     } finally {
@@ -63,6 +73,12 @@ function SignupForm() {
       {error && (
         <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 text-sm text-red-600 dark:text-red-400 text-left">
           {error}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mb-6 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30 text-sm text-green-700 dark:text-green-400 text-left">
+          {successMessage}
         </div>
       )}
 
@@ -137,7 +153,7 @@ function SignupForm() {
 
       <p className="text-sm text-gray-500 dark:text-gray-400">
         Already have an account?{" "}
-        <Link href={`/login${redirectTo !== '/dashboard' ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
+        <Link href={`/login${redirectTo !== '/' ? `?redirectTo=${encodeURIComponent(redirectTo)}` : ''}`} className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">
           Sign in
         </Link>
       </p>

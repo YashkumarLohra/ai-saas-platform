@@ -30,6 +30,24 @@ export const rankingService = {
       let score = 0;
       const reasons: string[] = [];
 
+      // DYNAMIC TIE-BREAKERS
+      if (candidate.isIntegrated) score += 0.3;
+      if (candidate.apiAvailable) score += 0.2;
+      if (candidate.pricing && candidate.pricing.toLowerCase().includes("free")) score += 0.1;
+      if (candidate.features && candidate.features.length > 0) {
+        score += candidate.features.length * 0.01;
+      }
+
+      // METADATA-BASED REASONS
+      // Primary Reason
+      if (candidate.bestFor) {
+        reasons.push(`Best for: ${candidate.bestFor}`);
+      } else if (candidate.features && candidate.features.length > 0) {
+        reasons.push(`Key feature: ${candidate.features[0]}`);
+      } else {
+        reasons.push(`Top-rated in ${candidate.category.toLowerCase()}`);
+      }
+
       // If ambiguous, we still process user preferences but skip strict intent soft signals
       if (!intent.confidence.ambiguous) {
         // Output Type Match (+40 each)
@@ -39,7 +57,7 @@ export const rankingService = {
           );
           if (matchedOutputs.length > 0) {
             score += matchedOutputs.length * 40;
-            reasons.push(`Matches your requested output`);
+            reasons.push(`Specializes in generating ${matchedOutputs.join(' and ').toLowerCase()}`);
           }
         }
 
@@ -50,14 +68,13 @@ export const rankingService = {
           );
           if (matchedInputs.length > 0) {
             score += matchedInputs.length * 30;
-            reasons.push(`Supports your required input`);
+            // Optionally could add reason here, but to avoid spam we focus on output first
           }
         }
 
         // Difficulty Match (+15)
         if (intent.preferredDifficulty && candidate.difficulty === intent.preferredDifficulty) {
           score += 15;
-          reasons.push(`Matches your preferred difficulty`);
         }
 
         // Audience Match (+15 capped)
@@ -67,7 +84,6 @@ export const rankingService = {
           );
           if (audienceOverlap) {
             score += 15;
-            reasons.push(`Tailored to your intended audience`);
           }
         }
 
@@ -79,7 +95,6 @@ export const rankingService = {
           );
           if (hasOverlap) {
             score += 10;
-            reasons.push(`Matches your selected category`);
           }
         }
 
@@ -112,7 +127,7 @@ export const rankingService = {
 
           if (semScore > 0) {
             score += semScore;
-            reasons.push(`Strong match for your specific task`);
+            reasons.push(`Offers: ${matchedSems[0]}`); // Add the first matched semantic capability
           }
         }
       }
@@ -125,18 +140,18 @@ export const rankingService = {
         );
         if (hasPrefOverlap) {
           score += 10;
-          reasons.push(`Matches your interests`);
         }
       }
 
       return {
         tool: candidate,
         score,
-        reasons
+        reasons: Array.from(new Set(reasons)) // Deduplicate just in case
       };
     });
 
     // Sort: highest score -> lowest score, tie break: name asc
+    // Due to fractional scores, ties should be extremely rare now
     ranked.sort((a, b) => {
       if (b.score !== a.score) {
         return b.score - a.score;

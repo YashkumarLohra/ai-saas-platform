@@ -41,6 +41,10 @@ async function main() {
         outputTypes: tool.outputTypes || [],
         difficulty: tool.difficulty ? tool.difficulty.toUpperCase() : "INTERMEDIATE",
         targetAudience: tool.targetAudience || [],
+        apiAvailable: tool.apiAvailable || false,
+        integrationType: tool.integrationType || "EXTERNAL",
+        affiliateUrl: tool.affiliateUrl || null,
+        lastVerifiedAt: tool.lastVerifiedAt ? new Date(tool.lastVerifiedAt) : new Date(),
       };
 
       // 3. Upsert Strategy (Idempotent)

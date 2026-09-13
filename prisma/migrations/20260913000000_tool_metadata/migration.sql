@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Tool" ADD COLUMN     "affiliateUrl" TEXT,
+ADD COLUMN     "apiAvailable" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "integrationType" TEXT NOT NULL DEFAULT 'EXTERNAL',
+ADD COLUMN     "lastVerifiedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

@@ -29,6 +29,10 @@ model Tool {
   outputTypes     String[] @default([])
   difficulty      String   @default("INTERMEDIATE")
   targetAudience  String[] @default([])
+  apiAvailable    Boolean  @default(false)
+  integrationType String   @default("EXTERNAL")
+  affiliateUrl    String?
+  lastVerifiedAt  DateTime @default(now())
 
   // Relationships
   favorites   Favorite[]

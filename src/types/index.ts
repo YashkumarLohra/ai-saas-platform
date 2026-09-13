@@ -18,6 +18,10 @@ export interface Recommendation {
   outputTypes?: string[];
   difficulty?: string;
   targetAudience?: string[];
+  apiAvailable?: boolean;
+  integrationType?: string;
+  affiliateUrl?: string;
+  lastVerifiedAt?: string;
 }
 
 export interface TaskContext {

@@ -5,14 +5,24 @@ export const workflowRunService = {
   /**
    * Creates a PENDING WorkflowRun to track the generation attempt.
    */
-  async createPendingRun(userId: string, prompt: string, creditsUsed: number) {
+  async createPendingRun(userId: string, prompt: string, creditsUsed: number, idempotencyKey?: string) {
     return prisma.workflowRun.create({
       data: {
         userId,
         prompt,
         creditsUsed,
+        idempotencyKey,
         status: WorkflowRunStatus.PENDING,
       },
+    });
+  },
+
+  /**
+   * Finds an existing WorkflowRun by its idempotencyKey.
+   */
+  async findByIdempotencyKey(idempotencyKey: string) {
+    return prisma.workflowRun.findUnique({
+      where: { idempotencyKey },
     });
   },
 

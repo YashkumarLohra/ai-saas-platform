@@ -42,3 +42,35 @@ export class AuthenticationError extends ApiError {
     this.name = "AuthenticationError";
   }
 }
+
+/**
+ * Represents an error during the workflow orchestration process.
+ */
+export class WorkflowError extends AppError {
+  constructor(message: string) {
+    super(message);
+    this.name = "WorkflowError";
+  }
+}
+
+/**
+ * Represents a failure from an external generation provider.
+ */
+export class ProviderError extends AppError {
+  public providerDetails?: any;
+  constructor(message: string, providerDetails?: any) {
+    super(message);
+    this.name = "ProviderError";
+    this.providerDetails = providerDetails;
+  }
+}
+
+/**
+ * Represents a failure to store or retrieve generated assets.
+ */
+export class StorageError extends AppError {
+  constructor(message: string) {
+    super(message);
+    this.name = "StorageError";
+  }
+}

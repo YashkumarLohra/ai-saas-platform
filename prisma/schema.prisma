@@ -109,6 +109,7 @@ model WorkflowRun {
   isRefunded     Boolean           @default(false)
   assetUrl       String?
   errorDetails   String?
+  idempotencyKey String?           @unique
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 

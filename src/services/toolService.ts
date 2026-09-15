@@ -18,7 +18,7 @@ function mapApiToolToRecommendation(apiTool: any): Recommendation {
     pros: apiTool.pros || [],
     cons: apiTool.cons || [],
     websiteUrl: apiTool.websiteUrl || undefined,
-    isIntegrated: apiTool.isIntegrated || false,
+
     inputTypes: apiTool.inputTypes || [],
     outputTypes: apiTool.outputTypes || [],
     difficulty: apiTool.difficulty || "INTERMEDIATE",

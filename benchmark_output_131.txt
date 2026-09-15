@@ -1,0 +1,408 @@
+
+========================================================
+Q: Write a professional email to a client.
+Intent capabilities: text_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. ChatGPT (Score: 12.060)
+   Reasons: Provides required capabilities: text_generation. | Best for: General assistance and drafting.
+2. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_generation. | Best for: Long document analysis and nuanced writing.
+3. Jasper AI (Score: 12.020)
+   Reasons: Provides required capabilities: text_generation. | Best for: Marketing teams and copywriters.
+
+========================================================
+Q: Write a long-form SEO article.
+Intent capabilities: text_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. ChatGPT (Score: 12.060)
+   Reasons: Provides required capabilities: text_generation. | Best for: General assistance and drafting.
+2. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_generation. | Best for: Long document analysis and nuanced writing.
+3. Jasper AI (Score: 12.020)
+   Reasons: Provides required capabilities: text_generation. | Best for: Marketing teams and copywriters.
+
+========================================================
+Q: Rewrite this paragraph professionally.
+Intent capabilities: text_analysis, grammar_checking
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. ChatGPT (Score: 14.060)
+   Reasons: Provides required capabilities: text_analysis, grammar_checking. | Best for: General assistance and drafting.
+2. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_analysis. | Best for: Long document analysis and nuanced writing.
+3. Jasper AI (Score: 12.020)
+   Reasons: Provides required capabilities: grammar_checking. | Best for: Marketing teams and copywriters.
+
+========================================================
+Q: Check grammar in this document.
+Intent capabilities: grammar_checking, text_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. ChatGPT (Score: 14.060)
+   Reasons: Provides required capabilities: text_analysis, grammar_checking. | Best for: General assistance and drafting.
+2. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_analysis. | Best for: Long document analysis and nuanced writing.
+3. Jasper AI (Score: 12.020)
+   Reasons: Provides required capabilities: grammar_checking. | Best for: Marketing teams and copywriters.
+
+========================================================
+Q: Create persuasive marketing copy.
+Intent capabilities: text_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. ChatGPT (Score: 12.060)
+   Reasons: Provides required capabilities: text_generation. | Best for: General assistance and drafting.
+2. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_generation. | Best for: Long document analysis and nuanced writing.
+3. Jasper AI (Score: 12.020)
+   Reasons: Provides required capabilities: text_generation. | Best for: Marketing teams and copywriters.
+
+========================================================
+Q: Generate a realistic product photograph.
+Intent capabilities: image_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 6
+1. Stable Diffusion (Score: 12.020)
+   Reasons: Provides required capabilities: image_generation. | Best for: Advanced image generation workflows.
+2. DALL-E 3 (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: Specific, prompt-adherent image creation.
+3. Midjourney (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: High-quality artistic and conceptual images.
+
+========================================================
+Q: Create an artistic concept illustration.
+Intent capabilities: image_generation, concept_art
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 6
+1. Stable Diffusion (Score: 14.020)
+   Reasons: Provides required capabilities: image_generation, concept_art. | Best for: Advanced image generation workflows.
+2. DALL-E 3 (Score: 14.010)
+   Reasons: Provides required capabilities: image_generation, concept_art. | Best for: Specific, prompt-adherent image creation.
+3. Midjourney (Score: 14.010)
+   Reasons: Provides required capabilities: image_generation, concept_art. | Best for: High-quality artistic and conceptual images.
+
+========================================================
+Q: Generate a minimalist logo.
+Intent capabilities: image_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 6
+1. Stable Diffusion (Score: 12.020)
+   Reasons: Provides required capabilities: image_generation. | Best for: Advanced image generation workflows.
+2. DALL-E 3 (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: Specific, prompt-adherent image creation.
+3. Midjourney (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: High-quality artistic and conceptual images.
+
+========================================================
+Q: Create an Instagram image.
+Intent capabilities: image_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 6
+1. Stable Diffusion (Score: 12.020)
+   Reasons: Provides required capabilities: image_generation. | Best for: Advanced image generation workflows.
+2. DALL-E 3 (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: Specific, prompt-adherent image creation.
+3. Midjourney (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: High-quality artistic and conceptual images.
+
+========================================================
+Q: Generate a realistic portrait.
+Intent capabilities: image_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 6
+1. Stable Diffusion (Score: 12.020)
+   Reasons: Provides required capabilities: image_generation. | Best for: Advanced image generation workflows.
+2. DALL-E 3 (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: Specific, prompt-adherent image creation.
+3. Midjourney (Score: 12.010)
+   Reasons: Provides required capabilities: image_generation. | Best for: High-quality artistic and conceptual images.
+
+========================================================
+Q: Find peer-reviewed research about microplastics.
+Intent capabilities: academic_search, document_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Consensus (Score: 14.015)
+   Reasons: Provides required capabilities: academic_search, document_analysis. | Best for: Academic and scientific research.
+2. Perplexity AI (Score: 12.015)
+   Reasons: Provides required capabilities: academic_search. | Best for: Factual search and web research.
+3. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: document_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Research quantum computing.
+Intent capabilities: web_search, academic_search
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 3
+1. Perplexity AI (Score: 14.015)
+   Reasons: Provides required capabilities: web_search, academic_search. | Best for: Factual search and web research.
+2. Consensus (Score: 12.015)
+   Reasons: Provides required capabilities: academic_search. | Best for: Academic and scientific research.
+3. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: web_search. | Best for: General assistance and drafting.
+
+========================================================
+Q: Find evidence for a research paper.
+Intent capabilities: academic_search, document_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Consensus (Score: 14.015)
+   Reasons: Provides required capabilities: academic_search, document_analysis. | Best for: Academic and scientific research.
+2. Perplexity AI (Score: 12.015)
+   Reasons: Provides required capabilities: academic_search. | Best for: Factual search and web research.
+3. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: document_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Compare scientific studies.
+Intent capabilities: document_analysis, data_analysis, academic_search
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Consensus (Score: 14.015)
+   Reasons: Provides required capabilities: academic_search, document_analysis. | Best for: Academic and scientific research.
+2. Perplexity AI (Score: 12.015)
+   Reasons: Provides required capabilities: academic_search. | Best for: Factual search and web research.
+3. ChatGPT (Score: 4.060)
+   Reasons: Provides required capabilities: document_analysis, data_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Analyze a large research document.
+Intent capabilities: document_analysis, summarization
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 7
+1. Consensus (Score: 14.015)
+   Reasons: Provides required capabilities: document_analysis, summarization. | Best for: Academic and scientific research.
+2. Perplexity AI (Score: 12.015)
+   Reasons: Provides required capabilities: summarization. | Best for: Factual search and web research.
+3. ChatGPT (Score: 4.060)
+   Reasons: Provides required capabilities: summarization, document_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Debug my React application.
+Intent capabilities: debugging, code_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Cursor (Score: 14.025)
+   Reasons: Provides required capabilities: code_analysis, debugging. | Best for: AI-first software development.
+2. GitHub Copilot (Score: 14.020)
+   Reasons: Provides required capabilities: code_analysis, debugging. | Best for: In-IDE code completion and generation.
+3. ChatGPT (Score: 4.060)
+   Reasons: Provides required capabilities: code_analysis, debugging. | Best for: General assistance and drafting.
+
+========================================================
+Q: Review my smart contract for vulnerabilities.
+Intent capabilities: security_review, code_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Cursor (Score: 14.025)
+   Reasons: Provides required capabilities: code_analysis, security_review. | Best for: AI-first software development.
+2. GitHub Copilot (Score: 12.020)
+   Reasons: Provides required capabilities: code_analysis. | Best for: In-IDE code completion and generation.
+3. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: code_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Explain this large codebase.
+Intent capabilities: code_analysis, codebase_chat
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Cursor (Score: 14.025)
+   Reasons: Provides required capabilities: code_analysis, codebase_chat. | Best for: AI-first software development.
+2. GitHub Copilot (Score: 14.020)
+   Reasons: Provides required capabilities: code_analysis, codebase_chat. | Best for: In-IDE code completion and generation.
+3. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: code_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Optimize this SQL query.
+Intent capabilities: code_analysis, data_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Cursor (Score: 12.025)
+   Reasons: Provides required capabilities: code_analysis. | Best for: AI-first software development.
+2. GitHub Copilot (Score: 12.020)
+   Reasons: Provides required capabilities: code_analysis. | Best for: In-IDE code completion and generation.
+3. ChatGPT (Score: 4.060)
+   Reasons: Provides required capabilities: code_analysis, data_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: Build a Python web scraper.
+Intent capabilities: code_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Cursor (Score: 12.025)
+   Reasons: Provides required capabilities: code_generation. | Best for: AI-first software development.
+2. GitHub Copilot (Score: 12.020)
+   Reasons: Provides required capabilities: code_generation. | Best for: In-IDE code completion and generation.
+3. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: code_generation. | Best for: General assistance and drafting.
+
+========================================================
+Q: Create a realistic voiceover.
+Intent capabilities: text_to_speech, voice_cloning
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 2
+1. ElevenLabs (Score: 14.015)
+   Reasons: Provides required capabilities: text_to_speech, voice_cloning. | Best for: Realistic voiceovers and audio generation.
+2. Otter.ai (Score: 10.015)
+   Reasons: Best for: Meeting transcription and audio-to-text.
+
+========================================================
+Q: Clone my voice.
+Intent capabilities: voice_cloning
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 2
+1. ElevenLabs (Score: 12.015)
+   Reasons: Provides required capabilities: voice_cloning. | Best for: Realistic voiceovers and audio generation.
+2. Otter.ai (Score: 10.015)
+   Reasons: Best for: Meeting transcription and audio-to-text.
+
+========================================================
+Q: Generate natural AI speech.
+Intent capabilities: text_to_speech, audio_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 2
+1. ElevenLabs (Score: 14.015)
+   Reasons: Provides required capabilities: text_to_speech, audio_generation. | Best for: Realistic voiceovers and audio generation.
+2. Otter.ai (Score: 10.015)
+   Reasons: Best for: Meeting transcription and audio-to-text.
+
+========================================================
+Q: Transcribe an interview.
+Intent capabilities: transcription
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 2
+1. Otter.ai (Score: 12.015)
+   Reasons: Provides required capabilities: transcription. | Best for: Meeting transcription and audio-to-text.
+2. ElevenLabs (Score: 10.015)
+   Reasons: Best for: Realistic voiceovers and audio generation.
+
+========================================================
+Q: Create an audiobook narration.
+Intent capabilities: text_to_speech
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 2
+1. ElevenLabs (Score: 12.015)
+   Reasons: Provides required capabilities: text_to_speech. | Best for: Realistic voiceovers and audio generation.
+2. Otter.ai (Score: 10.015)
+   Reasons: Best for: Meeting transcription and audio-to-text.
+
+========================================================
+Q: Summarize this YouTube video.
+Intent capabilities: summarization, video_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 7
+1. Eightify (Score: 14.010)
+   Reasons: Provides required capabilities: summarization, video_analysis. | Best for: YouTube video summarization and research.
+2. Consensus (Score: 12.015)
+   Reasons: Provides required capabilities: summarization. | Best for: Academic and scientific research.
+3. Perplexity AI (Score: 12.015)
+   Reasons: Provides required capabilities: summarization. | Best for: Factual search and web research.
+
+========================================================
+Q: Turn this outline into a presentation.
+Intent capabilities: text_generation, presentation_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Gamma (Score: 14.015)
+   Reasons: Provides required capabilities: text_generation, presentation_generation. | Best for: Creating slide decks and presentations quickly.
+2. ChatGPT (Score: 12.060)
+   Reasons: Provides required capabilities: text_generation. | Best for: General assistance and drafting.
+3. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_generation. | Best for: Long document analysis and nuanced writing.
+
+========================================================
+Q: Remove the background from this image.
+Intent capabilities: image_editing
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 3
+1. Stable Diffusion (Score: 12.020)
+   Reasons: Provides required capabilities: image_editing. | Best for: Advanced image generation workflows.
+2. DALL-E 3 (Score: 10.010)
+   Reasons: Best for: Specific, prompt-adherent image creation.
+3. Midjourney (Score: 10.010)
+   Reasons: Best for: High-quality artistic and conceptual images.
+
+========================================================
+Q: Create a 3D model from this description.
+Intent capabilities: 3d_generation, image_generation
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 6
+1. Luma AI (Score: 14.015)
+   Reasons: Provides required capabilities: image_generation, 3d_generation. | Best for: Text-to-3D and image-to-3D generation.
+2. ChatGPT (Score: 2.060)
+   Reasons: Provides required capabilities: image_generation. | Best for: General assistance and drafting.
+3. Stable Diffusion (Score: 2.020)
+   Reasons: Provides required capabilities: image_generation. | Best for: Advanced image generation workflows.
+
+========================================================
+Q: Research competitors for my startup.
+Intent capabilities: web_search, data_analysis
+Intent requiresApi: false
+Intent requiredPricing: null
+Candidates retrieved: 4
+1. Perplexity AI (Score: 12.015)
+   Reasons: Provides required capabilities: web_search. | Best for: Factual search and web research.
+2. Consensus (Score: 10.015)
+   Reasons: Best for: Academic and scientific research.
+3. ChatGPT (Score: 4.060)
+   Reasons: Provides required capabilities: web_search, data_analysis. | Best for: General assistance and drafting.
+
+========================================================
+Q: I need an AI coding tool with an API.
+Intent capabilities: code_generation
+Intent requiresApi: true
+Intent requiredPricing: null
+Candidates retrieved: 0
+FAILED / NO TOOLS FOUND
+
+========================================================
+Q: I need a free text generator.
+Intent capabilities: text_generation
+Intent requiresApi: false
+Intent requiredPricing: FREE
+Candidates retrieved: 3
+1. ChatGPT (Score: 12.060)
+   Reasons: Provides required capabilities: text_generation. | Best for: General assistance and drafting.
+2. Claude (Score: 12.045)
+   Reasons: Provides required capabilities: text_generation. | Best for: Long document analysis and nuanced writing.
+3. Gamma (Score: 2.015)
+   Reasons: Provides required capabilities: text_generation. | Best for: Creating slide decks and presentations quickly.
+
+
+=== BENCHMARK METRICS ===
+Total queries: 32
+No-tool count: 1
+Avg Candidate Retrieval Latency: 433.96 ms
+Avg Ranking Latency: 0.40 ms

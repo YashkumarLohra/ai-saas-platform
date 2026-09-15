@@ -12,14 +12,20 @@ export interface Recommendation {
   pros: string[];
   cons: string[];
   websiteUrl?: string;
-  isIntegrated?: boolean;
+
   isPreferenceMatch?: boolean;
   inputTypes?: string[];
   outputTypes?: string[];
+  capabilities?: string[];
+  limitations?: string[];
   difficulty?: string;
   targetAudience?: string[];
-  apiAvailable?: boolean;
-  integrationType?: string;
+  
+  pricingTier?: PricingTier;
+  apiAccess?: ApiAccessLevel;
+  integration?: IntegrationType;
+  
+
   affiliateUrl?: string;
   lastVerifiedAt?: string;
 }
@@ -50,6 +56,10 @@ export type ToolPricing = "FREE" | "PAID";
 export type ToolMediaType = "TEXT" | "IMAGE" | "AUDIO" | "VIDEO" | "CODE" | "DOCUMENT" | "PRESENTATION";
 export type ToolDifficulty = "BEGINNER" | "INTERMEDIATE" | "ADVANCED";
 export type ToolAudience = "STUDENTS" | "PROFESSIONALS" | "CREATORS" | "MARKETERS" | "DEVELOPERS" | "DESIGNERS" | "BUSINESS";
+
+export type PricingTier = "FREE" | "FREEMIUM" | "PAID" | "ENTERPRISE" | "UNKNOWN";
+export type ApiAccessLevel = "NO_API" | "PUBLIC_API" | "PAID_API" | "ENTERPRISE_API" | "RESTRICTED_API" | "UNKNOWN";
+export type IntegrationType = "EXTERNAL" | "API" | "NATIVE" | "EMBED" | "UNKNOWN";
 
 export interface StructuredIntent {
   // Original context

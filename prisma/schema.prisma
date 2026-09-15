@@ -6,6 +6,31 @@ datasource db {
   provider = "postgresql"
 }
 
+enum PricingTier {
+  FREE
+  FREEMIUM
+  PAID
+  ENTERPRISE
+  UNKNOWN
+}
+
+enum ApiAccessLevel {
+  NO_API
+  PUBLIC_API
+  PAID_API
+  ENTERPRISE_API
+  RESTRICTED_API
+  UNKNOWN
+}
+
+enum IntegrationType {
+  EXTERNAL
+  API
+  NATIVE
+  EMBED
+  UNKNOWN
+}
+
 // ============================================================================
 // PUBLIC DATA
 // ============================================================================
@@ -17,6 +42,13 @@ model Tool {
   description     String
   longDescription String?
   category        String
+  
+  // New Structured Metadata
+  pricingTier     PricingTier      @default(UNKNOWN)
+  apiAccess       ApiAccessLevel   @default(UNKNOWN)
+  integration     IntegrationType  @default(UNKNOWN)
+  
+  // Legacy fields retained for migration
   pricing         String?
   websiteUrl      String?
   reasons         String[]
@@ -24,13 +56,12 @@ model Tool {
   features        String[]
   pros            String[]
   cons            String[]
-  isIntegrated    Boolean  @default(false)
   inputTypes      String[] @default([])
   outputTypes     String[] @default([])
+  capabilities    String[] @default([])
+  limitations     String[] @default([])
   difficulty      String   @default("INTERMEDIATE")
   targetAudience  String[] @default([])
-  apiAvailable    Boolean  @default(false)
-  integrationType String   @default("EXTERNAL")
   affiliateUrl    String?
   lastVerifiedAt  DateTime @default(now())
 
@@ -52,12 +83,36 @@ model User {
   id        String   @id // Maps to the Auth provider's UUID
   email     String   @unique
   createdAt DateTime @default(now())
+  credits   Int      @default(25)
 
   // Relationships
   favorites   Favorite[]
   projects    Project[]
   preferences Preference?
   recentViews RecentlyViewed[]
+  workflowRuns WorkflowRun[]
+}
+
+enum WorkflowRunStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+model WorkflowRun {
+  id             String            @id @default(uuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt         String
+  status         WorkflowRunStatus @default(PENDING)
+  creditsUsed    Int
+  isRefunded     Boolean           @default(false)
+  assetUrl       String?
+  errorDetails   String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([userId])
 }
 
 model Favorite {

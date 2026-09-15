@@ -20,7 +20,7 @@ export async function generateStaticParams() {
 }
 
 function OfficialWebsiteAction({ tool }: { tool: Recommendation }) {
-  if (tool.isIntegrated) {
+  if (tool.integration === "NATIVE") {
     return (
       <button 
         className="w-full sm:w-auto rounded-xl bg-brand-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 flex justify-center items-center gap-2 shadow-sm"

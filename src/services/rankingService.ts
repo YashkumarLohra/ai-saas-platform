@@ -30,12 +30,22 @@ export const rankingService = {
       let score = 0;
       const reasons: string[] = [];
 
+      // CAPABILITY RELEVANCE
+      if (intent.semanticCapabilities && intent.semanticCapabilities.length > 0) {
+        const intersection = candidate.capabilities.filter(c => intent.semanticCapabilities.includes(c));
+        if (intersection.length > 0) {
+          score += intersection.length * 2.0; // Specialist capabilities get huge boost
+          reasons.push(`Provides required capabilities: ${intersection.join(", ")}.`);
+        }
+      }
+
       // DYNAMIC TIE-BREAKERS
-      if (candidate.isIntegrated) score += 0.3;
-      if (candidate.apiAvailable) score += 0.2;
-      if (candidate.pricing && candidate.pricing.toLowerCase().includes("free")) score += 0.1;
-      if (candidate.features && candidate.features.length > 0) {
-        score += candidate.features.length * 0.01;
+      if (candidate.integration === "NATIVE" || candidate.integration === "API") score += 0.3;
+      if (candidate.apiAccess === "PUBLIC_API" || candidate.apiAccess === "PAID_API") score += 0.2;
+      if (candidate.pricingTier === "FREE" || candidate.pricingTier === "FREEMIUM") score += 0.1;
+      if (candidate.capabilities && candidate.capabilities.length > 0) {
+        // Reduced generalist bump: slight bump for generalists
+        score += candidate.capabilities.length * 0.005;
       }
 
       // METADATA-BASED REASONS
@@ -98,38 +108,7 @@ export const rankingService = {
           }
         }
 
-        // Semantic Capabilities (+20 each, max +40)
-        if (intent.semanticCapabilities && intent.semanticCapabilities.length > 0) {
-          const searchableText = normalize(
-            [
-              candidate.name,
-              candidate.description,
-              candidate.bestFor,
-              ...(candidate.features || [])
-            ].join(" ")
-          );
 
-          let semScore = 0;
-          const matchedSems = [];
-          for (const cap of intent.semanticCapabilities) {
-            if (semScore >= 40) break;
-            const normalizedCap = normalize(cap);
-            if (!normalizedCap) continue;
-            
-            const escapedCap = escapeRegExp(normalizedCap);
-            const regex = new RegExp(`\\b${escapedCap}\\b`, 'i');
-            
-            if (regex.test(searchableText)) {
-              semScore += 20;
-              matchedSems.push(cap);
-            }
-          }
-
-          if (semScore > 0) {
-            score += semScore;
-            reasons.push(`Offers: ${matchedSems[0]}`); // Add the first matched semantic capability
-          }
-        }
       }
 
       // User Preferences Match (+10 max)

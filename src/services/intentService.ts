@@ -38,10 +38,16 @@ Rules:
 - If a constraint is not explicitly stated, return null (for scalars) or [] (for arrays).
 - Never invent constraints.
 - requiredPricing is a hard constraint (e.g. if the user says "free").
-- requiredInputTypes / requiredOutputTypes are hard constraints.
+- apiRequirement is a hard constraint. Set to "NONE" by default. Set to "ANY" if they just ask for an API. Set to "ENTERPRISE" if they explicitly need an enterprise API. Set to "PUBLIC_OR_PAID" if they explicitly want a public/paid API.
+- requiredInputTypes / requiredOutputTypes are soft constraints for older integrations (do not rely on them heavily).
 - preferredDifficulty is a soft signal. Treat "professional" as ADVANCED, "no experience" as BEGINNER, etc.
 - inferredAudiences are soft signals (e.g. "for college" = STUDENTS).
-- semanticCapabilities are free-text strings for specific features (e.g., "Python support", "background removal").
+- semanticCapabilities must be chosen from the following exact vocabulary:
+  TEXT: text_generation, text_analysis, summarization, translation, grammar_checking, presentation_generation
+  CODE: code_generation, code_analysis, debugging, security_review, codebase_chat
+  IMAGE: image_generation, image_editing, image_upscaling, concept_art, 3d_generation
+  AUDIO: text_to_speech, voice_cloning, audio_generation, transcription
+  RESEARCH: web_search, academic_search, document_analysis, data_analysis, video_analysis
 - If the query is vague (e.g., "Help me work faster"), set confidence.ambiguous = true and return empty arrays/nulls.`,
         prompt: prompt,
       });

@@ -148,7 +148,7 @@ export function CompareClientView() {
                       >
                         View Details
                       </Link>
-                      {tool.isIntegrated ? (
+                      {tool.integration === "NATIVE" ? (
                         <button className="w-full text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 shadow-sm flex items-center justify-center gap-1.5">
                           Use in Platform
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
@@ -321,7 +321,7 @@ export function CompareClientView() {
                     <Link href={`/tools/${tool.slug}`} className="flex-1 text-center rounded-xl border border-gray-200 dark:border-zinc-700 px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                       View Details
                     </Link>
-                    {tool.isIntegrated ? (
+                    {tool.integration === "NATIVE" ? (
                       <button className="flex-1 text-center rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-500 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                         Use in Platform
                       </button>

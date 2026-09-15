@@ -44,6 +44,7 @@ export const StructuredIntentSchema = z.object({
   inferredCategories: z.array(z.string()),
   
   semanticCapabilities: z.array(z.string()),
+  apiRequirement: z.enum(["NONE", "ANY", "PUBLIC_OR_PAID", "ENTERPRISE"]).default("NONE"),
   
   confidence: z.object({
     overall: ExtractionConfidenceSchema,

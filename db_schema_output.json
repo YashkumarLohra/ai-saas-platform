@@ -1,0 +1,468 @@
+◇ injected env (5) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+[
+  {
+    "column_name": "id",
+    "data_type": "text"
+  },
+  {
+    "column_name": "slug",
+    "data_type": "text"
+  },
+  {
+    "column_name": "name",
+    "data_type": "text"
+  },
+  {
+    "column_name": "description",
+    "data_type": "text"
+  },
+  {
+    "column_name": "longDescription",
+    "data_type": "text"
+  },
+  {
+    "column_name": "category",
+    "data_type": "text"
+  },
+  {
+    "column_name": "pricing",
+    "data_type": "text"
+  },
+  {
+    "column_name": "websiteUrl",
+    "data_type": "text"
+  },
+  {
+    "column_name": "bestFor",
+    "data_type": "text"
+  },
+  {
+    "column_name": "cons",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "features",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "pros",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "reasons",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "difficulty",
+    "data_type": "text"
+  },
+  {
+    "column_name": "inputTypes",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "outputTypes",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "targetAudience",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "affiliateUrl",
+    "data_type": "text"
+  },
+  {
+    "column_name": "lastVerifiedAt",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "capabilities",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "limitations",
+    "data_type": "ARRAY"
+  },
+  {
+    "column_name": "apiAccess",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "column_name": "integration",
+    "data_type": "USER-DEFINED"
+  },
+  {
+    "column_name": "pricingTier",
+    "data_type": "USER-DEFINED"
+  }
+]
+
+=== TOOLS ===
+[
+  {
+    "slug": "test-tool",
+    "pricingTier": "UNKNOWN",
+    "pricing": null,
+    "apiAccess": "UNKNOWN",
+    "integration": "UNKNOWN",
+    "capabilities": [],
+    "limitations": [],
+    "inputTypes": [],
+    "outputTypes": []
+  },
+  {
+    "slug": "dall-e-3",
+    "pricingTier": "PAID",
+    "pricing": "Paid (via ChatGPT Plus)",
+    "apiAccess": "PAID_API",
+    "integration": "API",
+    "capabilities": [
+      "image_generation",
+      "concept_art"
+    ],
+    "limitations": [
+      "Strict safety filters restrict some prompts"
+    ],
+    "inputTypes": [
+      "TEXT"
+    ],
+    "outputTypes": [
+      "IMAGE"
+    ]
+  },
+  {
+    "slug": "perplexity",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium ($20/mo Pro)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "web_search",
+      "academic_search",
+      "summarization"
+    ],
+    "limitations": [
+      "Not designed for long-form creative writing"
+    ],
+    "inputTypes": [
+      "TEXT"
+    ],
+    "outputTypes": [
+      "TEXT"
+    ]
+  },
+  {
+    "slug": "midjourney",
+    "pricingTier": "PAID",
+    "pricing": "Paid (from $10/mo)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "image_generation",
+      "concept_art"
+    ],
+    "limitations": [
+      "Requires Discord interface",
+      "Cannot edit specific image regions easily"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "IMAGE"
+    ],
+    "outputTypes": [
+      "IMAGE"
+    ]
+  },
+  {
+    "slug": "stable-diffusion",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Free (OSS) / API Paid",
+    "apiAccess": "PUBLIC_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "image_generation",
+      "image_editing",
+      "image_upscaling",
+      "concept_art"
+    ],
+    "limitations": [
+      "Requires significant hardware for local execution"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "IMAGE"
+    ],
+    "outputTypes": [
+      "IMAGE"
+    ]
+  },
+  {
+    "slug": "consensus",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium ($9/mo Pro)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "academic_search",
+      "document_analysis",
+      "summarization"
+    ],
+    "limitations": [
+      "Restricted strictly to scientific and academic literature"
+    ],
+    "inputTypes": [
+      "TEXT"
+    ],
+    "outputTypes": [
+      "TEXT"
+    ]
+  },
+  {
+    "slug": "chatgpt",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium ($20/mo Pro)",
+    "apiAccess": "PAID_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "text_generation",
+      "text_analysis",
+      "summarization",
+      "translation",
+      "grammar_checking",
+      "code_generation",
+      "code_analysis",
+      "debugging",
+      "image_generation",
+      "web_search",
+      "document_analysis",
+      "data_analysis"
+    ],
+    "limitations": [
+      "May hallucinate on niche technical facts"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "DOCUMENT",
+      "IMAGE"
+    ],
+    "outputTypes": [
+      "TEXT",
+      "IMAGE"
+    ]
+  },
+  {
+    "slug": "github-copilot",
+    "pricingTier": "PAID",
+    "pricing": "Paid ($10/mo)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "code_generation",
+      "code_analysis",
+      "debugging",
+      "codebase_chat"
+    ],
+    "limitations": [
+      "Code explanations can be shallow compared to Claude 3.5 Sonnet"
+    ],
+    "inputTypes": [
+      "CODE",
+      "TEXT"
+    ],
+    "outputTypes": [
+      "CODE"
+    ]
+  },
+  {
+    "slug": "jasper",
+    "pricingTier": "PAID",
+    "pricing": "Paid (from $59/mo)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "text_generation",
+      "summarization",
+      "translation",
+      "grammar_checking"
+    ],
+    "limitations": [
+      "Optimized for marketing; struggles with deep technical writing"
+    ],
+    "inputTypes": [
+      "TEXT"
+    ],
+    "outputTypes": [
+      "TEXT"
+    ]
+  },
+  {
+    "slug": "cursor",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium ($20/mo Pro)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "code_generation",
+      "code_analysis",
+      "debugging",
+      "security_review",
+      "codebase_chat"
+    ],
+    "limitations": [
+      "Requires migrating to a new IDE fork"
+    ],
+    "inputTypes": [
+      "CODE",
+      "TEXT"
+    ],
+    "outputTypes": [
+      "CODE"
+    ]
+  },
+  {
+    "slug": "eightify",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "summarization",
+      "video_analysis"
+    ],
+    "limitations": [
+      "Cannot edit or generate video content"
+    ],
+    "inputTypes": [
+      "VIDEO",
+      "TEXT"
+    ],
+    "outputTypes": [
+      "TEXT"
+    ]
+  },
+  {
+    "slug": "luma-ai",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium",
+    "apiAccess": "PUBLIC_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "image_generation",
+      "3d_generation",
+      "concept_art"
+    ],
+    "limitations": [
+      "Topology of generated meshes isn't always animation-ready"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "IMAGE",
+      "VIDEO"
+    ],
+    "outputTypes": [
+      "IMAGE",
+      "VIDEO"
+    ]
+  },
+  {
+    "slug": "otter-ai",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium",
+    "apiAccess": "ENTERPRISE_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "transcription",
+      "summarization",
+      "text_analysis"
+    ],
+    "limitations": [
+      "Enterprise-only for deep API integration"
+    ],
+    "inputTypes": [
+      "AUDIO",
+      "VIDEO"
+    ],
+    "outputTypes": [
+      "TEXT",
+      "DOCUMENT"
+    ]
+  },
+  {
+    "slug": "gamma",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "text_generation",
+      "image_generation",
+      "presentation_generation"
+    ],
+    "limitations": [
+      "No public API available"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "DOCUMENT"
+    ],
+    "outputTypes": [
+      "PRESENTATION",
+      "TEXT",
+      "IMAGE"
+    ]
+  },
+  {
+    "slug": "elevenlabs",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium (API Paid)",
+    "apiAccess": "PUBLIC_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "text_to_speech",
+      "voice_cloning",
+      "audio_generation"
+    ],
+    "limitations": [
+      "High costs for long-form generation"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "AUDIO"
+    ],
+    "outputTypes": [
+      "AUDIO"
+    ]
+  },
+  {
+    "slug": "claude",
+    "pricingTier": "FREEMIUM",
+    "pricing": "Freemium ($20/mo Pro)",
+    "apiAccess": "NO_API",
+    "integration": "EXTERNAL",
+    "capabilities": [
+      "text_generation",
+      "text_analysis",
+      "summarization",
+      "translation",
+      "code_generation",
+      "code_analysis",
+      "debugging",
+      "document_analysis",
+      "data_analysis"
+    ],
+    "limitations": [
+      "Cannot generate images",
+      "No internet access in basic mode"
+    ],
+    "inputTypes": [
+      "TEXT",
+      "DOCUMENT",
+      "IMAGE"
+    ],
+    "outputTypes": [
+      "TEXT",
+      "CODE"
+    ]
+  }
+]

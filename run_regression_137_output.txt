@@ -1,0 +1,11 @@
+
+==================================================
+QUERY: "I need an AI tool with an API."
+INTENT: {
+  "query": "I need an AI tool with an API.",
+  "inferredCategories": [],
+  "semanticCapabilities": [],
+  "apiRequirement": "ANY",
+  "requiredPricing": null,
+  "confidence": {}
+}

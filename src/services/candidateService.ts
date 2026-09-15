@@ -17,24 +17,35 @@ export const candidateService = {
     const where: Prisma.ToolWhereInput = {};
 
     if (intent.requiredPricing === "FREE") {
-      where.pricing = {
-        contains: "Free",
-        mode: "insensitive",
+      where.pricingTier = {
+        in: ["FREE", "FREEMIUM"]
       };
     }
     // Note: If requiredPricing is "PAID", we do not apply a hard filter
     // because freemium tools are often still applicable.
 
-    if (intent.requiredInputTypes && intent.requiredInputTypes.length > 0) {
-      where.inputTypes = {
-        hasSome: intent.requiredInputTypes,
-      };
+    if (intent.apiRequirement && intent.apiRequirement !== "NONE") {
+      if (intent.apiRequirement === "ANY") {
+        where.apiAccess = { in: ["PUBLIC_API", "PAID_API", "ENTERPRISE_API", "RESTRICTED_API"] };
+      } else if (intent.apiRequirement === "ENTERPRISE") {
+        where.apiAccess = { in: ["ENTERPRISE_API"] };
+      } else if (intent.apiRequirement === "PUBLIC_OR_PAID") {
+        where.apiAccess = { in: ["PUBLIC_API", "PAID_API"] };
+      }
     }
 
-    if (intent.requiredOutputTypes && intent.requiredOutputTypes.length > 0) {
-      where.outputTypes = {
-        hasSome: intent.requiredOutputTypes,
-      };
+    const OR: Prisma.ToolWhereInput[] = [];
+
+    if (intent.inferredCategories && intent.inferredCategories.length > 0) {
+      OR.push({ category: { in: intent.inferredCategories } });
+    }
+
+    if (intent.semanticCapabilities && intent.semanticCapabilities.length > 0) {
+      OR.push({ capabilities: { hasSome: intent.semanticCapabilities } });
+    }
+
+    if (OR.length > 0) {
+      where.OR = OR;
     }
 
     const candidates = await prisma.tool.findMany({
